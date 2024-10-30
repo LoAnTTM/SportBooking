@@ -1,0 +1,42 @@
+package service
+
+import (
+	"errors"
+
+	roleModule "spb/bsa/internal/role"
+	roleUtility "spb/bsa/internal/role/utility"
+	"spb/bsa/internal/{{.PathName}}/model"
+	"spb/bsa/internal/{{.PathName}}/utility"
+	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/utils"
+)
+
+var ErrPermission = errors.New("{{.ModuleName}} does not have permission")
+
+// @author: LoanTT
+// @function: GetAll
+// @description: Service for get all {{.ModuleNamePlural}}
+// @param: *model.Get{{.StructNamePlural}}Request
+// @return: []*entities.{{.StructName}}, error
+func (s *Service) GetAll(reqBody *model.Get{{.StructNamePlural}}Request) ([]*tb.{{.StructName}}, error) {
+	var {{.ModuleNamePlural}} []*tb.{{.StructName}}
+
+	childrenRoles, err := roleModule.RoleService.GetChildren(reqBody.Role)
+	if err != nil {
+		return nil, err
+	}
+	roles := roleUtility.FlattenAndGetRoleIds(childrenRoles)
+	if len(roles) == 0 {
+		return nil, ErrPermission
+	}
+
+	err = s.db.
+		Scopes(utility.Satisfied{{.StructName}}(roles), utils.Paginate(&reqBody.Pagination)).
+		Preload("Role.Permissions").
+		Find(&{{.ModuleNamePlural}}).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return {{.ModuleNamePlural}}, nil
+}

@@ -1,0 +1,22 @@
+package service
+
+import (
+	"spb/bsa/internal/{{.PathName}}/utility"
+	tb "spb/bsa/pkg/entities"
+)
+
+// @author: LoanTT
+// @function: Delete
+// @description: Service for {{.ModuleName}} deletion
+// @param: string {{.ModuleName}} id
+// @return: error
+func (s *Service) Delete({{.ModuleName}}Id string) error {
+	{{.ModuleName}} := tb.{{.StructName}}{}
+	{{.ModuleName}}.ID = {{.ModuleName}}Id
+
+	err := s.db.Scopes(utility.EmailIsVerity).Delete(&{{.ModuleName}}).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}

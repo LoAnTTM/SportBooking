@@ -1,0 +1,1364 @@
+basePath: /
+definitions:
+  model.AddressResponse:
+    properties:
+      address:
+        type: string
+      address_id:
+        type: string
+      location:
+        $ref: '#/definitions/model.LocationResponse'
+      location_geography:
+        $ref: '#/definitions/model.LocationGeography'
+      unit_id:
+        type: string
+    type: object
+  model.CreateAddressRequest:
+    properties:
+      address:
+        maxLength: 255
+        type: string
+      location:
+        $ref: '#/definitions/model.LocationRequest'
+      location_geography:
+        $ref: '#/definitions/model.LocationGeography'
+      unit_id:
+        type: string
+    required:
+    - address
+    - location
+    - location_geography
+    type: object
+  model.CreateLocationRequest:
+    properties:
+      locations:
+        items:
+          $ref: '#/definitions/model.LocationRequest'
+        minItems: 1
+        type: array
+    required:
+    - locations
+    type: object
+  model.CreateMediaRequest:
+    properties:
+      file_path:
+        maxLength: 255
+        type: string
+      file_type:
+        maxLength: 255
+        type: string
+      hash:
+        maxLength: 255
+        type: string
+      uploaded_at:
+        type: string
+    required:
+    - file_path
+    - file_type
+    - hash
+    - uploaded_at
+    type: object
+  model.CreateSportTypeRequest:
+    properties:
+      name:
+        maxLength: 255
+        type: string
+    required:
+    - name
+    type: object
+  model.CreateUnitPriceRequest:
+    properties:
+      end_time:
+        type: string
+      price:
+        type: number
+      start_time:
+        type: string
+    type: object
+  model.CreateUnitRequest:
+    properties:
+      address:
+        $ref: '#/definitions/model.CreateAddressRequest'
+      close_time:
+        type: string
+      club_id:
+        type: string
+      description:
+        maxLength: 3000
+        type: string
+      media:
+        items:
+          $ref: '#/definitions/model.CreateMediaRequest'
+        type: array
+      name:
+        maxLength: 255
+        type: string
+      open_time:
+        type: string
+      phone:
+        type: string
+      sport_types:
+        items:
+          $ref: '#/definitions/model.CreateSportTypeRequest'
+        type: array
+      status:
+        enum:
+        - 0
+        - 1
+        type: integer
+      unit_prices:
+        items:
+          $ref: '#/definitions/model.CreateUnitPriceRequest'
+        type: array
+      unit_services:
+        items:
+          $ref: '#/definitions/model.CreateUnitServiceRequest'
+        type: array
+    required:
+    - address
+    - close_time
+    - club_id
+    - media
+    - name
+    - open_time
+    - phone
+    - sport_types
+    - unit_prices
+    type: object
+  model.CreateUnitServiceRequest:
+    properties:
+      description:
+        maxLength: 3000
+        type: string
+      icon:
+        maxLength: 255
+        type: string
+      price:
+        type: number
+      unit_id:
+        type: string
+    required:
+    - icon
+    type: object
+  model.CreateUserRequest:
+    properties:
+      email:
+        maxLength: 32
+        minLength: 6
+        type: string
+      password:
+        maxLength: 32
+        minLength: 6
+        type: string
+      role:
+        type: string
+    required:
+    - email
+    - password
+    - role
+    type: object
+  model.GetUsersResponse:
+    properties:
+      pagination:
+        $ref: '#/definitions/utils.Pagination'
+      total:
+        type: integer
+      users:
+        items:
+          $ref: '#/definitions/spb_bsa_internal_user_model.UserResponse'
+        type: array
+    type: object
+  model.LocationGeography:
+    properties:
+      latitude:
+        type: number
+      longitude:
+        type: number
+    required:
+    - latitude
+    - longitude
+    type: object
+  model.LocationRequest:
+    properties:
+      city:
+        maxLength: 255
+        minLength: 2
+        type: string
+      description:
+        maxLength: 3000
+        type: string
+      district:
+        maxLength: 255
+        minLength: 2
+        type: string
+      province:
+        maxLength: 255
+        minLength: 2
+        type: string
+    required:
+    - city
+    - district
+    - province
+    type: object
+  model.LocationResponse:
+    properties:
+      city:
+        type: string
+      city_slug:
+        type: string
+      description:
+        type: string
+      district:
+        type: string
+      district_slug:
+        type: string
+      location_id:
+        type: string
+      province:
+        type: string
+      province_slug:
+        type: string
+    type: object
+  model.LocationsResponse:
+    properties:
+      locations:
+        items:
+          $ref: '#/definitions/model.LocationResponse'
+        type: array
+      total:
+        type: integer
+    type: object
+  model.LoginRequest:
+    properties:
+      email:
+        maxLength: 32
+        minLength: 6
+        type: string
+      password:
+        maxLength: 32
+        minLength: 6
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  model.LoginResponse:
+    properties:
+      access_token:
+        type: string
+      user:
+        $ref: '#/definitions/spb_bsa_internal_auth_model.UserResponse'
+    type: object
+  model.MediaResponse:
+    properties:
+      file_path:
+        type: string
+      file_type:
+        type: string
+      hash:
+        type: string
+      media_id:
+        type: string
+      uploaded_at:
+        type: string
+    type: object
+  model.RegisterRequest:
+    properties:
+      email:
+        maxLength: 32
+        minLength: 6
+        type: string
+      password:
+        maxLength: 32
+        minLength: 6
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  model.RoleResponse:
+    properties:
+      permissions:
+        items:
+          $ref: '#/definitions/spb_bsa_internal_role_model.PermissionResponse'
+        type: array
+      role_id:
+        type: string
+      role_name:
+        type: string
+    type: object
+  model.SportTypeResponse:
+    properties:
+      name:
+        type: string
+      sportType_id:
+        type: string
+    type: object
+  model.UnitPriceResponse:
+    properties:
+      end_time:
+        type: string
+      price:
+        type: number
+      start_time:
+        type: string
+      unitPrice_id:
+        type: string
+    type: object
+  model.UnitPricesResponse:
+    properties:
+      pagination:
+        $ref: '#/definitions/utils.Pagination'
+      total:
+        type: integer
+      unit_prices:
+        items:
+          $ref: '#/definitions/model.UnitPriceResponse'
+        type: array
+    type: object
+  model.UnitResponse:
+    properties:
+      address:
+        $ref: '#/definitions/model.AddressResponse'
+      close_time:
+        type: string
+      club_id:
+        type: string
+      description:
+        type: string
+      media:
+        items:
+          $ref: '#/definitions/model.MediaResponse'
+        type: array
+      name:
+        type: string
+      open_time:
+        type: string
+      phone:
+        type: string
+      sport_types:
+        items:
+          $ref: '#/definitions/model.SportTypeResponse'
+        type: array
+      status:
+        type: integer
+      unit_id:
+        type: string
+      unit_prices:
+        items:
+          $ref: '#/definitions/model.UnitPriceResponse'
+        type: array
+      unit_services:
+        items:
+          $ref: '#/definitions/model.UnitServiceResponse'
+        type: array
+    type: object
+  model.UnitServiceResponse:
+    properties:
+      description:
+        type: string
+      icon:
+        type: string
+      price:
+        type: number
+      unit_id:
+        type: string
+      unit_service_id:
+        type: string
+    type: object
+  model.UnitServicesResponse:
+    properties:
+      pagination:
+        $ref: '#/definitions/utils.Pagination'
+      total:
+        type: integer
+      unit_services:
+        items:
+          $ref: '#/definitions/model.UnitServiceResponse'
+        type: array
+    type: object
+  model.UpdateAddressRequest:
+    properties:
+      address:
+        maxLength: 255
+        type: string
+      location:
+        $ref: '#/definitions/model.UpdateLocationRequest'
+      location_geography:
+        $ref: '#/definitions/model.LocationGeography'
+      unit_id:
+        type: string
+    type: object
+  model.UpdateLocationRequest:
+    properties:
+      city:
+        maxLength: 255
+        minLength: 2
+        type: string
+      description:
+        maxLength: 3000
+        type: string
+      district:
+        maxLength: 255
+        minLength: 2
+        type: string
+      locationID:
+        type: string
+      province:
+        maxLength: 255
+        minLength: 2
+        type: string
+    type: object
+  model.UpdateMediaRequest:
+    properties:
+      file_path:
+        maxLength: 255
+        type: string
+      file_type:
+        maxLength: 255
+        type: string
+      hash:
+        maxLength: 255
+        type: string
+      uploaded_at:
+        type: string
+    type: object
+  model.UpdateSportTypeRequest:
+    properties:
+      name:
+        maxLength: 255
+        type: string
+    required:
+    - name
+    type: object
+  model.UpdateUnitPriceRequest:
+    properties:
+      end_time:
+        type: string
+      price:
+        type: number
+      start_time:
+        type: string
+    type: object
+  model.UpdateUnitRequest:
+    properties:
+      address:
+        $ref: '#/definitions/model.UpdateAddressRequest'
+      close_time:
+        type: string
+      club_id:
+        type: string
+      description:
+        maxLength: 3000
+        type: string
+      media:
+        items:
+          $ref: '#/definitions/model.UpdateMediaRequest'
+        type: array
+      name:
+        maxLength: 255
+        type: string
+      open_time:
+        type: string
+      phone:
+        type: string
+      sport_types:
+        items:
+          $ref: '#/definitions/model.UpdateSportTypeRequest'
+        type: array
+      status:
+        enum:
+        - 0
+        - 1
+        type: integer
+      unit_prices:
+        items:
+          $ref: '#/definitions/model.UpdateUnitPriceRequest'
+        type: array
+      unit_services:
+        items:
+          $ref: '#/definitions/model.UpdateUnitServiceRequest'
+        type: array
+    type: object
+  model.UpdateUnitServiceRequest:
+    properties:
+      description:
+        maxLength: 3000
+        type: string
+      icon:
+        maxLength: 255
+        type: string
+      price:
+        type: number
+    type: object
+  model.UpdateUserRequest:
+    properties:
+      full_name:
+        maxLength: 255
+        minLength: 2
+        type: string
+      phone:
+        type: string
+      role:
+        type: string
+    type: object
+  spb_bsa_internal_auth_model.UserResponse:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      phone:
+        type: string
+      user_id:
+        type: string
+    type: object
+  spb_bsa_internal_role_model.PermissionResponse:
+    properties:
+      permission_id:
+        type: string
+      permission_name:
+        type: string
+    type: object
+  spb_bsa_internal_user_model.UserResponse:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      is_email_verified:
+        type: boolean
+      phone:
+        type: string
+      role:
+        $ref: '#/definitions/model.RoleResponse'
+      user_id:
+        type: string
+    type: object
+  utils.ErrorResult:
+    properties:
+      message:
+        type: string
+    type: object
+  utils.JSONResult:
+    properties:
+      data: {}
+      message:
+        type: string
+    type: object
+  utils.Pagination:
+    properties:
+      count:
+        description: total items
+        type: integer
+      items:
+        description: number item per page
+        type: integer
+      next_page:
+        type: string
+      order_by:
+        description: order by
+        type: string
+      order_type:
+        description: order type
+        type: string
+      page:
+        description: current page
+        type: integer
+      prev_page:
+        type: string
+      total_pages:
+        description: total pages (count / items)
+        type: integer
+    type: object
+host: localhost:3000
+info:
+  contact:
+    email: loanTT@gmail.com
+    name: LoanTT
+  description: This is a swagger for Sport Booking APIs
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Sport Booking API
+  version: "1.0"
+paths:
+  /api/v1/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: login
+      parameters:
+      - description: login
+        in: body
+        name: group
+        required: true
+        schema:
+          $ref: '#/definitions/model.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: login success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.LoginResponse'
+              type: object
+        "400":
+          description: login failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: login
+      tags:
+      - auth
+  /api/v1/auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: refresh token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: refresh token success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.LoginResponse'
+              type: object
+        "400":
+          description: refresh token failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: refresh token
+      tags:
+      - auth
+  /api/v1/auth/register:
+    post:
+      consumes:
+      - application/json
+      description: register new user
+      parameters:
+      - description: register
+        in: body
+        name: group
+        required: true
+        schema:
+          $ref: '#/definitions/model.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: register success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  type: object
+                message:
+                  type: string
+              type: object
+        "400":
+          description: register failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: register new user
+      tags:
+      - auth
+  /api/v1/locations:
+    get:
+      consumes:
+      - application/json
+      description: Get all locations
+      parameters:
+      - description: Number items on page
+        in: query
+        name: i
+        type: integer
+      - description: Page number
+        in: query
+        name: p
+        type: integer
+      - description: Order by
+        in: query
+        name: b
+        type: string
+      - description: Order type
+        in: query
+        name: t
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get all locations success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.LocationsResponse'
+              type: object
+        "404":
+          description: Get all locations failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: Get all locations
+      tags:
+      - locations
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create location
+        in: body
+        name: Group
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateLocationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Create location success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.LocationsResponse'
+              type: object
+        "400":
+          description: Create location failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: Create location
+      tags:
+      - locations
+  /api/v1/locations/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete location
+      parameters:
+      - description: location id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Delete location success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+        "400":
+          description: Delete location failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: Delete location
+      tags:
+      - locations
+    patch:
+      consumes:
+      - application/json
+      description: Update location by id
+      parameters:
+      - description: Location data
+        in: body
+        name: location
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateLocationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Update location by id success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.LocationResponse'
+              type: object
+        "400":
+          description: Update location by id failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: Update location by id
+      tags:
+      - locations
+  /api/v1/unit-prices:
+    get:
+      consumes:
+      - application/json
+      description: Get all unit_prices
+      parameters:
+      - description: Number items on page
+        in: query
+        name: i
+        type: integer
+      - description: Page number
+        in: query
+        name: p
+        type: integer
+      - description: Order by
+        in: query
+        name: b
+        type: string
+      - description: Order type
+        in: query
+        name: t
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get all unit_prices success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.UnitPricesResponse'
+              type: object
+        "404":
+          description: Get all unit_prices failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: Get all unit_prices
+      tags:
+      - unit-prices
+    post:
+      consumes:
+      - application/json
+      description: Create unitPrice
+      parameters:
+      - description: Create unitPrice
+        in: body
+        name: Group
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateUnitServiceRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Create unitPrice success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.UnitServiceResponse'
+              type: object
+        "400":
+          description: Create unitPrice failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: Create unitPrice
+      tags:
+      - unit-prices
+  /api/v1/unit-prices/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Get unitPrice by id
+      parameters:
+      - description: UnitPrice ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get unitPrice by id success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+        "400":
+          description: Get unitPrice by id failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: Get unitPrice by id
+      tags:
+      - unit-prices
+    patch:
+      consumes:
+      - application/json
+      description: Update unitPrice by id
+      parameters:
+      - description: UnitPrice data
+        in: body
+        name: unitPrice
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateUnitPriceRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Update unitPrice by id success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.UnitPriceResponse'
+              type: object
+        "400":
+          description: Update unitPrice by id failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: Update unitPrice by id
+      tags:
+      - unit-prices
+  /api/v1/unit-services:
+    get:
+      consumes:
+      - application/json
+      description: Get all unit_services
+      parameters:
+      - description: Number items on page
+        in: query
+        name: i
+        type: integer
+      - description: Page number
+        in: query
+        name: p
+        type: integer
+      - description: Order by
+        in: query
+        name: b
+        type: string
+      - description: Order type
+        in: query
+        name: t
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get all unit_services success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.UnitServicesResponse'
+              type: object
+        "404":
+          description: Get all unit_services failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: Get all unit_services
+      tags:
+      - unit-services
+  /api/v1/unit-services/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Get unitService by id
+      parameters:
+      - description: UnitService ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get unitService by id success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+        "400":
+          description: Get unitService by id failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: Get unitService by id
+      tags:
+      - unit-services
+    patch:
+      consumes:
+      - application/json
+      description: Update unitService by id
+      parameters:
+      - description: UnitService data
+        in: body
+        name: unitService
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateUnitServiceRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Update unitService by id success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.UnitServiceResponse'
+              type: object
+        "400":
+          description: Update unitService by id failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: Update unitService by id
+      tags:
+      - unit-services
+  /api/v1/units:
+    post:
+      consumes:
+      - application/json
+      description: Create unit
+      parameters:
+      - description: Create unit
+        in: body
+        name: Group
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateUnitRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Create unit success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.UnitResponse'
+              type: object
+        "400":
+          description: Create unit failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: Create unit
+      tags:
+      - units
+  /api/v1/units/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Get unit by id
+      parameters:
+      - description: Unit ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get unit by id success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+        "400":
+          description: Get unit by id failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: Get unit by id
+      tags:
+      - units
+    patch:
+      consumes:
+      - application/json
+      description: Update unit by id
+      parameters:
+      - description: Unit data
+        in: body
+        name: unit
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateUnitRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Update unit by id success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.UnitResponse'
+              type: object
+        "400":
+          description: Update unit by id failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: Update unit by id
+      tags:
+      - units
+  /api/v1/users:
+    get:
+      consumes:
+      - application/json
+      description: Get all users
+      parameters:
+      - description: Number items on page
+        in: query
+        name: i
+        type: integer
+      - description: Page number
+        in: query
+        name: p
+        type: integer
+      - description: Order by
+        in: query
+        name: b
+        type: string
+      - description: Order type
+        in: query
+        name: t
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get all users success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.GetUsersResponse'
+              type: object
+        "404":
+          description: Get all users failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: Get all users
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: Create user
+      parameters:
+      - description: Create user
+        in: body
+        name: Group
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Create user success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/spb_bsa_internal_user_model.UserResponse'
+              type: object
+        "400":
+          description: Create user failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: Create user
+      tags:
+      - users
+  /api/v1/users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Get user by id
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get user by id success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+        "400":
+          description: Get user by id failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: Get user by id
+      tags:
+      - users
+    patch:
+      consumes:
+      - application/json
+      description: Update user by id
+      parameters:
+      - description: User data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Update user by id success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/spb_bsa_internal_user_model.UserResponse'
+              type: object
+        "400":
+          description: Update user by id failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: Update user by id
+      tags:
+      - users
+swagger: "2.0"

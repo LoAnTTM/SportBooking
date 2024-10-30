@@ -1,0 +1,21 @@
+package utility
+
+import (
+	roleUtils "spb/bsa/internal/role/utility"
+	"spb/bsa/internal/{{.PathName}}/model"
+	tb "spb/bsa/pkg/entities"
+
+	"gorm.io/gorm"
+)
+
+// @author: LoanTT
+// @function: Map{{.StructName}}EntityToResponse
+// @description: Mapping {{.ModuleName}} entity to response
+// @param: {{.ModuleName}} tb.{{.StructName}}
+// @return: model.{{.StructName}}Response
+func Map{{.StructName}}EntityToResponse({{.ModuleName}} *tb.{{.StructName}}) model.{{.StructName}}Response {
+	return model.{{.StructName}}Response{
+		{{.StructName}}ID:          {{.ModuleName}}.ID,
+	}
+}
+

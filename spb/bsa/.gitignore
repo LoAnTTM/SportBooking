@@ -1,0 +1,12 @@
+# log
+log/*
+# go.sum
+go.sum
+# executable file 
+build/
+
+# vscode config
+.vscode/
+.VSCodeCounter/
+cover.out
+aws.cert

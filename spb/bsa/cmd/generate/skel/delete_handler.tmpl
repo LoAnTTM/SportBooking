@@ -1,0 +1,39 @@
+package handler
+
+import (
+	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/utils"
+
+	"github.com/gofiber/fiber/v3"
+)
+
+var ErrDelete{{.StructName}}Failed = fiber.NewError(fiber.StatusBadRequest, "delete {{.ModuleName}} failed")
+
+// {{.StructName}}GetAll godoc
+//
+// @Summary 		Delete {{.ModuleName}}
+// @Description 	Delete {{.ModuleName}}
+// @Tags 			{{.RouteName}}
+// @Accept  		json
+// @Produce 		json
+// @Param 			id path string true "{{.ModuleName}} id"
+// @Success 		200 {object} utils.JSONResult{message=string}		"Delete {{.ModuleName}} success"
+// @Failure 		400 {object} utils.ErrorResult{message=string}      "Delete {{.ModuleName}} failed"
+// @Router 			/api/v1/{{.RouteName}}/{id} [delete]
+func (s *Handler) Delete(ctx fiber.Ctx) error {
+	var err error
+	var {{.ModuleName}}Id string
+
+	fctx := utils.FiberCtx{Fctx: ctx}
+	if {{.ModuleName}}Id, err = fctx.ParseUUID("id"); err != nil {
+		logger.Errorf("error parse {{.ModuleName}} id: %v", err)
+		return fctx.ErrResponse(ErrDelete{{.StructName}}Failed)
+	}
+
+	err = s.service.Delete({{.ModuleName}}Id)
+	if err != nil {
+		logger.Errorf("error delete {{.ModuleName}}: %v", err)
+		return fctx.ErrResponse(ErrDelete{{.StructName}}Failed)
+	}
+	return fctx.JsonResponse(fiber.StatusOK, "delete {{.ModuleName}} success")
+}

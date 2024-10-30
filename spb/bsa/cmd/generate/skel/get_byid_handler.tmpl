@@ -1,0 +1,55 @@
+package handler
+
+import (
+	"spb/bsa/internal/{{.PathName}}/utility"
+	"spb/bsa/pkg/auth"
+	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/utils"
+
+	tb "spb/bsa/pkg/entities"
+
+	"github.com/gofiber/fiber/v3"
+)
+
+var (
+	ErrGet{{.StructName}}Failed = fiber.NewError(fiber.StatusBadRequest, "error get {{.ModuleName}}")
+	Err{{.StructName}}NotFound  = fiber.NewError(fiber.StatusNotFound, "{{.ModuleName}} not found")
+)
+
+// {{.StructName}}GetAll godoc
+//
+// @Summary 		Get {{.ModuleName}} by id
+// @Description 	Get {{.ModuleName}} by id
+// @Tags 			{{.RouteName}}
+// @Accept  		json
+// @Produce 		json
+// @Param 			id path string true "{{.StructName}} ID"
+// @Success 		200 {object} utils.JSONResult{message=string}		"Get {{.ModuleName}} by id success"
+// @Failure 		400 {object} utils.ErrorResult{message=string}      "Get {{.ModuleName}} by id failed"
+// @Router 			/api/v1/{{.RouteName}}/{id} [delete]
+func (s *Handler) GetByID(ctx fiber.Ctx) error {
+	var err error
+	var {{.ModuleName}}Id string
+	var {{.ModuleName}} *tb.{{.StructName}}
+
+	fctx := utils.FiberCtx{Fctx: ctx}
+	claims, err := auth.GetTokenFromCookie(ctx)
+	if err != nil {
+		logger.Errorf("error parse jwt: %v", err)
+		return fctx.ErrResponse(ErrGet{{.StructName}}Failed)
+	}
+
+	if {{.ModuleName}}Id, err = fctx.ParseUUID("id"); err != nil {
+		logger.Errorf("error parse {{.ModuleName}} id: %v", err)
+		return fctx.ErrResponse(ErrGet{{.StructName}}Failed)
+	}
+
+	role := claims["role"].(string)
+	if {{.ModuleName}}, err = s.service.GetByID({{.ModuleName}}Id, role); err != nil {
+		logger.Errorf("error get {{.ModuleName}} by id: %v", err)
+		return fctx.ErrResponse(Err{{.StructName}}NotFound)
+	}
+
+	{{.ModuleName}}Response := utility.Map{{.StructName}}EntityToResponse({{.ModuleName}})
+	return fctx.JsonResponse(fiber.StatusOK, {{.ModuleName}}Response)
+}

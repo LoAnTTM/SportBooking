@@ -1,0 +1,29 @@
+package model
+
+import (
+	roleModel "spb/bsa/internal/role/model"
+	"spb/bsa/pkg/utils"
+)
+
+type Get{{.StructNamePlural}}Request struct {
+	Pagination utils.Pagination
+}
+
+type {{.StructName}}Response struct {
+	{{.StructName}}ID          string                 `json:"{{.ModuleName}}_id"`
+
+}
+
+type {{.StructNamePlural}}Response struct {
+	{{.StructNamePlural}}      []{{.StructName}}Response    `json:"{{.ModuleNamePlural}}"`
+	Total      uint              `json:"total"`
+	Pagination *utils.Pagination `json:"pagination"`
+}
+
+type Create{{.StructName}}Request struct {
+
+}
+
+type Update{{.StructName}}Request struct {
+	
+}

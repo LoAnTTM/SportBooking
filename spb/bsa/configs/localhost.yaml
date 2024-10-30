@@ -1,0 +1,70 @@
+project_name: "Sport booking"
+
+server:
+    env: development # development, production
+    host: "127.0.0.1"
+    port: 3000
+
+cors:
+    allow_origin:
+        - "http://127.0.0.1"
+    allow_headers:
+        - "Content-Type"
+        - "Origin"
+        - "Accept"
+    allow_methods:
+        - "GET"
+        - "POST"
+        - "PATCH"
+        - "DELETE"
+    allow_credentials: true
+
+jwt:
+    secret: "1234balhblahblah"
+    access_token_exp: 10 # minutes
+    refresh_token_exp: 43200 # minutes
+    expire_cache: 43200 # minutes
+
+oauth:
+    google_client_id: "xxxx"
+    google_client_secret: "xxxx"
+
+database:
+    engine: "postgres"
+    postgres:
+        host: "localhost"
+        port: "5432"
+        user: "spb_user"
+        password: "spb_password"
+        dbname: "spb_database"
+        ssl_mode: "disable"
+
+redis:
+    addrs:
+        - "localhost:6379"
+    password: "spb_password"
+    username: ""
+    reset: false
+    pool_size: 10
+    db: 0
+
+logging:
+    level: 0 # debug:0, info:1, warning:2, error:3
+    output:
+        - "console"
+        # - "file"
+    filename: "requests.log"
+
+aws:
+    region: "us-east-1"
+    max_retries: 3
+
+notification:
+    ios:
+        enabled: false
+    android:
+        enabled: false
+    redis_queue:
+        channel_name: "notification"
+        channel_size: 10
+        worker_num: 4
