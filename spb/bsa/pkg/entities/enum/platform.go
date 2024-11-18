@@ -12,7 +12,7 @@ const (
 )
 
 func (st *Platform) Scan(val interface{}) error {
-	*st = Platform(val.([]byte))
+	*st = Platform(val.(string))
 	return nil
 }
 

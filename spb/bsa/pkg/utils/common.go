@@ -87,14 +87,14 @@ func Defer[T any](v *T) T {
 
 // @author: LoanTT
 // @function: IsSubSet
-// @description: check (subSet) is subset of (setCheck)
-// @param: subSet, setCheck []string
+// @description: check (subSet) is subset of (originalSet)
+// @param: subSet, originalSet []string
 // @return: bool
-func IsSubSet(subSet, setCheck []string) bool {
+func IsSubSet(subSet, originalSet []string) bool {
 	for subCID := range subSet {
 		hasSubItem := false
-		for setCID := range setCheck {
-			if subSet[subCID] == setCheck[setCID] {
+		for setCID := range originalSet {
+			if subSet[subCID] == originalSet[setCID] {
 				hasSubItem = true
 				break
 			}
@@ -105,6 +105,31 @@ func IsSubSet(subSet, setCheck []string) bool {
 		}
 	}
 	return true
+}
+
+// @author: LoanTT
+// @function: ContainsString
+// @description: check if val is in arr
+// @param: arr []T
+// @param: val T
+// @return: bool
+func ContainsItem[T string | int](arr []T, val T) bool {
+	for _, item := range arr {
+		if item == val {
+			return true
+		}
+	}
+	return false
+}
+
+// @author: LoanTT
+// @function: ContainBit
+// @description: check if bit contain val
+// @param: bit uint64
+// @param: val uint64
+// @return: bool
+func ContainBit(bit, val uint64) bool {
+	return bit&val == val
 }
 
 // @author: LoanTT

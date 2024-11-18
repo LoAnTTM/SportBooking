@@ -2,7 +2,10 @@ package utils
 
 import (
 	"encoding/json"
+	"errors"
 	"strconv"
+
+	"spb/bsa/pkg/msg"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
@@ -10,6 +13,8 @@ import (
 )
 
 type FlexInt int64
+
+var ErrKeyNotFound = errors.New("key not found")
 
 // @author: LoanTT
 // @function: UnmarshalJSON
@@ -58,7 +63,7 @@ type FiberCtx struct {
 // @return: error
 func (ctx *FiberCtx) ValidateJson() error {
 	if !json.Valid(ctx.Fctx.BodyRaw()) {
-		return ErrRequestJsonNotValid
+		return msg.ErrRequestJsonNotValid
 	}
 	return nil
 }
@@ -98,21 +103,22 @@ func (ctx *FiberCtx) ParseUUID(key string) (string, error) {
 // @author: LoanTT
 // @function: GetQueryString
 // @description: Get query string
-// @return: map[string]interface{}, error
-func (ctx *FiberCtx) ParseQuery(keys ...string) interface{} {
+// @return: map[string]string, error
+func (ctx *FiberCtx) ParseQuery(keys ...string) (map[string]string, error) {
 	rawQueries := ctx.Fctx.Queries()
 	if len(keys) == 0 {
-		return rawQueries
-	}
-	if len(keys) == 1 {
-		return rawQueries[keys[0]]
+		return rawQueries, nil
 	}
 
 	queries := make(map[string]string)
 	for id := range keys {
-		queries[keys[id]] = rawQueries[keys[id]]
+		val, ok := rawQueries[keys[id]]
+		if !ok {
+			return nil, ErrKeyNotFound
+		}
+		queries[keys[id]] = val
 	}
-	return queries
+	return queries, nil
 }
 
 // @author: LoanTT
@@ -120,29 +126,30 @@ func (ctx *FiberCtx) ParseQuery(keys ...string) interface{} {
 // @description: Json response
 // @param: ctx fiber.Ctx
 // @param: respCode int
-// @param: data interface{}
+// @param: data ...interface{}
 // @return: error
-func (ctx *FiberCtx) JsonResponse(respCode int, data interface{}, message ...string) error {
-	var msg *string
-	var dataVal *interface{}
-
-	switch {
-	case len(message) > 0:
-		msg = &message[0]
-	case data != nil:
-		dataVal = &data
+func (ctx *FiberCtx) JsonResponse(respCode int, code string, data ...interface{}) error {
+	var resData interface{}
+	if len(data) > 0 {
+		resData = data[0]
 	}
 	return ctx.Fctx.
 		Status(respCode).
-		JSON(JSONResult{Data: dataVal, Message: msg})
+		JSON(JSONResult{Status: "success", Data: resData, Code: code})
 }
 
 // @author: LoanTT
 // @function: ErrResponse
-// @description: Err response
-// @param: ctx fiber.Ctx
+// @description: Error response
 // @param: err *fiber.Error
+// @param: data ...interface{}
 // @return: error
-func (ctx *FiberCtx) ErrResponse(err *fiber.Error) error {
-	return ctx.Fctx.Status(err.Code).JSON(ErrorResult{Message: err.Error()})
+func (ctx *FiberCtx) ErrResponse(err *fiber.Error, data ...interface{}) error {
+	var resData interface{}
+	if len(data) > 0 {
+		resData = data[0]
+	}
+	return ctx.Fctx.
+		Status(err.Code).
+		JSON(JSONResult{Status: "error", Data: resData, Code: err.Message})
 }

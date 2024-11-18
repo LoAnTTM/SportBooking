@@ -21,7 +21,7 @@ var ErrCreate{{.StructName}}Failed = fiber.NewError(fiber.StatusBadRequest, "cre
 // @Produce 		json
 // @Param 			Group body model.Create{{.StructName}}Request true "Create {{.ModuleName}}"
 // @Success 		200 {object} utils.JSONResult{data=model.{{.StructName}}Response}		"Create {{.ModuleName}} success"
-// @Failure 		400 {object} utils.ErrorResult{message=string}        		"Create {{.ModuleName}} failed"
+// @Failure 		400 {object} utils.JSONResult{}        		"Create {{.ModuleName}} failed"
 // @Router 			/api/v1/{{.RouteName}} [post]
 func (s *Handler) Create(ctx fiber.Ctx) error {
 	var err error

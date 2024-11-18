@@ -1,16 +1,13 @@
 package service
 
 import (
-	"errors"
-
 	"spb/bsa/internal/unit_price/model"
 	"spb/bsa/internal/unit_price/utility"
 	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/msg"
 
 	"gorm.io/gorm/clause"
 )
-
-var ErrUnitPriceNotFound = errors.New("unitPrice not found")
 
 // @author: LoanTT
 // @function: Update
@@ -27,7 +24,7 @@ func (s *Service) Update(reqBody *model.UpdateUnitPriceRequest, unitPriceId stri
 	if err = s.db.Model(tb.UnitPrice{}).
 		Where("id = ?", unitPriceId).
 		Count(&count).Error; err == nil && count == 0 {
-		return nil, ErrUnitPriceNotFound
+		return nil, msg.ErrUnitPriceNotFound
 	} else if err != nil {
 		return nil, err
 	}
@@ -42,7 +39,7 @@ func (s *Service) Update(reqBody *model.UpdateUnitPriceRequest, unitPriceId stri
 		return nil, err
 	}
 	if len(unit_prices) == 0 {
-		return nil, ErrUnitPriceNotFound
+		return nil, msg.ErrUnitPriceNotFound
 	}
 
 	return &unit_prices[0], nil

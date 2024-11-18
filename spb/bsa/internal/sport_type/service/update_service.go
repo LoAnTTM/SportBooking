@@ -1,16 +1,13 @@
 package service
 
 import (
-	"errors"
-
 	"spb/bsa/internal/sport_type/model"
 	"spb/bsa/internal/sport_type/utility"
 	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/msg"
 
 	"gorm.io/gorm/clause"
 )
-
-var ErrSportTypeNotFound = errors.New("sportType not found")
 
 // @author: LoanTT
 // @function: Update
@@ -26,7 +23,7 @@ func (s *Service) Update(reqBody *model.UpdateSportTypeRequest, sportTypeId stri
 	if err := s.db.Model(tb.SportType{}).
 		Where("id = ?", sportTypeId).
 		Count(&count).Error; err == nil && count == 0 {
-		return nil, ErrSportTypeNotFound
+		return nil, msg.ErrSportTypeNotFound
 	} else if err != nil {
 		return nil, err
 	}
@@ -42,7 +39,7 @@ func (s *Service) Update(reqBody *model.UpdateSportTypeRequest, sportTypeId stri
 		return nil, err
 	}
 	if len(sportTypes) == 0 {
-		return nil, ErrSportTypeNotFound
+		return nil, msg.ErrSportTypeNotFound
 	}
 
 	return &sportTypes[0], nil

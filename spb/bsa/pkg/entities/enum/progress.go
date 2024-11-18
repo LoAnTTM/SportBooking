@@ -12,7 +12,7 @@ const (
 )
 
 func (st *Progress) Scan(val interface{}) error {
-	*st = Progress(val.([]byte))
+	*st = Progress(val.(string))
 	return nil
 }
 

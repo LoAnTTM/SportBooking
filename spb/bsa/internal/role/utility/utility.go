@@ -12,27 +12,9 @@ import (
 // @return: model.RoleResponse
 func MapRoleEntityToResponse(role *tb.Role) model.RoleResponse {
 	return model.RoleResponse{
-		RoleID:   role.ID,
-		RoleName: role.Name,
-		Permissions: func() []model.PermissionResponse {
-			var permissions []model.PermissionResponse
-			for _, permission := range role.Permissions {
-				permissions = append(permissions, MapPermissionEntityToResponse(&permission))
-			}
-			return permissions
-		}(),
-	}
-}
-
-// @author: LoanTT
-// @function: MapPermissionEntityToResponse
-// @description: map permission entity to permission response
-// @param: permission tb.Permission
-// @return: model.PermissionResponse
-func MapPermissionEntityToResponse(permission *tb.Permission) model.PermissionResponse {
-	return model.PermissionResponse{
-		PermissionID:   permission.ID,
-		PermissionName: permission.Name,
+		RoleID:      role.ID,
+		RoleName:    role.Name,
+		Permissions: role.PermissionBit,
 	}
 }
 

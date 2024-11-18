@@ -1,12 +1,8 @@
 package service
 
 import (
-	"errors"
-
 	tb "spb/bsa/pkg/entities"
 )
-
-var ErrPermission = errors.New("location does not have permission")
 
 // @author: LoanTT
 // @function: GetAll

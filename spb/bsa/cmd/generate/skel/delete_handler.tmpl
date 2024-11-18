@@ -18,7 +18,7 @@ var ErrDelete{{.StructName}}Failed = fiber.NewError(fiber.StatusBadRequest, "del
 // @Produce 		json
 // @Param 			id path string true "{{.ModuleName}} id"
 // @Success 		200 {object} utils.JSONResult{message=string}		"Delete {{.ModuleName}} success"
-// @Failure 		400 {object} utils.ErrorResult{message=string}      "Delete {{.ModuleName}} failed"
+// @Failure 		400 {object} utils.JSONResult{}      "Delete {{.ModuleName}} failed"
 // @Router 			/api/v1/{{.RouteName}}/{id} [delete]
 func (s *Handler) Delete(ctx fiber.Ctx) error {
 	var err error

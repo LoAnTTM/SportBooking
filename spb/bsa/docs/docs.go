@@ -23,9 +23,9 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/auth/login": {
+        "/api/v1/auth/forgot-password": {
             "post": {
-                "description": "login",
+                "description": "Forgot password api",
                 "consumes": [
                     "application/json"
                 ],
@@ -35,10 +35,50 @@ const docTemplate = `{
                 "tags": [
                     "auth"
                 ],
-                "summary": "login",
+                "summary": "Forgot password api",
                 "parameters": [
                     {
-                        "description": "login",
+                        "description": "Forgot password",
+                        "name": "group",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.ForgotPasswordRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Forgot password success",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Forgot password failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/login": {
+            "post": {
+                "description": "Login api",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Login api",
+                "parameters": [
+                    {
+                        "description": "Login",
                         "name": "group",
                         "in": "body",
                         "required": true,
@@ -49,7 +89,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "login success",
+                        "description": "Login success",
                         "schema": {
                             "allOf": [
                                 {
@@ -67,21 +107,9 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "login failed",
+                        "description": "Login failed",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.ErrorResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.JSONResult"
                         }
                     }
                 }
@@ -89,7 +117,7 @@ const docTemplate = `{
         },
         "/api/v1/auth/refresh": {
             "post": {
-                "description": "refresh token",
+                "description": "Refresh token api",
                 "consumes": [
                     "application/json"
                 ],
@@ -99,10 +127,10 @@ const docTemplate = `{
                 "tags": [
                     "auth"
                 ],
-                "summary": "refresh token",
+                "summary": "Refresh token api",
                 "responses": {
                     "200": {
-                        "description": "refresh token success",
+                        "description": "Refresh token success",
                         "schema": {
                             "allOf": [
                                 {
@@ -120,21 +148,9 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "refresh token failed",
+                        "description": "Refresh token failed",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.ErrorResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.JSONResult"
                         }
                     }
                 }
@@ -142,7 +158,7 @@ const docTemplate = `{
         },
         "/api/v1/auth/register": {
             "post": {
-                "description": "register new user",
+                "description": "Register new user api",
                 "consumes": [
                     "application/json"
                 ],
@@ -152,10 +168,10 @@ const docTemplate = `{
                 "tags": [
                     "auth"
                 ],
-                "summary": "register new user",
+                "summary": "Register new user api",
                 "parameters": [
                     {
-                        "description": "register",
+                        "description": "Register",
                         "name": "group",
                         "in": "body",
                         "required": true,
@@ -166,42 +182,135 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "register success",
+                        "description": "Register success",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.JSONResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object"
-                                        },
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.JSONResult"
                         }
                     },
                     "400": {
-                        "description": "register failed",
+                        "description": "Register failed",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.ErrorResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/reset-password": {
+            "post": {
+                "description": "Reset password api",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Reset password api",
+                "parameters": [
+                    {
+                        "description": "Reset password",
+                        "name": "group",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.ResetPasswordRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reset password success",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Reset password failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/verify-email": {
+            "post": {
+                "description": "Verify email api",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Verify email api",
+                "parameters": [
+                    {
+                        "description": "Verify email",
+                        "name": "group",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.VerifyEmailRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Email verification success",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Verify token error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/verify-reset-token": {
+            "post": {
+                "description": "Verify reset token api",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Verify reset token api",
+                "parameters": [
+                    {
+                        "description": "Verify reset token",
+                        "name": "group",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.VerifyTokenRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Verify reset token success",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Verify reset token failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
                         }
                     }
                 }
@@ -209,7 +318,7 @@ const docTemplate = `{
         },
         "/api/v1/locations": {
             "get": {
-                "description": "Get all locations",
+                "description": "Get all locations api",
                 "consumes": [
                     "application/json"
                 ],
@@ -219,7 +328,7 @@ const docTemplate = `{
                 "tags": [
                     "locations"
                 ],
-                "summary": "Get all locations",
+                "summary": "Get all locations api",
                 "parameters": [
                     {
                         "type": "integer",
@@ -268,24 +377,13 @@ const docTemplate = `{
                     "404": {
                         "description": "Get all locations failed",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.ErrorResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.JSONResult"
                         }
                     }
                 }
             },
             "post": {
+                "description": "Create location api",
                 "consumes": [
                     "application/json"
                 ],
@@ -295,7 +393,7 @@ const docTemplate = `{
                 "tags": [
                     "locations"
                 ],
-                "summary": "Create location",
+                "summary": "Create location api",
                 "parameters": [
                     {
                         "description": "Create location",
@@ -329,27 +427,15 @@ const docTemplate = `{
                     "400": {
                         "description": "Create location failed",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.ErrorResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.JSONResult"
                         }
                     }
                 }
             }
         },
         "/api/v1/locations/{id}": {
-            "delete": {
-                "description": "Delete location",
+            "put": {
+                "description": "Update location by id api",
                 "consumes": [
                     "application/json"
                 ],
@@ -359,67 +445,7 @@ const docTemplate = `{
                 "tags": [
                     "locations"
                 ],
-                "summary": "Delete location",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "location id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Delete location success",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.JSONResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Delete location failed",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.ErrorResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "description": "Update location by id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "locations"
-                ],
-                "summary": "Update location by id",
+                "summary": "Update location by id api",
                 "parameters": [
                     {
                         "description": "Location data",
@@ -453,19 +479,133 @@ const docTemplate = `{
                     "400": {
                         "description": "Update location by id failed",
                         "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete location api",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "locations"
+                ],
+                "summary": "Delete location api",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "location id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Delete location success",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Delete location failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/metadatas": {
+            "put": {
+                "description": "Update metadata by key",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "metadatas"
+                ],
+                "summary": "Update metadata by key",
+                "parameters": [
+                    {
+                        "description": "Metadata data",
+                        "name": "metadata",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateMetadataRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Update metadata by key success",
+                        "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/utils.ErrorResult"
+                                    "$ref": "#/definitions/utils.JSONResult"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "message": {
-                                            "type": "string"
+                                        "data": {
+                                            "$ref": "#/definitions/model.MetadataResponse"
                                         }
                                     }
                                 }
                             ]
+                        }
+                    },
+                    "400": {
+                        "description": "Update metadata by key failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/metadatas/{key}": {
+            "get": {
+                "description": "Get metadata by key",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "metadatas"
+                ],
+                "summary": "Get metadata by key",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Metadata Key",
+                        "name": "key",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get metadata by key success",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Get metadata by key failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
                         }
                     }
                 }
@@ -473,7 +613,7 @@ const docTemplate = `{
         },
         "/api/v1/unit-prices": {
             "get": {
-                "description": "Get all unit_prices",
+                "description": "Get all unit price",
                 "consumes": [
                     "application/json"
                 ],
@@ -483,7 +623,7 @@ const docTemplate = `{
                 "tags": [
                     "unit-prices"
                 ],
-                "summary": "Get all unit_prices",
+                "summary": "Get all unit price",
                 "parameters": [
                     {
                         "type": "integer",
@@ -512,7 +652,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Get all unit_prices success",
+                        "description": "Get all unit price success",
                         "schema": {
                             "allOf": [
                                 {
@@ -530,27 +670,15 @@ const docTemplate = `{
                         }
                     },
                     "404": {
-                        "description": "Get all unit_prices failed",
+                        "description": "Get all unit price failed",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.ErrorResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.JSONResult"
                         }
                     }
                 }
             },
             "post": {
-                "description": "Create unitPrice",
+                "description": "Create unit price",
                 "consumes": [
                     "application/json"
                 ],
@@ -560,145 +688,21 @@ const docTemplate = `{
                 "tags": [
                     "unit-prices"
                 ],
-                "summary": "Create unitPrice",
+                "summary": "Create unit price",
                 "parameters": [
                     {
-                        "description": "Create unitPrice",
+                        "description": "Create unit price",
                         "name": "Group",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.CreateUnitServiceRequest"
+                            "$ref": "#/definitions/model.CreateUnitPriceRequest"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Create unitPrice success",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.JSONResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/model.UnitServiceResponse"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Create unitPrice failed",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.ErrorResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/unit-prices/{id}": {
-            "delete": {
-                "description": "Get unitPrice by id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "unit-prices"
-                ],
-                "summary": "Get unitPrice by id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "UnitPrice ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Get unitPrice by id success",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.JSONResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Get unitPrice by id failed",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.ErrorResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "description": "Update unitPrice by id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "unit-prices"
-                ],
-                "summary": "Update unitPrice by id",
-                "parameters": [
-                    {
-                        "description": "UnitPrice data",
-                        "name": "unitPrice",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.UpdateUnitPriceRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Update unitPrice by id success",
+                        "description": "Create unit price success",
                         "schema": {
                             "allOf": [
                                 {
@@ -716,21 +720,133 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Update unitPrice by id failed",
+                        "description": "Create unit price failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/unit-prices/{id}": {
+            "get": {
+                "description": "Get unit price by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "unit-prices"
+                ],
+                "summary": "Get unit price by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Unit price ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get unit price by id success",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Get unit price by id failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete unit price",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "unit-prices"
+                ],
+                "summary": "Delete unit price",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unit price id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Delete unit price success",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Delete unit price failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "description": "Update unit price by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "unit-prices"
+                ],
+                "summary": "Update unit price by id",
+                "parameters": [
+                    {
+                        "description": "Unit price data",
+                        "name": "unitPrice",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateUnitPriceRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Update unit price by id success",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/utils.ErrorResult"
+                                    "$ref": "#/definitions/utils.JSONResult"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "message": {
-                                            "type": "string"
+                                        "data": {
+                                            "$ref": "#/definitions/model.UnitPriceResponse"
                                         }
                                     }
                                 }
                             ]
+                        }
+                    },
+                    "400": {
+                        "description": "Update unit price by id failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
                         }
                     }
                 }
@@ -738,7 +854,7 @@ const docTemplate = `{
         },
         "/api/v1/unit-services": {
             "get": {
-                "description": "Get all unit_services",
+                "description": "Get all unit service",
                 "consumes": [
                     "application/json"
                 ],
@@ -748,7 +864,7 @@ const docTemplate = `{
                 "tags": [
                     "unit-services"
                 ],
-                "summary": "Get all unit_services",
+                "summary": "Get all unit service",
                 "parameters": [
                     {
                         "type": "integer",
@@ -777,7 +893,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Get all unit_services success",
+                        "description": "Get all unit service success",
                         "schema": {
                             "allOf": [
                                 {
@@ -795,89 +911,15 @@ const docTemplate = `{
                         }
                     },
                     "404": {
-                        "description": "Get all unit_services failed",
+                        "description": "Get all unit service failed",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.ErrorResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/unit-services/{id}": {
-            "delete": {
-                "description": "Get unitService by id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "unit-services"
-                ],
-                "summary": "Get unitService by id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "UnitService ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Get unitService by id success",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.JSONResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Get unitService by id failed",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.ErrorResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.JSONResult"
                         }
                     }
                 }
             },
-            "patch": {
-                "description": "Update unitService by id",
+            "post": {
+                "description": "Create unit service",
                 "consumes": [
                     "application/json"
                 ],
@@ -887,21 +929,21 @@ const docTemplate = `{
                 "tags": [
                     "unit-services"
                 ],
-                "summary": "Update unitService by id",
+                "summary": "Create unit service",
                 "parameters": [
                     {
-                        "description": "UnitService data",
-                        "name": "unitService",
+                        "description": "Create unit service",
+                        "name": "Group",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.UpdateUnitServiceRequest"
+                            "$ref": "#/definitions/model.CreateUnitServiceRequest"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Update unitService by id success",
+                        "description": "Create unit service success",
                         "schema": {
                             "allOf": [
                                 {
@@ -919,11 +961,129 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Update unitService by id failed",
+                        "description": "Create unit service failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/unit-services/{id}": {
+            "get": {
+                "description": "Get unit service by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "unit-services"
+                ],
+                "summary": "Get unit service by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Unit service id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get unit service by id success",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Get unit service by id failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update unit service by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "unit-services"
+                ],
+                "summary": "Update unit service by id",
+                "parameters": [
+                    {
+                        "description": "Unit service data",
+                        "name": "unitService",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateUnitServiceRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Update unit service by id success",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/utils.ErrorResult"
+                                    "$ref": "#/definitions/utils.JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/model.UnitServiceResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Update unit service by id failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete unit service",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "unit-services"
+                ],
+                "summary": "Delete unit service",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unit service id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Delete unit service success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.JSONResult"
                                 },
                                 {
                                     "type": "object",
@@ -935,13 +1095,19 @@ const docTemplate = `{
                                 }
                             ]
                         }
+                    },
+                    "400": {
+                        "description": "Delete unit service failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
                     }
                 }
             }
         },
         "/api/v1/units": {
             "post": {
-                "description": "Create unit",
+                "description": "Create unit api",
                 "consumes": [
                     "application/json"
                 ],
@@ -951,7 +1117,7 @@ const docTemplate = `{
                 "tags": [
                     "units"
                 ],
-                "summary": "Create unit",
+                "summary": "Create unit api",
                 "parameters": [
                     {
                         "description": "Create unit",
@@ -985,26 +1151,14 @@ const docTemplate = `{
                     "400": {
                         "description": "Create unit failed",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.ErrorResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.JSONResult"
                         }
                     }
                 }
             }
         },
         "/api/v1/units/{id}": {
-            "delete": {
+            "get": {
                 "description": "Get unit by id",
                 "consumes": [
                     "application/json"
@@ -1029,42 +1183,18 @@ const docTemplate = `{
                     "200": {
                         "description": "Get unit by id success",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.JSONResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.JSONResult"
                         }
                     },
                     "400": {
                         "description": "Get unit by id failed",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.ErrorResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.JSONResult"
                         }
                     }
                 }
             },
-            "patch": {
+            "put": {
                 "description": "Update unit by id",
                 "consumes": [
                     "application/json"
@@ -1109,9 +1239,39 @@ const docTemplate = `{
                     "400": {
                         "description": "Update unit by id failed",
                         "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete unit api",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "units"
+                ],
+                "summary": "Delete unit api",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unit id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Delete unit success",
+                        "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/utils.ErrorResult"
+                                    "$ref": "#/definitions/utils.JSONResult"
                                 },
                                 {
                                     "type": "object",
@@ -1122,6 +1282,12 @@ const docTemplate = `{
                                     }
                                 }
                             ]
+                        }
+                    },
+                    "400": {
+                        "description": "Delete unit failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
                         }
                     }
                 }
@@ -1188,19 +1354,7 @@ const docTemplate = `{
                     "404": {
                         "description": "Get all users failed",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.ErrorResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.JSONResult"
                         }
                     }
                 }
@@ -1250,26 +1404,14 @@ const docTemplate = `{
                     "400": {
                         "description": "Create user failed",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.ErrorResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.JSONResult"
                         }
                     }
                 }
             }
         },
         "/api/v1/users/{id}": {
-            "delete": {
+            "get": {
                 "description": "Get user by id",
                 "consumes": [
                     "application/json"
@@ -1294,42 +1436,18 @@ const docTemplate = `{
                     "200": {
                         "description": "Get user by id success",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.JSONResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.JSONResult"
                         }
                     },
                     "400": {
                         "description": "Get user by id failed",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.ErrorResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.JSONResult"
                         }
                     }
                 }
             },
-            "patch": {
+            "put": {
                 "description": "Update user by id",
                 "consumes": [
                     "application/json"
@@ -1374,19 +1492,43 @@ const docTemplate = `{
                     "400": {
                         "description": "Update user by id failed",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/utils.ErrorResult"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Delete user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Delete user success",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Delete user failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
                         }
                     }
                 }
@@ -1606,16 +1748,29 @@ const docTemplate = `{
             "properties": {
                 "email": {
                     "type": "string",
-                    "maxLength": 32,
+                    "maxLength": 256,
                     "minLength": 6
                 },
                 "password": {
                     "type": "string",
-                    "maxLength": 32,
+                    "maxLength": 256,
                     "minLength": 6
                 },
                 "role": {
                     "type": "string"
+                }
+            }
+        },
+        "model.ForgotPasswordRequest": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "maxLength": 256,
+                    "minLength": 6
                 }
             }
         },
@@ -1732,12 +1887,12 @@ const docTemplate = `{
             "properties": {
                 "email": {
                     "type": "string",
-                    "maxLength": 32,
+                    "maxLength": 256,
                     "minLength": 6
                 },
                 "password": {
                     "type": "string",
-                    "maxLength": 32,
+                    "maxLength": 256,
                     "minLength": 6
                 }
             }
@@ -1773,6 +1928,23 @@ const docTemplate = `{
                 }
             }
         },
+        "model.MetadataResponse": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "key": {
+                    "type": "string"
+                },
+                "metadata_id": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
         "model.RegisterRequest": {
             "type": "object",
             "required": [
@@ -1782,13 +1954,36 @@ const docTemplate = `{
             "properties": {
                 "email": {
                     "type": "string",
-                    "maxLength": 32,
+                    "maxLength": 256,
                     "minLength": 6
                 },
                 "password": {
                     "type": "string",
-                    "maxLength": 32,
+                    "maxLength": 256,
                     "minLength": 6
+                }
+            }
+        },
+        "model.ResetPasswordRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "password",
+                "token"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "maxLength": 256,
+                    "minLength": 6
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 256,
+                    "minLength": 6
+                },
+                "token": {
+                    "type": "string"
                 }
             }
         },
@@ -2012,6 +2207,31 @@ const docTemplate = `{
                 }
             }
         },
+        "model.UpdateMetadataRequest": {
+            "type": "object",
+            "required": [
+                "description",
+                "key",
+                "value"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "maxLength": 3000,
+                    "minLength": 1
+                },
+                "key": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                },
+                "value": {
+                    "type": "string",
+                    "maxLength": 3000,
+                    "minLength": 1
+                }
+            }
+        },
         "model.UpdateSportTypeRequest": {
             "type": "object",
             "required": [
@@ -2129,6 +2349,34 @@ const docTemplate = `{
                 }
             }
         },
+        "model.VerifyEmailRequest": {
+            "type": "object",
+            "required": [
+                "token"
+            ],
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.VerifyTokenRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "token"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "maxLength": 256,
+                    "minLength": 6
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
         "spb_bsa_internal_auth_model.UserResponse": {
             "type": "object",
             "properties": {
@@ -2180,19 +2428,14 @@ const docTemplate = `{
                 }
             }
         },
-        "utils.ErrorResult": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                }
-            }
-        },
         "utils.JSONResult": {
             "type": "object",
             "properties": {
+                "code": {
+                    "type": "string"
+                },
                 "data": {},
-                "message": {
+                "status": {
                     "type": "string"
                 }
             }

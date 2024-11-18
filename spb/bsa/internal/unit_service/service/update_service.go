@@ -1,16 +1,13 @@
 package service
 
 import (
-	"errors"
-
 	"spb/bsa/internal/unit_service/model"
 	"spb/bsa/internal/unit_service/utility"
 	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/msg"
 
 	"gorm.io/gorm/clause"
 )
-
-var ErrUnitServiceNotFound = errors.New("unitService not found")
 
 // @author: LoanTT
 // @function: Update
@@ -26,7 +23,7 @@ func (s *Service) Update(reqBody *model.UpdateUnitServiceRequest, unitServiceId 
 	if err = s.db.Model(&tb.UnitService{}).
 		Where("id = ?", unitServiceId).
 		Count(&count).Error; err == nil && count == 0 {
-		return nil, ErrUnitServiceNotFound
+		return nil, msg.ErrUnitServiceNotFound
 	} else if err != nil {
 		return nil, err
 	}
@@ -41,7 +38,7 @@ func (s *Service) Update(reqBody *model.UpdateUnitServiceRequest, unitServiceId 
 		return nil, err
 	}
 	if len(unitServices) == 0 {
-		return nil, ErrUnitServiceNotFound
+		return nil, msg.ErrUnitServiceNotFound
 	}
 
 	return &unitServices[0], nil

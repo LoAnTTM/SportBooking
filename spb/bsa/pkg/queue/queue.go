@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"github.com/jpillora/backoff"
@@ -41,7 +42,7 @@ func NewQueue(opts ...Option) (*Queue, error) {
 	}
 
 	if q.worker == nil {
-		return nil, ErrMissingWorker
+		return nil, msg.ErrMissingWorker
 	}
 	return q, nil
 }
@@ -115,7 +116,7 @@ func (q *Queue) QueueTask(task TaskFunc, opts ...AllowOption) error {
 
 func (q *Queue) queue(m *Message) error {
 	if atomic.LoadInt32(&q.stopFlag) == 1 {
-		return ErrQueueShutdown
+		return msg.ErrQueueShutdown
 	}
 	if err := q.worker.Queue(m); err != nil {
 		return err
@@ -266,13 +267,12 @@ func (q *Queue) start() {
 		// fetch task
 		q.workerGroup.Go(func() {
 			for {
-				logger.Debugf("fetch task .....")
 				t, err := q.worker.Request()
 				if t == nil || err != nil {
 					if err != nil {
 						select {
 						case <-q.quit:
-							if !errors.Is(err, ErrNoTaskInQueue) {
+							if !errors.Is(err, msg.ErrNoTaskInQueue) {
 								close(tasks)
 								return
 							}
@@ -289,7 +289,7 @@ func (q *Queue) start() {
 
 				select {
 				case <-q.quit:
-					if !errors.Is(err, ErrNoTaskInQueue) {
+					if !errors.Is(err, msg.ErrNoTaskInQueue) {
 						close(tasks)
 						return
 					}

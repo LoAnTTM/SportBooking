@@ -10,6 +10,7 @@ import (
 	"spb/bsa/internal/metadata"
 	"spb/bsa/internal/notification"
 	"spb/bsa/internal/notification_type"
+	"spb/bsa/internal/permission"
 	"spb/bsa/internal/role"
 	"spb/bsa/internal/sport_type"
 	"spb/bsa/internal/unit"
@@ -56,40 +57,39 @@ type Fiber struct {
 // @description: Create a new fiber app
 func (f *Fiber) GetApp() {
 	var err error
-	// load env variables
+
 	err = global.SPB_CONFIG.LoadEnvVariables()
 	if err != nil {
 		panic(fmt.Sprintf("failed to load env variables: %v\n", err))
 	}
-	// initialize logger
+
 	zaplog.NewZlog(global.SPB_CONFIG)
-	// connect database
+
 	global.SPB_DB, err = database.ConnectDB(global.SPB_CONFIG)
 	if err != nil {
 		panic(fmt.Sprintf("failed to connect database: %v\n", err))
 	}
-	// connect redis
+
 	global.SPB_REDIS, err = redis.NewClient(global.SPB_CONFIG)
 	if err != nil {
 		panic(fmt.Sprintf("failed to connect redis: %v\n", err))
 	}
-	// initialize validator
+
 	global.SPB_VALIDATOR, err = utils.NewValidator()
 	if err != nil {
 		panic(fmt.Sprintf("failed to create validator: %v\n", err))
 	}
-	// load aws session
+
 	awsSession, err := aws.NewAWSSession(global.SPB_CONFIG)
 	if err != nil {
 		panic(fmt.Sprintf("failed to connect aws: %v\n", err))
 	}
-	// initialize notification
+
 	global.SPB_NOTIFY = notify.NewNotification(
 		global.SPB_CONFIG,
 		global.SPB_REDIS,
 		ses.NewSESService(awsSession))
 
-	// create fiber app
 	f.App = fiber.New(fiber.Config{
 		CaseSensitive:                true,
 		StrictRouting:                false,
@@ -128,7 +128,10 @@ func (f *Fiber) LoadRoutes() {
 		"/api/v1/auth/register",
 		"/api/v1/auth/refresh",
 		"/api/v1/auth/verify-email",
-		"/apt/v1/locations",
+		"/api/v1/auth/forgot-password",
+		"/api/v1/auth/verify-reset-token",
+		"/api/v1/auth/reset-password",
+		"/api/v1/locations",
 	}
 	router := f.App.Group("",
 		custMiddlewares.Log(),                           // add logging to all routes
@@ -137,6 +140,7 @@ func (f *Fiber) LoadRoutes() {
 
 	auth.LoadModule(router, custMiddlewares)
 	role.LoadModule(router, custMiddlewares)
+	permission.LoadModule(router, custMiddlewares)
 	user.LoadModule(router, custMiddlewares)
 	unit_service.LoadModule(router, custMiddlewares)
 	unit_price.LoadModule(router, custMiddlewares)
@@ -146,6 +150,12 @@ func (f *Fiber) LoadRoutes() {
 	metadata.LoadModule(router, custMiddlewares)
 	notification_type.LoadModule(router, custMiddlewares)
 	notification.LoadModule(router, custMiddlewares)
+
+	permissions, err := permission.GetPermissions()
+	if err != nil {
+		panic(fmt.Sprintf("failed to get permissions: %v\n", err))
+	}
+	global.SPB_PERMISSIONS = permissions
 
 	// a custom 404 handler
 	f.App.Use(func(ctx fiber.Ctx) error {

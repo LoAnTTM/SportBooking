@@ -98,3 +98,12 @@ func Timer(start time.Time) func() {
 		fmt.Printf("duration: %+v\n", duration)
 	}
 }
+
+// @author: LoanTT
+// @function: ExpireTime
+// @description: Expire time
+// @param: expire int
+// @return: time.Time
+func ExpireTime(expire int) time.Time {
+	return time.Now().Add(time.Minute * time.Duration(expire))
+}

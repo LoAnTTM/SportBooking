@@ -11,7 +11,6 @@ import (
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/golang-jwt/jwt/v5"
 )
 
 var excludeLogRoutes = []string{}
@@ -45,14 +44,11 @@ func LogMiddleware() fiber.Handler {
 			}
 		}
 
+		userId := ""
 		reqHeader, _ := json.Marshal(ctx.GetReqHeaders())
-
-		var userId interface{}
-		var claims jwt.MapClaims
-		claims, _ = auth.GetTokenFromHeader(ctx)
-
-		if len(claims) > 0 {
-			userId = claims["userId"]
+		claims, _ := auth.GetTokenFromHeader(ctx)
+		if claims != nil {
+			userId = claims.UserID
 		}
 
 		start := time.Now()

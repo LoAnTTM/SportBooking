@@ -26,7 +26,7 @@ build: test
 run: build
 	$(BUILD_DIR)/$(APP_NAME) start
 
-dev: test
+dev: 
 	go run $(PWD) start
 
 swag:

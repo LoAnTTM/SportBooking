@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/queue"
 
 	"github.com/redis/go-redis/v9"
@@ -65,7 +66,7 @@ func (w *Worker) Run(ctx context.Context, task queue.QueuedMessage) error {
 
 func (w *Worker) Shutdown() error {
 	if !atomic.CompareAndSwapInt32(&w.stopFlag, 0, 1) {
-		return queue.ErrQueueShutdown
+		return msg.ErrQueueShutdown
 	}
 	w.stopOnce.Do(func() {
 		_ = w.pubsub.Close()
@@ -82,7 +83,7 @@ func (w *Worker) Shutdown() error {
 
 func (w *Worker) Queue(job queue.QueuedMessage) error {
 	if atomic.LoadInt32(&w.stopFlag) == 1 {
-		return queue.ErrQueueShutdown
+		return msg.ErrQueueShutdown
 	}
 
 	ctx := context.Background()
@@ -101,7 +102,7 @@ loop:
 		select {
 		case task, ok := <-w.channel:
 			if !ok {
-				return nil, queue.ErrQueueHasBeenClosed
+				return nil, msg.ErrQueueHasBeenClosed
 			}
 			var data queue.Message
 			_ = json.Unmarshal([]byte(task.Payload), &data)
@@ -113,5 +114,5 @@ loop:
 			clock += 1
 		}
 	}
-	return nil, queue.ErrNoTaskInQueue
+	return nil, msg.ErrNoTaskInQueue
 }

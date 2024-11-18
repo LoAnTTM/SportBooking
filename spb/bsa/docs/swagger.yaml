@@ -143,11 +143,11 @@ definitions:
   model.CreateUserRequest:
     properties:
       email:
-        maxLength: 32
+        maxLength: 256
         minLength: 6
         type: string
       password:
-        maxLength: 32
+        maxLength: 256
         minLength: 6
         type: string
       role:
@@ -156,6 +156,15 @@ definitions:
     - email
     - password
     - role
+    type: object
+  model.ForgotPasswordRequest:
+    properties:
+      email:
+        maxLength: 256
+        minLength: 6
+        type: string
+    required:
+    - email
     type: object
   model.GetUsersResponse:
     properties:
@@ -231,11 +240,11 @@ definitions:
   model.LoginRequest:
     properties:
       email:
-        maxLength: 32
+        maxLength: 256
         minLength: 6
         type: string
       password:
-        maxLength: 32
+        maxLength: 256
         minLength: 6
         type: string
     required:
@@ -262,19 +271,47 @@ definitions:
       uploaded_at:
         type: string
     type: object
+  model.MetadataResponse:
+    properties:
+      description:
+        type: string
+      key:
+        type: string
+      metadata_id:
+        type: string
+      value:
+        type: string
+    type: object
   model.RegisterRequest:
     properties:
       email:
-        maxLength: 32
+        maxLength: 256
         minLength: 6
         type: string
       password:
-        maxLength: 32
+        maxLength: 256
         minLength: 6
         type: string
     required:
     - email
     - password
+    type: object
+  model.ResetPasswordRequest:
+    properties:
+      email:
+        maxLength: 256
+        minLength: 6
+        type: string
+      password:
+        maxLength: 256
+        minLength: 6
+        type: string
+      token:
+        type: string
+    required:
+    - email
+    - password
+    - token
     type: object
   model.RoleResponse:
     properties:
@@ -423,6 +460,25 @@ definitions:
       uploaded_at:
         type: string
     type: object
+  model.UpdateMetadataRequest:
+    properties:
+      description:
+        maxLength: 3000
+        minLength: 1
+        type: string
+      key:
+        maxLength: 255
+        minLength: 1
+        type: string
+      value:
+        maxLength: 3000
+        minLength: 1
+        type: string
+    required:
+    - description
+    - key
+    - value
+    type: object
   model.UpdateSportTypeRequest:
     properties:
       name:
@@ -502,6 +558,25 @@ definitions:
       role:
         type: string
     type: object
+  model.VerifyEmailRequest:
+    properties:
+      token:
+        type: string
+    required:
+    - token
+    type: object
+  model.VerifyTokenRequest:
+    properties:
+      email:
+        maxLength: 256
+        minLength: 6
+        type: string
+      token:
+        type: string
+    required:
+    - email
+    - token
+    type: object
   spb_bsa_internal_auth_model.UserResponse:
     properties:
       email:
@@ -535,15 +610,12 @@ definitions:
       user_id:
         type: string
     type: object
-  utils.ErrorResult:
-    properties:
-      message:
-        type: string
-    type: object
   utils.JSONResult:
     properties:
+      code:
+        type: string
       data: {}
-      message:
+      status:
         type: string
     type: object
   utils.Pagination:
@@ -584,13 +656,39 @@ info:
   title: Sport Booking API
   version: "1.0"
 paths:
+  /api/v1/auth/forgot-password:
+    post:
+      consumes:
+      - application/json
+      description: Forgot password api
+      parameters:
+      - description: Forgot password
+        in: body
+        name: group
+        required: true
+        schema:
+          $ref: '#/definitions/model.ForgotPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Forgot password success
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+        "400":
+          description: Forgot password failed
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Forgot password api
+      tags:
+      - auth
   /api/v1/auth/login:
     post:
       consumes:
       - application/json
-      description: login
+      description: Login api
       parameters:
-      - description: login
+      - description: Login
         in: body
         name: group
         required: true
@@ -600,7 +698,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: login success
+          description: Login success
           schema:
             allOf:
             - $ref: '#/definitions/utils.JSONResult'
@@ -609,27 +707,22 @@ paths:
                   $ref: '#/definitions/model.LoginResponse'
               type: object
         "400":
-          description: login failed
+          description: Login failed
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.ErrorResult'
-            - properties:
-                message:
-                  type: string
-              type: object
-      summary: login
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Login api
       tags:
       - auth
   /api/v1/auth/refresh:
     post:
       consumes:
       - application/json
-      description: refresh token
+      description: Refresh token api
       produces:
       - application/json
       responses:
         "200":
-          description: refresh token success
+          description: Refresh token success
           schema:
             allOf:
             - $ref: '#/definitions/utils.JSONResult'
@@ -638,24 +731,19 @@ paths:
                   $ref: '#/definitions/model.LoginResponse'
               type: object
         "400":
-          description: refresh token failed
+          description: Refresh token failed
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.ErrorResult'
-            - properties:
-                message:
-                  type: string
-              type: object
-      summary: refresh token
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Refresh token api
       tags:
       - auth
   /api/v1/auth/register:
     post:
       consumes:
       - application/json
-      description: register new user
+      description: Register new user api
       parameters:
-      - description: register
+      - description: Register
         in: body
         name: group
         required: true
@@ -665,33 +753,99 @@ paths:
       - application/json
       responses:
         "200":
-          description: register success
+          description: Register success
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.JSONResult'
-            - properties:
-                data:
-                  type: object
-                message:
-                  type: string
-              type: object
+            $ref: '#/definitions/utils.JSONResult'
         "400":
-          description: register failed
+          description: Register failed
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.ErrorResult'
-            - properties:
-                message:
-                  type: string
-              type: object
-      summary: register new user
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Register new user api
+      tags:
+      - auth
+  /api/v1/auth/reset-password:
+    post:
+      consumes:
+      - application/json
+      description: Reset password api
+      parameters:
+      - description: Reset password
+        in: body
+        name: group
+        required: true
+        schema:
+          $ref: '#/definitions/model.ResetPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Reset password success
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+        "400":
+          description: Reset password failed
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Reset password api
+      tags:
+      - auth
+  /api/v1/auth/verify-email:
+    post:
+      consumes:
+      - application/json
+      description: Verify email api
+      parameters:
+      - description: Verify email
+        in: body
+        name: group
+        required: true
+        schema:
+          $ref: '#/definitions/model.VerifyEmailRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Email verification success
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+        "400":
+          description: Verify token error
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Verify email api
+      tags:
+      - auth
+  /api/v1/auth/verify-reset-token:
+    post:
+      consumes:
+      - application/json
+      description: Verify reset token api
+      parameters:
+      - description: Verify reset token
+        in: body
+        name: group
+        required: true
+        schema:
+          $ref: '#/definitions/model.VerifyTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Verify reset token success
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+        "400":
+          description: Verify reset token failed
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Verify reset token api
       tags:
       - auth
   /api/v1/locations:
     get:
       consumes:
       - application/json
-      description: Get all locations
+      description: Get all locations api
       parameters:
       - description: Number items on page
         in: query
@@ -724,18 +878,14 @@ paths:
         "404":
           description: Get all locations failed
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.ErrorResult'
-            - properties:
-                message:
-                  type: string
-              type: object
-      summary: Get all locations
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Get all locations api
       tags:
       - locations
     post:
       consumes:
       - application/json
+      description: Create location api
       parameters:
       - description: Create location
         in: body
@@ -758,20 +908,15 @@ paths:
         "400":
           description: Create location failed
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.ErrorResult'
-            - properties:
-                message:
-                  type: string
-              type: object
-      summary: Create location
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Create location api
       tags:
       - locations
   /api/v1/locations/{id}:
     delete:
       consumes:
       - application/json
-      description: Delete location
+      description: Delete location api
       parameters:
       - description: location id
         in: path
@@ -784,28 +929,18 @@ paths:
         "200":
           description: Delete location success
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.JSONResult'
-            - properties:
-                message:
-                  type: string
-              type: object
+            $ref: '#/definitions/utils.JSONResult'
         "400":
           description: Delete location failed
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.ErrorResult'
-            - properties:
-                message:
-                  type: string
-              type: object
-      summary: Delete location
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Delete location api
       tags:
       - locations
-    patch:
+    put:
       consumes:
       - application/json
-      description: Update location by id
+      description: Update location by id api
       parameters:
       - description: Location data
         in: body
@@ -828,20 +963,71 @@ paths:
         "400":
           description: Update location by id failed
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.ErrorResult'
-            - properties:
-                message:
-                  type: string
-              type: object
-      summary: Update location by id
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Update location by id api
       tags:
       - locations
+  /api/v1/metadatas:
+    put:
+      consumes:
+      - application/json
+      description: Update metadata by key
+      parameters:
+      - description: Metadata data
+        in: body
+        name: metadata
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateMetadataRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Update metadata by key success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.MetadataResponse'
+              type: object
+        "400":
+          description: Update metadata by key failed
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Update metadata by key
+      tags:
+      - metadatas
+  /api/v1/metadatas/{key}:
+    get:
+      consumes:
+      - application/json
+      description: Get metadata by key
+      parameters:
+      - description: Metadata Key
+        in: path
+        name: key
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get metadata by key success
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+        "400":
+          description: Get metadata by key failed
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Get metadata by key
+      tags:
+      - metadatas
   /api/v1/unit-prices:
     get:
       consumes:
       - application/json
-      description: Get all unit_prices
+      description: Get all unit price
       parameters:
       - description: Number items on page
         in: query
@@ -863,7 +1049,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: Get all unit_prices success
+          description: Get all unit price success
           schema:
             allOf:
             - $ref: '#/definitions/utils.JSONResult'
@@ -872,59 +1058,49 @@ paths:
                   $ref: '#/definitions/model.UnitPricesResponse'
               type: object
         "404":
-          description: Get all unit_prices failed
+          description: Get all unit price failed
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.ErrorResult'
-            - properties:
-                message:
-                  type: string
-              type: object
-      summary: Get all unit_prices
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Get all unit price
       tags:
       - unit-prices
     post:
       consumes:
       - application/json
-      description: Create unitPrice
+      description: Create unit price
       parameters:
-      - description: Create unitPrice
+      - description: Create unit price
         in: body
         name: Group
         required: true
         schema:
-          $ref: '#/definitions/model.CreateUnitServiceRequest'
+          $ref: '#/definitions/model.CreateUnitPriceRequest'
       produces:
       - application/json
       responses:
         "200":
-          description: Create unitPrice success
+          description: Create unit price success
           schema:
             allOf:
             - $ref: '#/definitions/utils.JSONResult'
             - properties:
                 data:
-                  $ref: '#/definitions/model.UnitServiceResponse'
+                  $ref: '#/definitions/model.UnitPriceResponse'
               type: object
         "400":
-          description: Create unitPrice failed
+          description: Create unit price failed
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.ErrorResult'
-            - properties:
-                message:
-                  type: string
-              type: object
-      summary: Create unitPrice
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Create unit price
       tags:
       - unit-prices
   /api/v1/unit-prices/{id}:
     delete:
       consumes:
       - application/json
-      description: Get unitPrice by id
+      description: Delete unit price
       parameters:
-      - description: UnitPrice ID
+      - description: unit price id
         in: path
         name: id
         required: true
@@ -933,32 +1109,46 @@ paths:
       - application/json
       responses:
         "200":
-          description: Get unitPrice by id success
+          description: Delete unit price success
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.JSONResult'
-            - properties:
-                message:
-                  type: string
-              type: object
+            $ref: '#/definitions/utils.JSONResult'
         "400":
-          description: Get unitPrice by id failed
+          description: Delete unit price failed
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.ErrorResult'
-            - properties:
-                message:
-                  type: string
-              type: object
-      summary: Get unitPrice by id
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Delete unit price
+      tags:
+      - unit-prices
+    get:
+      consumes:
+      - application/json
+      description: Get unit price by id
+      parameters:
+      - description: Unit price ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get unit price by id success
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+        "400":
+          description: Get unit price by id failed
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Get unit price by id
       tags:
       - unit-prices
     patch:
       consumes:
       - application/json
-      description: Update unitPrice by id
+      description: Update unit price by id
       parameters:
-      - description: UnitPrice data
+      - description: Unit price data
         in: body
         name: unitPrice
         required: true
@@ -968,7 +1158,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: Update unitPrice by id success
+          description: Update unit price by id success
           schema:
             allOf:
             - $ref: '#/definitions/utils.JSONResult'
@@ -977,22 +1167,17 @@ paths:
                   $ref: '#/definitions/model.UnitPriceResponse'
               type: object
         "400":
-          description: Update unitPrice by id failed
+          description: Update unit price by id failed
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.ErrorResult'
-            - properties:
-                message:
-                  type: string
-              type: object
-      summary: Update unitPrice by id
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Update unit price by id
       tags:
       - unit-prices
   /api/v1/unit-services:
     get:
       consumes:
       - application/json
-      description: Get all unit_services
+      description: Get all unit service
       parameters:
       - description: Number items on page
         in: query
@@ -1014,7 +1199,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: Get all unit_services success
+          description: Get all unit service success
           schema:
             allOf:
             - $ref: '#/definitions/utils.JSONResult'
@@ -1023,24 +1208,49 @@ paths:
                   $ref: '#/definitions/model.UnitServicesResponse'
               type: object
         "404":
-          description: Get all unit_services failed
+          description: Get all unit service failed
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Get all unit service
+      tags:
+      - unit-services
+    post:
+      consumes:
+      - application/json
+      description: Create unit service
+      parameters:
+      - description: Create unit service
+        in: body
+        name: Group
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateUnitServiceRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Create unit service success
           schema:
             allOf:
-            - $ref: '#/definitions/utils.ErrorResult'
+            - $ref: '#/definitions/utils.JSONResult'
             - properties:
-                message:
-                  type: string
+                data:
+                  $ref: '#/definitions/model.UnitServiceResponse'
               type: object
-      summary: Get all unit_services
+        "400":
+          description: Create unit service failed
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Create unit service
       tags:
       - unit-services
   /api/v1/unit-services/{id}:
     delete:
       consumes:
       - application/json
-      description: Get unitService by id
+      description: Delete unit service
       parameters:
-      - description: UnitService ID
+      - description: unit service id
         in: path
         name: id
         required: true
@@ -1049,7 +1259,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: Get unitService by id success
+          description: Delete unit service success
           schema:
             allOf:
             - $ref: '#/definitions/utils.JSONResult'
@@ -1058,23 +1268,42 @@ paths:
                   type: string
               type: object
         "400":
-          description: Get unitService by id failed
+          description: Delete unit service failed
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.ErrorResult'
-            - properties:
-                message:
-                  type: string
-              type: object
-      summary: Get unitService by id
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Delete unit service
       tags:
       - unit-services
-    patch:
+    get:
       consumes:
       - application/json
-      description: Update unitService by id
+      description: Get unit service by id
       parameters:
-      - description: UnitService data
+      - description: Unit service id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get unit service by id success
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+        "400":
+          description: Get unit service by id failed
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Get unit service by id
+      tags:
+      - unit-services
+    put:
+      consumes:
+      - application/json
+      description: Update unit service by id
+      parameters:
+      - description: Unit service data
         in: body
         name: unitService
         required: true
@@ -1084,7 +1313,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: Update unitService by id success
+          description: Update unit service by id success
           schema:
             allOf:
             - $ref: '#/definitions/utils.JSONResult'
@@ -1093,22 +1322,17 @@ paths:
                   $ref: '#/definitions/model.UnitServiceResponse'
               type: object
         "400":
-          description: Update unitService by id failed
+          description: Update unit service by id failed
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.ErrorResult'
-            - properties:
-                message:
-                  type: string
-              type: object
-      summary: Update unitService by id
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Update unit service by id
       tags:
       - unit-services
   /api/v1/units:
     post:
       consumes:
       - application/json
-      description: Create unit
+      description: Create unit api
       parameters:
       - description: Create unit
         in: body
@@ -1131,17 +1355,41 @@ paths:
         "400":
           description: Create unit failed
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.ErrorResult'
-            - properties:
-                message:
-                  type: string
-              type: object
-      summary: Create unit
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Create unit api
       tags:
       - units
   /api/v1/units/{id}:
     delete:
+      consumes:
+      - application/json
+      description: Delete unit api
+      parameters:
+      - description: unit id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Delete unit success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+        "400":
+          description: Delete unit failed
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Delete unit api
+      tags:
+      - units
+    get:
       consumes:
       - application/json
       description: Get unit by id
@@ -1157,25 +1405,15 @@ paths:
         "200":
           description: Get unit by id success
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.JSONResult'
-            - properties:
-                message:
-                  type: string
-              type: object
+            $ref: '#/definitions/utils.JSONResult'
         "400":
           description: Get unit by id failed
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.ErrorResult'
-            - properties:
-                message:
-                  type: string
-              type: object
+            $ref: '#/definitions/utils.JSONResult'
       summary: Get unit by id
       tags:
       - units
-    patch:
+    put:
       consumes:
       - application/json
       description: Update unit by id
@@ -1201,12 +1439,7 @@ paths:
         "400":
           description: Update unit by id failed
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.ErrorResult'
-            - properties:
-                message:
-                  type: string
-              type: object
+            $ref: '#/definitions/utils.JSONResult'
       summary: Update unit by id
       tags:
       - units
@@ -1247,12 +1480,7 @@ paths:
         "404":
           description: Get all users failed
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.ErrorResult'
-            - properties:
-                message:
-                  type: string
-              type: object
+            $ref: '#/definitions/utils.JSONResult'
       summary: Get all users
       tags:
       - users
@@ -1282,17 +1510,36 @@ paths:
         "400":
           description: Create user failed
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.ErrorResult'
-            - properties:
-                message:
-                  type: string
-              type: object
+            $ref: '#/definitions/utils.JSONResult'
       summary: Create user
       tags:
       - users
   /api/v1/users/{id}:
     delete:
+      consumes:
+      - application/json
+      description: Delete user
+      parameters:
+      - description: User id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Delete user success
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+        "400":
+          description: Delete user failed
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Delete user
+      tags:
+      - users
+    get:
       consumes:
       - application/json
       description: Get user by id
@@ -1308,25 +1555,15 @@ paths:
         "200":
           description: Get user by id success
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.JSONResult'
-            - properties:
-                message:
-                  type: string
-              type: object
+            $ref: '#/definitions/utils.JSONResult'
         "400":
           description: Get user by id failed
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.ErrorResult'
-            - properties:
-                message:
-                  type: string
-              type: object
+            $ref: '#/definitions/utils.JSONResult'
       summary: Get user by id
       tags:
       - users
-    patch:
+    put:
       consumes:
       - application/json
       description: Update user by id
@@ -1352,12 +1589,7 @@ paths:
         "400":
           description: Update user by id failed
           schema:
-            allOf:
-            - $ref: '#/definitions/utils.ErrorResult'
-            - properties:
-                message:
-                  type: string
-              type: object
+            $ref: '#/definitions/utils.JSONResult'
       summary: Update user by id
       tags:
       - users

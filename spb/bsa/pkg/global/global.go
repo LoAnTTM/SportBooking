@@ -10,11 +10,12 @@ import (
 )
 
 var (
-	SPB_CONFIG    *config.Config
-	SPB_DB        *gorm.DB
-	SPB_VALIDATOR *validator.Validate
-	SPB_REDIS     *redis.Storage
-	SPB_NOTIFY    *notification.Notification
+	SPB_CONFIG      *config.Config
+	SPB_DB          *gorm.DB
+	SPB_VALIDATOR   *validator.Validate
+	SPB_REDIS       *redis.Storage
+	SPB_NOTIFY      *notification.Notification
+	SPB_PERMISSIONS map[string]uint64
 )
 
 // @author: LoanTT

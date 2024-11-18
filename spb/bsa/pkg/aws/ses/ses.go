@@ -1,8 +1,8 @@
 package ses
 
 import (
-	aws_local "spb/bsa/pkg/aws"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -69,16 +69,16 @@ func (s *sesService) SendEmail(email *EmailInfo) (*ses.SendEmailOutput, error) {
 		if aerr, ok := err.(awserr.Error); ok {
 			switch aerr.Code() {
 			case ses.ErrCodeMessageRejected:
-				return nil, aws_local.AWSError(ses.ErrCodeMessageRejected, aerr)
+				return nil, msg.AWSError(ses.ErrCodeMessageRejected, aerr)
 			case ses.ErrCodeMailFromDomainNotVerifiedException:
-				return nil, aws_local.AWSError(ses.ErrCodeMailFromDomainNotVerifiedException, aerr)
+				return nil, msg.AWSError(ses.ErrCodeMailFromDomainNotVerifiedException, aerr)
 			case ses.ErrCodeConfigurationSetDoesNotExistException:
-				return nil, aws_local.AWSError(ses.ErrCodeConfigurationSetDoesNotExistException, aerr)
+				return nil, msg.AWSError(ses.ErrCodeConfigurationSetDoesNotExistException, aerr)
 			default:
-				return nil, aws_local.AWSError(aws_local.ErrInternalServer, aerr)
+				return nil, msg.AWSError(msg.AWSInternalServerError, aerr)
 			}
 		} else {
-			return nil, aws_local.AWSError(aws_local.ErrInternalServer, aerr)
+			return nil, msg.AWSError(msg.AWSInternalServerError, aerr)
 		}
 	}
 
@@ -128,16 +128,16 @@ func (s *sesService) SendVerification(email string) (*ses.VerifyEmailAddressOutp
 		if aerr, ok := err.(awserr.Error); ok {
 			switch aerr.Code() {
 			case ses.ErrCodeMessageRejected:
-				return nil, aws_local.AWSError(ses.ErrCodeMessageRejected, aerr)
+				return nil, msg.AWSError(ses.ErrCodeMessageRejected, aerr)
 			case ses.ErrCodeMailFromDomainNotVerifiedException:
-				return nil, aws_local.AWSError(ses.ErrCodeMailFromDomainNotVerifiedException, aerr)
+				return nil, msg.AWSError(ses.ErrCodeMailFromDomainNotVerifiedException, aerr)
 			case ses.ErrCodeConfigurationSetDoesNotExistException:
-				return nil, aws_local.AWSError(ses.ErrCodeConfigurationSetDoesNotExistException, aerr)
+				return nil, msg.AWSError(ses.ErrCodeConfigurationSetDoesNotExistException, aerr)
 			default:
-				return nil, aws_local.AWSError(aws_local.ErrInternalServer, aerr)
+				return nil, msg.AWSError(msg.AWSInternalServerError, aerr)
 			}
 		} else {
-			return nil, aws_local.AWSError(aws_local.ErrInternalServer, aerr)
+			return nil, msg.AWSError(msg.AWSInternalServerError, aerr)
 		}
 	}
 
@@ -155,7 +155,7 @@ func (s *sesService) DeleteVerifiedEmail(email string) error {
 		&ses.DeleteVerifiedEmailAddressInput{EmailAddress: aws.String(email)})
 
 	if delErr != nil {
-		return aws_local.AWSError(ses.ErrCodeCannotDeleteException, delErr)
+		return msg.AWSError(ses.ErrCodeCannotDeleteException, delErr)
 	}
 	return nil
 }

@@ -28,6 +28,6 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	unitPriceRoute.Get("/", UnitPriceHandler.GetAll, customMiddleware.CheckAccess("unit_price:list"))
 	unitPriceRoute.Get("/:id", UnitPriceHandler.GetByID, customMiddleware.CheckAccess("unit_price:read"))
 	unitPriceRoute.Post("/", UnitPriceHandler.Create, customMiddleware.CheckAccess("unit_price:create"))
-	unitPriceRoute.Patch("/:id", UnitPriceHandler.Update, customMiddleware.CheckAccess("unit_price:update"))
+	unitPriceRoute.Put("/:id", UnitPriceHandler.Update, customMiddleware.CheckAccess("unit_price:update"))
 	unitPriceRoute.Delete("/:id", UnitPriceHandler.Delete, customMiddleware.CheckAccess("unit_price:delete"))
 }

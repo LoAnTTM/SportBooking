@@ -1,17 +1,14 @@
 package service
 
 import (
-	"errors"
-
 	roleModule "spb/bsa/internal/role"
 	roleUtility "spb/bsa/internal/role/utility"
 	"spb/bsa/internal/user/model"
 	"spb/bsa/internal/user/utility"
 	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 )
-
-var ErrPermission = errors.New("user does not have permission")
 
 // @author: LoanTT
 // @function: GetAll
@@ -27,12 +24,12 @@ func (s *Service) GetAll(reqBody *model.GetUsersRequest) ([]*tb.User, error) {
 	}
 	roles := roleUtility.FlattenAndGetRoleIds(childrenRoles)
 	if len(roles) == 0 {
-		return nil, ErrPermission
+		return nil, msg.ErrPermission
 	}
 
 	err = s.db.
 		Scopes(utility.SatisfiedUser(roles), utils.Paginate(&reqBody.Pagination)).
-		Preload("Role.Permissions").
+		Preload("Role").
 		Find(&users).Error
 	if err != nil {
 		return nil, err

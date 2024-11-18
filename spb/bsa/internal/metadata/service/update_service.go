@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+
 	"spb/bsa/internal/metadata/model"
 	"spb/bsa/internal/metadata/utility"
 
@@ -18,14 +19,14 @@ var ErrMetadataNotFound = errors.New("metadata not found")
 // @param: metadata model.UpdateMetadataRequest
 // @param: string metadata id
 // @return: metadata entities.Metadata, error
-func (s *Service) Update(reqBody *model.UpdateMetadataRequest) (*tb.Metadata, error) {
+func (s *Service) Update(key string, reqBody *model.UpdateMetadataRequest) (*tb.Metadata, error) {
 	var err error
 	var count int64
 	var metadatas []tb.Metadata
 
 	// check if metadata exists
 	if err = s.db.Model(tb.Metadata{}).
-		Where("key = ?", reqBody.Key).
+		Where("key = ?", key).
 		Count(&count).Error; err == nil && count == 0 {
 		return nil, ErrMetadataNotFound
 	} else if err != nil {
@@ -36,7 +37,7 @@ func (s *Service) Update(reqBody *model.UpdateMetadataRequest) (*tb.Metadata, er
 	// update metadata
 	err = s.db.Model(&metadatas).
 		Clauses(clause.Returning{}).
-		Where("key = ?", reqBody.Key).
+		Where("key = ?", key).
 		Updates(metadataUpdate).Error
 	if err != nil {
 		return nil, err

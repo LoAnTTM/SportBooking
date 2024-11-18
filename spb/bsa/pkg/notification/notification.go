@@ -7,6 +7,7 @@ import (
 
 	"spb/bsa/pkg/config"
 	"spb/bsa/pkg/entities/enum"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/queue"
 )
 
@@ -73,7 +74,7 @@ func SendNotification(
 	case enum.IOS:
 		fmt.Printf("implement me\n")
 	default:
-		err = ErrInvalidRequest
+		err = msg.ErrInvalidRequest
 	}
 	return
 }

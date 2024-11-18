@@ -25,7 +25,7 @@ var ErrGet{{.StructNamePlural}}Failed = fiber.NewError(fiber.StatusNotFound, "ge
 // @Param			b query string false "Order by"
 // @Param			t query string false "Order type"
 // @Success 		200 {object} utils.JSONResult{data=model.Get{{.StructNamePlural}}Response}	"Get all {{.ModuleNamePlural}} success"
-// @Failure 		404 {object} utils.ErrorResult{message=string}        		"Get all {{.ModuleNamePlural}} failed"
+// @Failure 		404 {object} utils.JSONResult{}        		"Get all {{.ModuleNamePlural}} failed"
 // @Router 			/api/v1/{{.RouteName}} [get]
 func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	var err error

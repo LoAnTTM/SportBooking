@@ -1,0 +1,115 @@
+package msg
+
+import "github.com/gofiber/fiber/v3"
+
+const (
+	CODE_SERVER_ERROR = "ERS001"
+	CODE_FORBIDDEN    = "ERS002"
+)
+
+const (
+	// authentication error code
+	CODE_LOGIN_INCORRECT           = "ERA001"
+	CODE_REFRESH_TOKEN_EXPIRED     = "ERA002"
+	CODE_REGISTER_INCORRECT        = "ERA003"
+	CODE_VERIFY_TOKEN_EXPIRED      = "ERA004"
+	CODE_FORGOT_PASSWORD_INCORRECT = "ERA005"
+	CODE_EMAIL_DOES_NOT_EXIST      = "ERA006"
+	CODE_RESET_PASSWORD_INCORRECT  = "ERA007"
+	CODE_UNAUTHORIZED              = "ERA008"
+
+	// location error code
+	CODE_LOCATION_INCORRECT     = "ERL001"
+	CODE_CREATE_LOCATION_FAILED = "ERL002"
+	CODE_DELETE_LOCATION_FAILED = "ERL003"
+	CODE_UPDATE_LOCATION_FAILED = "ERL004"
+
+	// metadata error code
+	CODE_METADATA_INCORRECT     = "ERM001"
+	CODE_METADATA_NOTFOUND      = "ERM002"
+	CODE_UPDATE_METADATA_FAILED = "ERM003"
+
+	// unit error code
+	CODE_UNIT_INCORRECT     = "ERU001"
+	CODE_DELETE_UNIT_FAILED = "ERU002"
+	CODE_GET_UNIT_FAILED    = "ERU003"
+	CODE_UNIT_NOTFOUND      = "ERU004"
+	CODE_UPDATE_UNIT_FAILED = "ERU005"
+
+	// unit price error code
+	CODE_CREATE_UNITPRICE_FAILED = "ERUP001"
+	CODE_DELETE_UNITPRICE_FAILED = "ERUP002"
+	CODE_GET_UNITPRICE_FAILED    = "ERUP003"
+	CODE_UNITPRICE_NOTFOUND      = "ERUP004"
+	CODE_UPDATE_UNITPRICE_FAILED = "ERUP005"
+
+	// unit service error code
+	CODE_CREATE_UNIT_SERVICE_FAILED = "ERUS001"
+	CODE_DELETE_UNIT_SERVICE_FAILED = "ERUS002"
+	CODE_GET_UNIT_SERVICE_FAILED    = "ERUS003"
+	CODE_UPDATE_UNIT_SERVICE_FAILED = "ERUS004"
+	CODE_UNIT_SERVICE_NOTFOUND      = "ERUS005"
+
+	// user error code
+	CODE_CREATE_USER_FAILED = "ERU001"
+	CODE_DELETE_USER_FAILED = "ERU002"
+	CODE_GET_USER_FAILED    = "ERU003"
+	CODE_UPDATE_USER_FAILED = "ERU004"
+	CODE_USER_NOTFOUND      = "ERU005"
+)
+
+var (
+	SERVER_ERROR = fiber.NewError(fiber.StatusInternalServerError, CODE_SERVER_ERROR)
+	FORBIDDEN    = fiber.NewError(fiber.StatusForbidden, CODE_FORBIDDEN)
+)
+
+var (
+	// authentication error
+	LOGIN_INCORRECT           = fiber.NewError(fiber.StatusBadRequest, CODE_LOGIN_INCORRECT)
+	REFRESH_TOKEN_FAILED      = fiber.NewError(fiber.StatusBadRequest, CODE_REFRESH_TOKEN_EXPIRED)
+	REGISTER_INCORRECT        = fiber.NewError(fiber.StatusBadRequest, CODE_REGISTER_INCORRECT)
+	VERIFY_TOKEN_FAILED       = fiber.NewError(fiber.StatusBadRequest, CODE_VERIFY_TOKEN_EXPIRED)
+	FORGOT_PASSWORD_INCORRECT = fiber.NewError(fiber.StatusBadRequest, CODE_FORGOT_PASSWORD_INCORRECT)
+	EMAIL_DOES_NOT_EXIST      = fiber.NewError(fiber.StatusBadRequest, CODE_EMAIL_DOES_NOT_EXIST)
+	RESET_PASSWORD_INCORRECT  = fiber.NewError(fiber.StatusBadRequest, CODE_RESET_PASSWORD_INCORRECT)
+	UNAUTHORIZED              = fiber.NewError(fiber.StatusUnauthorized, CODE_UNAUTHORIZED)
+
+	// location error
+	LOCATION_INCORRECT     = fiber.NewError(fiber.StatusBadRequest, CODE_LOCATION_INCORRECT)
+	CREATE_LOCATION_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_CREATE_LOCATION_FAILED)
+	DELETE_LOCATION_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_DELETE_LOCATION_FAILED)
+	UPDATE_LOCATION_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_UPDATE_LOCATION_FAILED)
+
+	// metadata error
+	METADATA_INCORRECT     = fiber.NewError(fiber.StatusBadRequest, CODE_METADATA_INCORRECT)
+	METADATA_NOTFOUND      = fiber.NewError(fiber.StatusNotFound, CODE_METADATA_NOTFOUND)
+	UPDATE_METADATA_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_UPDATE_METADATA_FAILED)
+
+	// unit error
+	UNIT_INCORRECT     = fiber.NewError(fiber.StatusBadRequest, CODE_UNIT_INCORRECT)
+	DELETE_UNIT_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_DELETE_UNIT_FAILED)
+	GET_UNIT_FAILED    = fiber.NewError(fiber.StatusBadRequest, CODE_GET_UNIT_FAILED)
+	UNIT_NOTFOUND      = fiber.NewError(fiber.StatusNotFound, CODE_UNIT_NOTFOUND)
+	UPDATE_UNIT_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_UPDATE_UNIT_FAILED)
+
+	// unit price error
+	CREATE_UNITPRICE_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_CREATE_UNITPRICE_FAILED)
+	DELETE_UNITPRICE_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_DELETE_UNITPRICE_FAILED)
+	GET_UNITPRICE_FAILED    = fiber.NewError(fiber.StatusNotFound, CODE_GET_UNITPRICE_FAILED)
+	UNITPRICE_NOTFOUND      = fiber.NewError(fiber.StatusNotFound, CODE_UNITPRICE_NOTFOUND)
+	UPDATE_UNITPRICE_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_UPDATE_UNITPRICE_FAILED)
+
+	// unit service error
+	CREATE_UNIT_SERVICE_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_CREATE_UNIT_SERVICE_FAILED)
+	DELETE_UNIT_SERVICE_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_DELETE_UNIT_SERVICE_FAILED)
+	GET_UNIT_SERVICE_FAILED    = fiber.NewError(fiber.StatusBadRequest, CODE_GET_UNIT_SERVICE_FAILED)
+	UPDATE_UNIT_SERVICE_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_UPDATE_UNIT_SERVICE_FAILED)
+	UNIT_SERVICE_NOTFOUND      = fiber.NewError(fiber.StatusBadRequest, CODE_UNIT_SERVICE_NOTFOUND)
+
+	// user error
+	CREATE_USER_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_CREATE_USER_FAILED)
+	DELETE_USER_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_DELETE_USER_FAILED)
+	GET_USER_FAILED    = fiber.NewError(fiber.StatusBadRequest, CODE_GET_USER_FAILED)
+	UPDATE_USER_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_UPDATE_USER_FAILED)
+	USER_NOTFOUND      = fiber.NewError(fiber.StatusBadRequest, CODE_USER_NOTFOUND)
+)

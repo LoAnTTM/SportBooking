@@ -1,5 +1,5 @@
-CREATE TYPE status as ENUM ('active', 'inactive');
+CREATE TYPE public.status as ENUM ('active', 'inactive');
 
-CREATE TYPE platform as ENUM ('android', 'ios', 'inapp', 'email');
+CREATE TYPE public.platform as ENUM ('android', 'ios', 'inapp', 'email');
 
-CREATE TYPE progress as ENUM ('inprogress', 'pending', 'success', 'failure');
+CREATE TYPE public.progress as ENUM ('inprogress', 'pending', 'success', 'failure');

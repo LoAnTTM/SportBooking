@@ -26,5 +26,8 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	authRoute.Post("/login", AuthHandler.AccountLogin)
 	authRoute.Post("/register", AuthHandler.AccountRegister)
 	authRoute.Post("/refresh", AuthHandler.AccountRefreshToken)
-	authRoute.Get("/verify-email", AuthHandler.VerifyEmail)
+	authRoute.Post("/verify-email", AuthHandler.VerifyEmail)
+	authRoute.Post("/forgot-password", AuthHandler.ForgotPasswordHandler)
+	authRoute.Post("/verify-reset-token", AuthHandler.VerifyResetToken)
+	authRoute.Post("/reset-password", AuthHandler.ResetPassword)
 }

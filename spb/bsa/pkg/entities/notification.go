@@ -11,7 +11,6 @@ var NotificationTN = "notification"
 type Notification struct {
 	Base
 	Status             enum.Progress    `gorm:"type:progress" json:"status"`
-	Error              *string          `gorm:"type:text" json:"error"`
 	Platform           enum.Platform    `gorm:"type:platform" json:"platform"`
 	Title              string           `gorm:"size:255;not null" json:"title"`
 	Message            string           `gorm:"type:text" json:"message"`

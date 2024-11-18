@@ -5,6 +5,7 @@ import (
 	roleUtility "spb/bsa/internal/role/utility"
 	"spb/bsa/internal/user/utility"
 	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/msg"
 )
 
 // @author: LoanTT
@@ -30,7 +31,7 @@ func (s *Service) GetByID(userId, currentUserRoleName string) (*tb.User, error) 
 
 	roles := roleUtility.FlattenAndGetRoleNames(childrenRoles)
 	if len(roles) == 0 {
-		return nil, ErrPermission
+		return nil, msg.ErrPermission
 	}
 
 	for _, roleName := range roles {

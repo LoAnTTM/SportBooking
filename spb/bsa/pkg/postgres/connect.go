@@ -5,6 +5,7 @@ import (
 
 	"spb/bsa/pkg/config"
 	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/msg"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -38,7 +39,7 @@ func ConnectDB(configVal *config.Config) (*gorm.DB, error) {
 		SkipDefaultTransaction: true,
 	})
 	if err != nil {
-		return nil, ErrConnectionFailed(err)
+		return nil, msg.ErrConnectionFailed(err)
 	}
 
 	err = AutoMigrate(db)
@@ -77,7 +78,7 @@ func AutoMigrate(db *gorm.DB) error {
 		&tb.Transactions{},
 		&tb.WebHook{})
 	if err != nil {
-		return ErrMigrationFailed(err)
+		return msg.ErrMigrationFailed(err)
 	}
 
 	return nil

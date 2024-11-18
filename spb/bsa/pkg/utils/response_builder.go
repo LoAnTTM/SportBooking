@@ -1,10 +1,7 @@
 package utils
 
 type JSONResult struct {
-	Message *string     `json:"message,omitempty"`
-	Data    interface{} `json:"data"`
-}
-
-type ErrorResult struct {
-	Message string `json:"message"`
+	Status string      `json:"status"`
+	Code   string      `json:"code"`
+	Data   interface{} `json:"data"`
 }

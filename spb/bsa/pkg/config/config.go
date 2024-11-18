@@ -39,9 +39,12 @@ type Logging struct {
 }
 
 type Server struct {
-	Env  string `mapstructure:"env"`
-	Host string `mapstructure:"host"`
-	Port string `mapstructure:"port"`
+	Env              string `mapstructure:"env"`
+	Host             string `mapstructure:"host"`
+	Port             string `mapstructure:"port"`
+	ClientAddr       string `mapstructure:"client_addr"`
+	VerifyEmailUri   string `mapstructure:"verify_email_uri"`
+	ResetPasswordUri string `mapstructure:"reset_password_uri"`
 }
 
 type CORS struct {
@@ -49,6 +52,11 @@ type CORS struct {
 	AllowMethods     []string `mapstructure:"allow_methods"`
 	AllowHeaders     []string `mapstructure:"allow_headers"`
 	AllowCredentials bool     `mapstructure:"allow_credentials"`
+}
+
+type Cache struct {
+	VerifyEmailExp   int `mapstructure:"verify_email_exp"`
+	ResetPasswordExp int `mapstructure:"reset_password_exp"`
 }
 
 type JWT struct {
@@ -91,6 +99,7 @@ type AWS struct {
 type Config struct {
 	ProjectName  string        `mapstructure:"project_name"`
 	Server       *Server       `mapstructure:"server"`
+	Cache        *Cache        `mapstructure:"cache"`
 	JWT          *JWT          `mapstructure:"jwt"`
 	DB           *DB           `mapstructure:"database"`
 	Redis        *Redis        `mapstructure:"redis"`

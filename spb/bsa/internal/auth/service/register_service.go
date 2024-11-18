@@ -4,17 +4,14 @@ import (
 	"errors"
 
 	"spb/bsa/internal/auth/model"
-	"spb/bsa/internal/metadata"
 	notifyServ "spb/bsa/internal/notification"
 	notifyModel "spb/bsa/internal/notification/model"
-	notifyTypeServ "spb/bsa/internal/notification_type"
 	"spb/bsa/pkg/cache"
 	"spb/bsa/pkg/config"
 	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/entities/enum"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
-	"spb/bsa/pkg/notification"
 	"spb/bsa/pkg/utils"
 
 	"github.com/google/uuid"
@@ -60,52 +57,20 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 		return nil, err
 	}
 
-	if err := cache.SetVerifyEmailToken(u.Email, verifyToken); err != nil {
+	if err := cache.SetVerifyToken(verifyToken, global.SPB_CONFIG.Cache.VerifyEmailExp); err != nil {
 		tx.Rollback()
 		return nil, err
 	}
 
-	// Get metadata : operator email
-	oEmailMeta, err := metadata.MetadataService.GetByKey(config.OPERATOR_EMAIL_KEY)
-	if err != nil || oEmailMeta.Value == "" {
-		tx.Rollback()
-		return nil, logger.RErrorf("Can't get operator email: %v", err)
-	}
-
-	// Get notification template for email verify
-	oEmailTemplate, err := notifyTypeServ.NotificationTypeService.GetByType(config.VERIFY_USER_NT)
-	if err != nil || oEmailTemplate.Template == "" {
-		tx.Rollback()
-		return nil, logger.RErrorf("Can't get notification template: %v", err)
-	}
-
-	// Create message
-	message, err := MakeMesssage(verifyToken, oEmailTemplate)
+	notify, err := s.SendVerifyEmail(verifyToken, u.Email, config.VERIFY_USER_NT, tx)
 	if err != nil {
 		tx.Rollback()
-		return nil, logger.RErrorf("Can't make message: %v", err)
-	}
-
-	// Create push notification instance
-	notify := &notification.PushNotification{
-		ID:       uuid.New().String(),
-		Platform: enum.EMAIL,
-		Title:    oEmailTemplate.Title,
-		Message:  message,
-		Charset:  "utf-8",
-		From:     oEmailMeta.Value,
-		To:       []string{u.Email},
-	}
-
-	// Send notification
-	if err := global.SPB_NOTIFY.SendEmail(notify); err != nil {
-		tx.Rollback()
-		return nil, logger.RErrorf("Can't send notification: %v", err)
+		return nil, err
 	}
 
 	// Save notification with status inprogress
 	notifyRequest := &notifyModel.CreateNotificationRequest{
-		ID:               notify.ID,
+		ID:               verifyToken, // Use token as notification ID
 		Status:           enum.Progress(enum.INPROGRESS),
 		Platform:         enum.Platform(enum.EMAIL),
 		Title:            notify.Title,
@@ -123,29 +88,4 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 		return nil, err
 	}
 	return &user, nil
-}
-
-// @author: LoanTT
-// @function: MakeMesssage
-// @description: Make message for email template
-// @param: verifyToken string
-// @param: oEmailTemplate *tb.NotificationType
-// @return: string, error
-func MakeMesssage(verifyToken string, oEmailTemplate *tb.NotificationType) (string, error) {
-	oEmailTemplateData := map[string]string{
-		"VerificationLink": VerificationUrl(verifyToken),
-	}
-
-	temp := oEmailTemplate.MapTemplate(oEmailTemplateData)
-	return temp, nil
-}
-
-// @author: LoanTT
-// @function: VerificationUrl
-// @description: Get verification url with token
-// @param: token string
-// @return: string
-func VerificationUrl(token string) string {
-	baseUrl := global.SPB_CONFIG.GetServerUrl()
-	return baseUrl + "/api/v1/auth/verify-email/" + token
 }

@@ -1,14 +1,10 @@
 package service
 
 import (
-	"errors"
-
 	"spb/bsa/internal/unit_price/model"
 	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/utils"
 )
-
-var ErrPermission = errors.New("unitPrice does not have permission")
 
 // @author: LoanTT
 // @function: GetAll

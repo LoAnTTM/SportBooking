@@ -1,16 +1,13 @@
 package service
 
 import (
-	"errors"
-
 	"spb/bsa/internal/location/model"
 	"spb/bsa/internal/location/utility"
 	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/msg"
 
 	"gorm.io/gorm/clause"
 )
-
-var ErrLocationNotFound = errors.New("location not found")
 
 // @author: LoanTT
 // @function: Update
@@ -27,7 +24,7 @@ func (s *Service) Update(reqBody *model.UpdateLocationRequest, locationId string
 	if err = s.db.Model(tb.Location{}).
 		Where("id = ?", locationId).
 		Count(&count).Error; err == nil && count == 0 {
-		return nil, ErrLocationNotFound
+		return nil, msg.ErrLocationNotFound
 	} else if err != nil {
 		return nil, err
 	}
@@ -43,7 +40,7 @@ func (s *Service) Update(reqBody *model.UpdateLocationRequest, locationId string
 		return nil, err
 	}
 	if len(locations) == 0 {
-		return nil, ErrLocationNotFound
+		return nil, msg.ErrLocationNotFound
 	}
 
 	return &locations[0], nil

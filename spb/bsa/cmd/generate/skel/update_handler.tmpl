@@ -21,7 +21,7 @@ var ErrUpdate{{.StructName}}Failed = fiber.NewError(fiber.StatusBadRequest, "upd
 // @Produce 		json
 // @Param 			{{.ModuleName}} body model.Update{{.StructName}}Request true "{{.StructName}} data"
 // @Success 		200 {object} utils.JSONResult{data=model.{{.StructName}}Response}		"Update {{.ModuleName}} by id success"
-// @Failure 		400 {object} utils.ErrorResult{message=string}      "Update {{.ModuleName}} by id failed"
+// @Failure 		400 {object} utils.JSONResult{}      "Update {{.ModuleName}} by id failed"
 // @Router 			/api/v1/{{.RouteName}}/{id} [patch]
 func (s *Handler) Update(ctx fiber.Ctx) error {
 	var err error

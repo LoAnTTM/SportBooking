@@ -25,7 +25,7 @@ var (
 // @Produce 		json
 // @Param 			id path string true "{{.StructName}} ID"
 // @Success 		200 {object} utils.JSONResult{message=string}		"Get {{.ModuleName}} by id success"
-// @Failure 		400 {object} utils.ErrorResult{message=string}      "Get {{.ModuleName}} by id failed"
+// @Failure 		400 {object} utils.JSONResult{}      "Get {{.ModuleName}} by id failed"
 // @Router 			/api/v1/{{.RouteName}}/{id} [delete]
 func (s *Handler) GetByID(ctx fiber.Ctx) error {
 	var err error

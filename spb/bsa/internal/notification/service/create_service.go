@@ -1,16 +1,12 @@
 package service
 
 import (
-	"errors"
-
 	"spb/bsa/internal/notification/model"
 	"spb/bsa/internal/notification/utility"
 	tb "spb/bsa/pkg/entities"
 
 	"gorm.io/gorm"
 )
-
-var ErrEmailExists = errors.New("email already exists")
 
 // @author: LoanTT
 // @function: Create

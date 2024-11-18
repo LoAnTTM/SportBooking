@@ -10,7 +10,7 @@ const (
 )
 
 func (st *Status) Scan(val interface{}) error {
-	*st = Status(val.([]byte))
+	*st = Status(val.(string))
 	return nil
 }
 

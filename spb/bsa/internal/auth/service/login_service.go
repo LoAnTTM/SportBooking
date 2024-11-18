@@ -1,15 +1,12 @@
 package service
 
 import (
-	"errors"
-
 	"spb/bsa/internal/auth/model"
 	"spb/bsa/internal/auth/utility"
 	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 )
-
-var ErrIncorrectPassword = errors.New("incorrect password")
 
 // @author: LoanTT
 // @function: AccountLogin
@@ -26,7 +23,7 @@ func (s *Service) AccountLogin(u *model.LoginRequest) (*tb.User, error) {
 		First(&user).Error
 	if err == nil {
 		if ok := utils.BcryptCheck(u.Password, user.Password); !ok {
-			return nil, ErrIncorrectPassword
+			return nil, msg.ErrIncorrectPassword
 		}
 
 		permissions := new([]tb.Permission)

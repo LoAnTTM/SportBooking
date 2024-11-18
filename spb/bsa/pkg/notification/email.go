@@ -7,6 +7,7 @@ import (
 	"spb/bsa/pkg/config"
 	"spb/bsa/pkg/entities/enum"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 )
 
 var ESInstance EmailService
@@ -33,7 +34,7 @@ func (e *emailService) SendNotification(ctx context.Context, data *PushNotificat
 	output, err := e.sesService.SendEmail(email)
 	if err != nil {
 		resp.Logs = append(resp.Logs, logPush(data,
-			string(enum.FAILURE), config.VERIFY_USER_NT, ErrEmailSendFailed(err)))
+			string(enum.FAILURE), config.VERIFY_USER_NT, msg.ErrEmailSendFailed(err)))
 		return resp, err
 	}
 
