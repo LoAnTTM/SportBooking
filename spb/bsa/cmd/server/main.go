@@ -4,21 +4,22 @@ import (
 	"fmt"
 	"strings"
 
+	"spb/bsa/api/auth"
+	"spb/bsa/api/location"
+	"spb/bsa/api/metadata"
+	"spb/bsa/api/notification"
+	"spb/bsa/api/notification_type"
+	"spb/bsa/api/permission"
+	"spb/bsa/api/role"
+	"spb/bsa/api/sport_type"
+	"spb/bsa/api/unit"
+	"spb/bsa/api/unit_price"
+	"spb/bsa/api/unit_service"
+	"spb/bsa/api/user"
 	_ "spb/bsa/docs"
-	"spb/bsa/internal/auth"
-	"spb/bsa/internal/location"
-	"spb/bsa/internal/metadata"
-	"spb/bsa/internal/notification"
-	"spb/bsa/internal/notification_type"
-	"spb/bsa/internal/permission"
-	"spb/bsa/internal/role"
-	"spb/bsa/internal/sport_type"
-	"spb/bsa/internal/unit"
-	"spb/bsa/internal/unit_price"
-	"spb/bsa/internal/unit_service"
-	"spb/bsa/internal/user"
 	"spb/bsa/pkg/aws"
 	"spb/bsa/pkg/aws/ses"
+	"spb/bsa/pkg/cache"
 	"spb/bsa/pkg/global"
 	zaplog "spb/bsa/pkg/logger"
 	"spb/bsa/pkg/middleware"
@@ -89,6 +90,8 @@ func (f *Fiber) GetApp() {
 		global.SPB_CONFIG,
 		global.SPB_REDIS,
 		ses.NewSESService(awsSession))
+
+	cache.NewCache(global.SPB_REDIS)
 
 	f.App = fiber.New(fiber.Config{
 		CaseSensitive:                true,

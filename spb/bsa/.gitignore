@@ -1,8 +1,5 @@
-# log
 log/*
-# go.sum
 go.sum
-# executable file 
 build/
 
 # vscode config
@@ -10,3 +7,6 @@ build/
 .VSCodeCounter/
 cover.out
 aws.cert
+
+# macOS
+.DS_Store

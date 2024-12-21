@@ -60,10 +60,9 @@ type Cache struct {
 }
 
 type JWT struct {
-	Secret          string `yamll:"secret" mapstructure:"secret"`
-	AccessTokenExp  int    `yamll:"access_token_exp" mapstructure:"access_token_exp"`
-	RefreshTokenExp int    `yamll:"refresh_token_exp" mapstructure:"refresh_token_exp"`
-	ExpireCache     int    `yamll:"expire_cache" mapstructure:"expire_cache"`
+	Secret          string `mapstructure:"secret"`
+	AccessTokenExp  int    `mapstructure:"access_token_exp"`
+	RefreshTokenExp int    `mapstructure:"refresh_token_exp"`
 }
 
 type OAuth struct {
@@ -135,7 +134,7 @@ func (c *Config) LoadEnvVariables() error {
 	}
 
 	if err := c.Vpr.ReadInConfig(); err != nil {
-		return fmt.Errorf("fail to read config file, err: %+v", err)
+		return fmt.Errorf("failure to read config file, err: %+v", err)
 	}
 
 	if err := c.Vpr.Unmarshal(c); err != nil {

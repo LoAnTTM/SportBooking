@@ -33,13 +33,12 @@ func (e *emailService) SendNotification(ctx context.Context, data *PushNotificat
 	resp := new(ResponsePush)
 	output, err := e.sesService.SendEmail(email)
 	if err != nil {
-		resp.Logs = append(resp.Logs, logPush(data,
-			string(enum.FAILURE), config.VERIFY_USER_NT, msg.ErrEmailSendFailed(err)))
+		resp.Logs = append(resp.Logs, logPush(data, string(enum.FAILURE), data.Type, msg.ErrEmailSendFailed(err)))
 		return resp, err
 	}
 
 	logger.Infof(output.String())
-	resp.Logs = append(resp.Logs, logPush(data, string(enum.SUCCESS), config.VERIFY_USER_NT, nil))
+	resp.Logs = append(resp.Logs, logPush(data, string(enum.SUCCESS), data.Type, nil))
 
 	return resp, nil
 }

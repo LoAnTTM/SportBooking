@@ -29,6 +29,7 @@ type PushNotification struct {
 	ID       string        `json:"id"`
 	Platform enum.Platform `json:"platform"`
 	Message  string        `json:"message"`
+	Type     string        `json:"type"`
 	Retry    int           `json:"retry"`
 	Error    string        `json:"error,omitempty"`
 	Charset  string        `json:"charset,omitempty"`

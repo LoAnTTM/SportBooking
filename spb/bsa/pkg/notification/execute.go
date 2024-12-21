@@ -44,8 +44,8 @@ func Shutdown(n *Notification) {
 	logger.Infof("Notification service shutdown")
 }
 
-func (n *Notification) SendEmail(data *PushNotification) error {
-	logger.Infof("Send email [%s] to: %+v", data.Title, data.To)
+func (n *Notification) Notify(data *PushNotification) error {
+	logger.Infof("Send notification [%s] to: %+v", data.Title, data.To)
 
 	data.Data = data.Bytes()
 	err := n.queue.Queue(data)

@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"spb/bsa/internal/auth/model"
+	"spb/bsa/api/auth/model"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"

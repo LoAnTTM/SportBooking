@@ -59,7 +59,7 @@ logging:
     level: 0 # debug:0, info:1, warning:2, error:3
     output:
         - "console"
-        # - "file"
+        - "file"
     filename: "requests.log"
 
 aws:

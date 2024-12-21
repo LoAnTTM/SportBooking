@@ -9,14 +9,15 @@ const (
 
 const (
 	// authentication error code
-	CODE_LOGIN_INCORRECT           = "ERA001"
+	CODE_LOGIN_FAILURE             = "ERA001"
 	CODE_REFRESH_TOKEN_EXPIRED     = "ERA002"
-	CODE_REGISTER_INCORRECT        = "ERA003"
+	CODE_REGISTER_FAILURE          = "ERA003"
 	CODE_VERIFY_TOKEN_EXPIRED      = "ERA004"
 	CODE_FORGOT_PASSWORD_INCORRECT = "ERA005"
 	CODE_EMAIL_DOES_NOT_EXIST      = "ERA006"
 	CODE_RESET_PASSWORD_INCORRECT  = "ERA007"
 	CODE_UNAUTHORIZED              = "ERA008"
+	CODE_REGISTER_EMAIL_VERIFYING  = "ERA009"
 
 	// location error code
 	CODE_LOCATION_INCORRECT     = "ERL001"
@@ -65,9 +66,10 @@ var (
 
 var (
 	// authentication error
-	LOGIN_INCORRECT           = fiber.NewError(fiber.StatusBadRequest, CODE_LOGIN_INCORRECT)
+	LOGIN_FAILURE             = fiber.NewError(fiber.StatusBadRequest, CODE_LOGIN_FAILURE)
 	REFRESH_TOKEN_FAILED      = fiber.NewError(fiber.StatusBadRequest, CODE_REFRESH_TOKEN_EXPIRED)
-	REGISTER_INCORRECT        = fiber.NewError(fiber.StatusBadRequest, CODE_REGISTER_INCORRECT)
+	REGISTER_FAILURE          = fiber.NewError(fiber.StatusBadRequest, CODE_REGISTER_FAILURE)
+	REGISTER_EMAIL_VERIFYING  = fiber.NewError(fiber.StatusBadRequest, CODE_REGISTER_EMAIL_VERIFYING)
 	VERIFY_TOKEN_FAILED       = fiber.NewError(fiber.StatusBadRequest, CODE_VERIFY_TOKEN_EXPIRED)
 	FORGOT_PASSWORD_INCORRECT = fiber.NewError(fiber.StatusBadRequest, CODE_FORGOT_PASSWORD_INCORRECT)
 	EMAIL_DOES_NOT_EXIST      = fiber.NewError(fiber.StatusBadRequest, CODE_EMAIL_DOES_NOT_EXIST)

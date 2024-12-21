@@ -1,0 +1,33 @@
+package auth
+
+import (
+	handler "spb/bsa/api/auth/handler"
+	"spb/bsa/api/auth/service"
+	"spb/bsa/pkg/middleware"
+
+	"github.com/gofiber/fiber/v3"
+)
+
+var (
+	AuthService *service.Service
+	AuthHandler *handler.Handler
+)
+
+// @author: LoanTT
+// @function: LoadModule
+// @description: Register auth routes
+// @param: router fiber.Router
+// @param: customMiddleware middleware.ICustomMiddleware
+func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddleware) {
+	AuthService = service.NewService()
+	AuthHandler = handler.NewHandler(AuthService)
+
+	authRoute := router.Group("/api/v1/auth")
+	authRoute.Post("/login", AuthHandler.AccountLogin)
+	authRoute.Post("/register", AuthHandler.AccountRegister)
+	authRoute.Post("/refresh", AuthHandler.AccountRefreshToken)
+	authRoute.Post("/verify-email", AuthHandler.VerifyEmail)
+	authRoute.Post("/forgot-password", AuthHandler.ForgotPasswordHandler)
+	authRoute.Post("/verify-reset-token", AuthHandler.VerifyResetToken)
+	authRoute.Post("/reset-password", AuthHandler.ResetPassword)
+}

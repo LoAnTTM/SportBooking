@@ -3,19 +3,19 @@ package cache
 import (
 	"time"
 
-	"spb/bsa/pkg/config"
-	"spb/bsa/pkg/global"
+	"github.com/gofiber/storage/redis/v3"
 )
 
 type IJwtCache interface {
 	IsBlackListed(token string) bool
+	SetToBlackList(token string, expires int) error
 	GetJwt(key string) (string, error)
-	SetJwt(key string, value string) error
+	SetJwt(key string, value string, expires int) error
 }
 
-type JwtCache struct{}
-
-var JwtCacheApp = new(JwtCache)
+type JwtCache struct {
+	client *redis.Storage
+}
 
 // @author: LoanTT
 // @function: IsBlackListed
@@ -23,9 +23,7 @@ var JwtCacheApp = new(JwtCache)
 // @param: token string
 // @return: bool
 func (j *JwtCache) IsBlackListed(token string) bool {
-	blacklistToken := config.BLACKLIST_PREFIX + token
-	value, err := global.SPB_REDIS.Get(blacklistToken)
-
+	value, err := j.client.Get(token)
 	return err != nil || len(value) > 0
 }
 
@@ -34,10 +32,9 @@ func (j *JwtCache) IsBlackListed(token string) bool {
 // @description: set token to blacklist
 // @param: token string
 // @return: bool
-func (j *JwtCache) SetToBlackList(token string, expireConf int) error {
-	blacklistToken := config.BLACKLIST_PREFIX + token
-	expires := time.Minute * time.Duration(expireConf)
-	err := global.SPB_REDIS.Set(blacklistToken, []byte{0}, expires) // need set value != ""
+func (j *JwtCache) SetToBlackList(token string, expires int) error {
+	expireTime := time.Minute * time.Duration(expires)
+	err := j.client.Set(token, []byte{0}, expireTime) // need set value != ""
 	if err != nil {
 		return err
 	}
@@ -50,7 +47,7 @@ func (j *JwtCache) SetToBlackList(token string, expireConf int) error {
 // @param: key string
 // @return: string
 func (j *JwtCache) GetJwt(key string) (string, error) {
-	jwt, err := global.SPB_REDIS.Get(key)
+	jwt, err := j.client.Get(key)
 	if err != nil {
 		return "", err
 	}
@@ -62,10 +59,11 @@ func (j *JwtCache) GetJwt(key string) (string, error) {
 // @description: set jwt to cache
 // @param: key string
 // @param: value string
+// @param: expires int
 // @return: error
-func (j *JwtCache) SetJwt(key, value string) error {
-	expires := time.Minute * time.Duration(global.SPB_CONFIG.JWT.ExpireCache)
-	err := global.SPB_REDIS.Set(key, []byte(value), expires)
+func (j *JwtCache) SetJwt(key, value string, expires int) error {
+	expireTime := time.Minute * time.Duration(expires)
+	err := j.client.Set(key, []byte(value), expireTime)
 	if err != nil {
 		return err
 	}

@@ -3,7 +3,7 @@ package middleware
 import (
 	"slices"
 
-	"spb/bsa/internal/auth/model"
+	"spb/bsa/api/auth/model"
 	"spb/bsa/pkg/auth"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/msg"

@@ -3,16 +3,17 @@ package config
 const (
 	ACCESS_TOKEN_NAME  = "x-a"
 	REFRESH_TOKEN_NAME = "x-r"
-	BLACKLIST_PREFIX   = "bl-"
-	JWT_PREFIX         = "Bearer " // has a white space
-
-	// cache type
-	VERIFY_TOKEN_CACHE = "VERIFY:TOKEN"
-
-	// notification type
-	VERIFY_USER_NT    = "VERIFY:USER"
-	RESET_PASSWORD_NT = "RESET:PASSWORD"
+	JWT_PREFIX         = "Bearer " // has a whitespace
 
 	// metadata keys
 	OPERATOR_EMAIL_KEY = "operator_email"
+)
+
+const (
+	AUTH_REFRESH_TOKEN           = "A:RT:"
+	AUTH_REFRESH_TOKEN_BLACKLIST = "A:RT:BL:"
+
+	// notification type
+	AUTH_VERIFY_EMAIL   = "A:VE:"
+	AUTH_RESET_PASSWORD = "A:RP:"
 )

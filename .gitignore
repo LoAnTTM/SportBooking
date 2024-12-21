@@ -1,1 +1,9 @@
+dist/
+log/
+
+.env
+
+# macOS
 .DS_Store
+spb/bsa/API_DESIGN.md
+spb/bsa/scripts/

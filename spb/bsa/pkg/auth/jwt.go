@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	"spb/bsa/internal/auth/model"
+	"spb/bsa/api/auth/model"
 	"spb/bsa/pkg/config"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/msg"
