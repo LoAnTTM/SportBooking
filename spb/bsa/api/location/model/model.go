@@ -1,5 +1,15 @@
 package model
 
+import "spb/bsa/pkg/utils"
+
+var ORDER_BY = []string{
+	"province",
+	"city",
+	"district",
+	"created_at",
+	"updated_at",
+}
+
 type LocationRequest struct {
 	Province    string `json:"province" validate:"required,min=2,max=255"`
 	City        string `json:"city" validate:"required,min=2,max=255"`
@@ -19,8 +29,9 @@ type LocationResponse struct {
 }
 
 type LocationsResponse struct {
-	Locations []*LocationResponse `json:"locations"`
-	Total     uint                `json:"total"`
+	Locations  []*LocationResponse `json:"locations"`
+	Total      int                 `json:"total"`
+	Pagination utils.Pagination    `json:"pagination"`
 }
 
 type CreateLocationRequest struct {
@@ -28,9 +39,12 @@ type CreateLocationRequest struct {
 }
 
 type UpdateLocationRequest struct {
-	LocationID  string
 	Province    *string `json:"province,omitempty" validate:"omitempty,min=2,max=255"`
 	City        *string `json:"city,omitempty" validate:"omitempty,min=2,max=255"`
 	District    *string `json:"district,omitempty" validate:"omitempty,min=2,max=255"`
 	Description *string `json:"description,omitempty" validate:"omitempty,max=3000"`
+}
+
+type GetLocationsRequest struct {
+	Pagination utils.Pagination
 }

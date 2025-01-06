@@ -32,6 +32,7 @@ func (s *Handler) Update(ctx fiber.Ctx) error {
 		logger.Errorf("error parse json to struct: %v", err)
 		return fctx.ErrResponse(msg.UPDATE_LOCATION_FAILED)
 	}
+
 	if locationId, err = fctx.ParseUUID("id"); err != nil {
 		logger.Errorf("error parse location id: %v", err)
 		return fctx.ErrResponse(msg.UPDATE_LOCATION_FAILED)

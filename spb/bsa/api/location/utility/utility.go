@@ -10,17 +10,42 @@ import (
 // @function: MapLocationEntitiesToResponse
 // @description: Map locations entity to response
 // @param: locations []*tb.Location
-// @return: model.LocationsResponse
-func MapLocationEntitiesToResponse(location []*tb.Location) model.LocationsResponse {
+// @return: *model.LocationsResponse
+func MapLocationEntitiesToResponse(location []*tb.Location) *model.LocationsResponse {
 	locations := make([]*model.LocationResponse, len(location))
 
 	for id := range location {
 		locations[id] = MapLocationEntityToResponse(location[id])
 	}
-	return model.LocationsResponse{
-		Locations: locations,
-		Total:     uint(len(location)),
+
+	res := new(model.LocationsResponse)
+	res.Locations = locations
+	res.Total = len(location)
+
+	return res
+}
+
+// @author: LoanTT
+// @function: MapLocationEntitiesGetToResponse
+// @description: Map locations entity to response
+// @param: locations []*tb.Location
+// @param: *model.GetLocationsRequest
+// @param: total_location int64
+// @return: *model.LocationsResponse
+func MapLocationEntitiesGetToResponse(location []*tb.Location, reqBody *model.GetLocationsRequest, total_location int64) *model.LocationsResponse {
+	locations := make([]*model.LocationResponse, len(location))
+
+	for id := range location {
+		locations[id] = MapLocationEntityToResponse(location[id])
 	}
+
+	res := new(model.LocationsResponse)
+	res.Locations = locations
+	res.Total = len(locations)
+	res.Pagination = reqBody.Pagination
+	res.Pagination.SetNewPagination(utils.SafeInt64ToInt(total_location))
+
+	return res
 }
 
 // @author: LoanTT
@@ -47,7 +72,7 @@ func MapLocationEntityToResponse(location *tb.Location) *model.LocationResponse 
 // @param: reqBody model.CreateLocationRequest
 // @return: []*tb.Location
 func MapCreateRequestToEntities(reqBody *model.CreateLocationRequest) []*tb.Location {
-	locations := make([]*tb.Location, len(reqBody.Locations))
+	locations := make([]*tb.Location, 0)
 
 	for _, location := range reqBody.Locations {
 		locations = append(locations, &tb.Location{
