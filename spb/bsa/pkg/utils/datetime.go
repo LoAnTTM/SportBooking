@@ -76,9 +76,9 @@ func (t CustomDatetime) Value() (time.Time, error) {
 // @author: LoanTT
 // @function: Scan
 // @description: Scan
-// @param: src interface{}
+// @param: src any
 // @return: error
-func (t *CustomDatetime) Scan(src interface{}) error {
+func (t *CustomDatetime) Scan(src any) error {
 	if val, ok := src.(time.Time); ok {
 		t.Time = &val
 	} else {

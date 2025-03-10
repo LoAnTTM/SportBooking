@@ -129,12 +129,16 @@ func (f *Fiber) LoadRoutes() {
 	skipJwtCheckRoutes := []string{
 		"/api/v1/auth/login",
 		"/api/v1/auth/register",
+		"/api/v1/auth/logout",
 		"/api/v1/auth/refresh",
-		"/api/v1/auth/verify-email",
+		"/api/v1/auth/verify-register-token",
+		"/api/v1/auth/verify-register-token/resend",
 		"/api/v1/auth/forgot-password",
-		"/api/v1/auth/verify-reset-token",
+		"/api/v1/auth/verify-forgot-password-token",
 		"/api/v1/auth/reset-password",
-		"/api/v1/locations",
+		global.SPB_CONFIG.OAuth.Google.Callback,
+		// testing
+		"/api/v1/auth/ses-verify",
 	}
 	router := f.App.Group("",
 		custMiddlewares.Log(),                           // add logging to all routes
@@ -163,7 +167,7 @@ func (f *Fiber) LoadRoutes() {
 	// a custom 404 handler
 	f.App.Use(func(ctx fiber.Ctx) error {
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"message": "resource Not Found",
+			"message": "resource not found",
 		})
 	})
 }

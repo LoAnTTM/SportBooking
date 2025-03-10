@@ -30,7 +30,7 @@ func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	reqBody := new(model.GetUsersRequest)
 	fctx := utils.FiberCtx{Fctx: ctx}
 
-	pagination := utils.GetPagination(ctx.Queries())
+	pagination := utils.GetPagination(ctx.Queries(), model.ORDER_BY)
 	reqBody.Pagination = pagination
 
 	claims := ctx.Locals("claims").(authModel.UserClaims)

@@ -28,10 +28,7 @@ func (s *Handler) GetByKey(ctx fiber.Ctx) error {
 	var metadata *tb.Metadata
 
 	fctx := utils.FiberCtx{Fctx: ctx}
-	if metadataKey, err = fctx.ParseUUID("key"); err != nil {
-		logger.Errorf("error parse metadata key: %v", err)
-		return fctx.ErrResponse(msg.METADATA_INCORRECT)
-	}
+	metadataKey = fctx.ParseParam("key")
 
 	if metadata, err = s.service.GetByKey(metadataKey); err != nil {
 		logger.Errorf("error get metadata by key: %v", err)

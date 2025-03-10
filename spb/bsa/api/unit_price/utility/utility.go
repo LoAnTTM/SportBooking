@@ -33,8 +33,8 @@ func MapUnitPricesEntityToResponse(unit_prices []*tb.UnitPrice, reqBody *model.G
 
 	unitPriceNum := len(res.UnitPrices)
 	res.Total = uint(unitPriceNum)
-	res.Pagination = &reqBody.Pagination
-	res.Pagination.SetPagination(unitPriceNum)
+	res.Pagination = reqBody.Pagination
+	res.Pagination.SetNewPagination(unitPriceNum)
 	return res
 }
 
@@ -56,11 +56,11 @@ func MapCreateRequestToEntity(reqBody *model.CreateUnitPriceRequest) *tb.UnitPri
 // @description: Mapping create unitPrice requests to unitPrice entities
 // @param: reqBody []model.CreateUnitPriceRequest
 // @return: []tb.UnitPrice
-func MapCreateRequestToEntities(reqBody []model.CreateUnitPriceRequest) []tb.UnitPrice {
-	unitPrices := make([]tb.UnitPrice, len(reqBody))
+func MapCreateRequestToEntities(reqBody []*model.CreateUnitPriceRequest) []*tb.UnitPrice {
+	unitPrices := make([]*tb.UnitPrice, 0)
 
 	for id := range reqBody {
-		unitPrices[id] = *MapCreateRequestToEntity(&reqBody[id])
+		unitPrices[id] = MapCreateRequestToEntity(reqBody[id])
 	}
 	return unitPrices
 }
@@ -70,8 +70,8 @@ func MapCreateRequestToEntities(reqBody []model.CreateUnitPriceRequest) []tb.Uni
 // @description: mapping update fields
 // @param: reqBody *model.UpdateUnitPriceRequest
 // @return: tb.UnitPrice
-func MapUpdateRequestToEntity(reqBody *model.UpdateUnitPriceRequest) tb.UnitPrice {
-	var unitPriceUpdate tb.UnitPrice
+func MapUpdateRequestToEntity(reqBody *model.UpdateUnitPriceRequest) *tb.UnitPrice {
+	unitPriceUpdate := new(tb.UnitPrice)
 
 	if reqBody.Price != nil {
 		unitPriceUpdate.Price = *reqBody.Price
@@ -90,10 +90,10 @@ func MapUpdateRequestToEntity(reqBody *model.UpdateUnitPriceRequest) tb.UnitPric
 // @description: mapping update fields
 // @param: reqBody []model.UpdateUnitPriceRequest
 // @return: []tb.UnitPrice
-func MapUpdateRequestToEntities(reqBody []model.UpdateUnitPriceRequest) []tb.UnitPrice {
-	unitPrices := make([]tb.UnitPrice, len(reqBody))
+func MapUpdateRequestToEntities(reqBody []*model.UpdateUnitPriceRequest) []*tb.UnitPrice {
+	unitPrices := make([]*tb.UnitPrice, 0)
 	for id := range reqBody {
-		unitPrices[id] = MapUpdateRequestToEntity(&reqBody[id])
+		unitPrices[id] = MapUpdateRequestToEntity(reqBody[id])
 	}
 	return unitPrices
 }

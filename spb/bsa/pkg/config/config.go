@@ -54,20 +54,10 @@ type CORS struct {
 	AllowCredentials bool     `mapstructure:"allow_credentials"`
 }
 
-type Cache struct {
-	VerifyEmailExp   int `mapstructure:"verify_email_exp"`
-	ResetPasswordExp int `mapstructure:"reset_password_exp"`
-}
-
 type JWT struct {
 	Secret          string `mapstructure:"secret"`
 	AccessTokenExp  int    `mapstructure:"access_token_exp"`
 	RefreshTokenExp int    `mapstructure:"refresh_token_exp"`
-}
-
-type OAuth struct {
-	GoogleClientId     string `mapstructure:"google_client_id"`
-	GoogleClientSecret string `mapstructure:"google_client_secret"`
 }
 
 type RedisQueue struct {
@@ -95,10 +85,23 @@ type AWS struct {
 	MaxRetries int    `mapstructure:"max_retries"`
 }
 
+type OTP struct {
+	OTPLength int `mapstructure:"length"`
+	OTPExp    int `mapstructure:"expire"`
+}
+
+type Google struct {
+	ClientID string `mapstructure:"client_id"`
+	Callback string `mapstructure:"client_callback"`
+}
+
+type OAuth struct {
+	Google Google `mapstructure:"google"`
+}
+
 type Config struct {
 	ProjectName  string        `mapstructure:"project_name"`
 	Server       *Server       `mapstructure:"server"`
-	Cache        *Cache        `mapstructure:"cache"`
 	JWT          *JWT          `mapstructure:"jwt"`
 	DB           *DB           `mapstructure:"database"`
 	Redis        *Redis        `mapstructure:"redis"`
@@ -106,6 +109,8 @@ type Config struct {
 	Logging      *Logging      `mapstructure:"logging"`
 	Notification *Notification `mapstructure:"notification"`
 	AWS          *AWS          `mapstructure:"aws"`
+	OTP          *OTP          `mapstructure:"otp"`
+	OAuth        *OAuth        `mapstructure:"oauth"`
 	Vpr          *viper.Viper
 }
 

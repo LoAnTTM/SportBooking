@@ -10,8 +10,8 @@ import (
 // @description: Mapping notificationType entity to response
 // @param: notificationType tb.NotificationType
 // @return: model.NotificationTypeResponse
-func MapNotificationTypeEntityToResponse(notificationType *tb.NotificationType) model.NotificationTypeResponse {
-	return model.NotificationTypeResponse{
+func MapNotificationTypeEntityToResponse(notificationType *tb.NotificationType) *model.NotificationTypeResponse {
+	return &model.NotificationTypeResponse{
 		NotificationTypeID: notificationType.ID,
 		Type:               notificationType.Type,
 		Template:           notificationType.Template,

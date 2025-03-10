@@ -160,7 +160,7 @@ func (q *Queue) run(task QueuedMessage) error {
 
 func (q *Queue) handle(m *Message) error {
 	done := make(chan error, 1)
-	panicChan := make(chan interface{}, 1)
+	panicChan := make(chan any, 1)
 	startTime := time.Now()
 	ctx, cancel := context.WithTimeout(context.Background(), m.Timeout)
 	defer cancel()

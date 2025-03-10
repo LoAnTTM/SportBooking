@@ -11,7 +11,7 @@ const (
 	EMAIL   Platform = "email"
 )
 
-func (st *Platform) Scan(val interface{}) error {
+func (st *Platform) Scan(val any) error {
 	*st = Platform(val.(string))
 	return nil
 }

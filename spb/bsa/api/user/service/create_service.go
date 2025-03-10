@@ -21,7 +21,7 @@ func (s *Service) Create(reqBody *model.CreateUserRequest) (*tb.User, error) {
 		return nil, msg.ErrEmailExists
 	}
 
-	var role *tb.Role
+	role := new(tb.Role)
 	if err := s.db.
 		Preload("Permissions").
 		Where("id = ?", reqBody.Role).

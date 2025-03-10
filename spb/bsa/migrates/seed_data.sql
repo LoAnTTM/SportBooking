@@ -18,13 +18,17 @@ VALUES
 	(16384, 'location:create', NOW(), NOW()),
 	(32768, 'location:update', NOW(), NOW()),
 	(65536, 'location:delete', NOW(), NOW()),
-	(131072, 'metadata:create', NOW(), NOW()),
-	(262144, 'metadata:read', NOW(), NOW()),
-	(524288, 'order:list', NOW(), NOW()),
-	(1048576, 'order:read', NOW(), NOW()),
-	(2097152, 'order:create', NOW(), NOW()),
-	(4194304, 'order:approve_request', NOW(), NOW()),
-	(8388608, 'order:approve_payment', NOW(), NOW());
+	(131072, 'metadata:read', NOW(), NOW()),
+	(262144, 'metadata:create', NOW(), NOW()),
+	(524288, 'metadata:update', NOW(), NOW()),
+	(1048576, 'order:club:list', NOW(), NOW()),
+	(2097152, 'order:club:read', NOW(), NOW()),
+	(4194304, 'order:create', NOW(), NOW()),
+	(8388608, 'order:approve_request', NOW(), NOW()),
+	(16777216, 'order:approve_payment', NOW(), NOW()),
+	(33554432, 'sport_type:create', NOW(), NOW()),
+	(67108864, 'sport_type:update', NOW(), NOW()),
+	(134217728, 'sport_type:delete', NOW(), NOW());
 
 INSERT INTO
 	"role" (
@@ -39,7 +43,7 @@ VALUES
 	(
 		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
 		'admin',
-		16777215,
+		268435455,
 		null,
 		NOW (),
 		NOW ()
@@ -47,7 +51,7 @@ VALUES
 	(
 		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
 		'client',
-		11567079,
+		28327904,
 		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
 		NOW (),
 		NOW ()
@@ -55,7 +59,7 @@ VALUES
 	(
 		'9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid,
 		'user',
-		3670016,
+		4194304,
 		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
 		NOW (),
 		NOW ()
@@ -161,16 +165,20 @@ VALUES
 		8388608
 	),
 	(
-		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
-		1
+		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
+		16777216
 	),
 	(
-		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
-		2
+		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
+		33554432
 	),
 	(
-		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
-		4
+		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
+		67108864
+	),
+	(
+		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
+		134217728
 	),
 	(
 		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
@@ -210,10 +218,6 @@ VALUES
 	),
 	(
 		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
-		16384
-	),
-	(
-		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
 		1048576
 	),
 	(
@@ -225,16 +229,12 @@ VALUES
 		8388608
 	),
 	(
-		'9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid,
-		524288
+		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
+		16777216
 	),
 	(
 		'9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid,
-		1048576
-	),
-	(
-		'9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid,
-		2097152
+		4194304
 	);
 
 INSERT INTO
@@ -247,7 +247,6 @@ INSERT INTO
 		"password",
 		full_name,
 		phone,
-		email_verify_token,
 		is_email_verified,
 		role_id
 	)
@@ -258,8 +257,7 @@ VALUES
 		NOW (),
 		NULL,
 		'admin@gmail.com',
-		'$2a$10$nCvN3CAF4b1mMuramtpSre8Dx7fsBf4FoRG2btotNKvbLftZPKbqu',
-		NULL,
+		'$2a$10$sZxiPLqCjWpft0qcWhiscu5uxvbUD.Tlx3ZrzIX1ywwU1ghAr3hUW',
 		NULL,
 		NULL,
 		true,
@@ -271,8 +269,7 @@ VALUES
 		NOW (),
 		NULL,
 		'client@gmail.com',
-		'$2a$10$A20KBHwJ8dpuL951mY23P.D0gV6kek73rKqspLgAm2sfkCe7HgbFm',
-		NULL,
+		'$2a$10$7iWYtkc2ohSfcGJ6zIIJ9u.7qFKo8N.3uwrdEU7knndQrUZMsyAhe',
 		NULL,
 		NULL,
 		true,
@@ -285,7 +282,6 @@ VALUES
 		NULL,
 		'user1@gmail.com',
 		'$2a$10$buwiJga6U0oGp4eim88zCuKYYFdxLz3cGgGxb9mhzuXoh3G5vpY26',
-		NULL,
 		NULL,
 		NULL,
 		false,
@@ -306,8 +302,8 @@ VALUES
 	(
 		gen_random_uuid(),
 		'A:VE:',
-		'Sport Booking - Email Address Verification Request',
-		'<!DOCTYPE html> <html> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Email Verification</title> <link rel="preconnect" href="https://fonts.googleapis.com" /> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /> <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet" /> <style> body { font-family: "Lato", sans-serif; font-weight: 400; font-style: normal; background-color: #f4f4f4; margin: 0; padding: 0; } .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); } .content { text-align: left; padding: 20px; } .center { display: flex; justify-content: center; margin: 30px 0; } .button { display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: #28a745; text-decoration: none; border-radius: 5px; } .footer { text-align: center; padding: 20px; font-size: 12px; color: #777; } </style> </head> <body> <div class="container"> <div class="content"> <h1>Hi, {{.Name}}</h1> <p>Thank you for registering at {{.CompanyName}}! <br /></p> <p> To complete your registration, please verify your email address by clicking the link below: </p> <div class="center"> <a href="{{.VerificationLink}}" class="button" >Verify My Email</a > </div> <p> If you didn’t sign up for an account, please ignore this email. </p> <p>Thank you,</p> <p>{{.CompanyName}} Team</p> </div> <div class="footer"> <p>&copy; 2024 Sport Booking. All rights reserved.</p> </div> </div> </body> </html>',
+		'OTP Verification - Verity Email',
+		'<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>OTP Verification - {{.CompanyName}}</title> <style> body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; } .email-container { max-width: 600px; margin: 30px auto; padding: 20px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); } .email-header { text-align: center; padding-bottom: 20px; } .email-header h1 { font-size: 24px; color: #333333; margin: 0; } .otp-container { text-align: center; padding: 20px; background-color: #f8f8f8; border-radius: 5px; margin-top: 20px; } .otp-code { font-size: 32px; font-weight: bold; color: #007bff; margin: 0; } .email-footer { text-align: center; padding-top: 20px; color: #777777; font-size: 14px; } .email-footer a { color: #007bff; text-decoration: none; } </style> </head> <body> <div class="email-container"> <div class="email-header"> <h1>OTP Verification Code</h1> </div> <p>Hi {{.Name}},</p> <p> We received a request to verify your identity. Use the One-Time Password (OTP) below to complete the process: </p> <div class="otp-container"> <p class="otp-code">{{.OTPCode}}</p> </div> <p> This OTP is valid for {{.Expire}}. If you did not request this, please ignore this email. </p> <div class="email-footer"> <p>Best regards,</p> <p>The {{.CompanyName}} Team</p> <p>&copy; 2024 Sport Booking. All rights reserved.</p> </div> </div> </body> </html>',
 		'verify email',
 		NOW(),
 		NOW()
@@ -315,8 +311,8 @@ VALUES
 	(
 		gen_random_uuid(),
 		'A:RP:',
-		'Sport Booking - Reset Your Password',
-		'<!DOCTYPE html> <html> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Email Verification</title> <link rel="preconnect" href="https://fonts.googleapis.com" /> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /> <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet" /> <style> body { font-family: "Lato", sans-serif; font-weight: 400; font-style: normal; background-color: #f4f4f4; margin: 0; padding: 0; } .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); } .content { text-align: left; padding: 20px; } .center { display: flex; justify-content: center; margin: 30px 0; } .button { display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: #28a745; text-decoration: none; border-radius: 5px; } .footer { text-align: center; padding: 20px; font-size: 12px; color: #777; } </style> </head> <body> <div class="container"> <div class="content"> <h1>Hi, {{.Name}}</h1> <p> We received a request to reset your password for your {{.CompanyName}} account. <br /> </p> <p>To reset your password, <b>click the link below:</b></p> <div class="center"> <a href="{{.VerificationLink}}" class="button" >Reset My Password</a > </div> <p> If you did not request a password reset, please ignore this email. Your password will remain unchanged. </p> <p>Thank you,</p> <p>{{.CompanyName}} Team</p> <hr /> <i>This link will expire in <b>{{.Expire}}</b>.</i> </div> <div class="footer"> <p>&copy; 2024 Sport Booking. All rights reserved.</p> </div> </div> </body> </html>',
+		'OTP Verification - Reset Your Password',
+		'<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>OTP Verification - {{.CompanyName}}</title> <style> body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; } .email-container { max-width: 600px; margin: 30px auto; padding: 20px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); } .email-header { text-align: center; padding-bottom: 20px; } .email-header h1 { font-size: 24px; color: #333333; margin: 0; } .otp-container { text-align: center; padding: 20px; background-color: #f8f8f8; border-radius: 5px; margin-top: 20px; } .otp-code { font-size: 32px; font-weight: bold; color: #007bff; margin: 0; } .email-footer { text-align: center; padding-top: 20px; color: #777777; font-size: 14px; } .email-footer a { color: #007bff; text-decoration: none; } </style> </head> <body> <div class="email-container"> <div class="email-header"> <h1>OTP Verification Code</h1> </div> <p>Hi {{.Name}},</p> <p> We received a request to verify your identity. Use the One-Time Password (OTP) below to complete the process: </p> <div class="otp-container"> <p class="otp-code">{{.OTPCode}}</p> </div> <p> This OTP is valid for {{.Expire}}. If you did not request this, please ignore this email. </p> <div class="email-footer"> <p>Best regards,</p> <p>The {{.CompanyName}} Team</p> <p>&copy; 2024 Sport Booking. All rights reserved.</p> </div> </div> </body> </html>',
 		'reset password',
 		NOW(),
 		NOW()

@@ -3,6 +3,7 @@ package service
 import (
 	"spb/bsa/api/auth/model"
 	"spb/bsa/api/auth/utility"
+	permissionModule "spb/bsa/api/permission"
 	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
@@ -21,23 +22,21 @@ func (s *Service) AccountLogin(u *model.LoginRequest) (*tb.User, error) {
 		Where("email = ?", u.Email).
 		Preload("Role").
 		First(&user).Error
-	if err == nil {
-		if ok := utils.BcryptCheck(u.Password, user.Password); !ok {
-			return nil, msg.ErrIncorrectPassword
-		}
-
-		permissions := new([]tb.Permission)
-		err = s.db.Model(&tb.Permission{}).
-			Joins("join role_permissions rp on rp.permission_id = permission.id").
-			Where("rp.role_id = ?", user.RoleID).
-			Find(permissions).Error
-		if err != nil {
-			return nil, err
-		}
-
-		user.Role.Permissions = *permissions
-		return &user, nil
+	if err != nil {
+		return nil, err
 	}
 
-	return nil, err
+	if ok := utils.BcryptCheck(u.Password, user.Password); !ok {
+		return nil, msg.ErrIncorrectPassword
+	}
+
+	var permissions []tb.Permission
+
+	permissions, err = permissionModule.PermissionService.GetByRole(user.Role.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	user.Role.Permissions = permissions
+	return &user, nil
 }

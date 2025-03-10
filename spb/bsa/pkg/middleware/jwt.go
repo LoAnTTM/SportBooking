@@ -5,6 +5,8 @@ import (
 
 	"spb/bsa/api/auth/model"
 	"spb/bsa/pkg/auth"
+	"spb/bsa/pkg/cache"
+	"spb/bsa/pkg/config"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
@@ -24,10 +26,19 @@ func JwtMiddleware(ignorePaths ...string) fiber.Handler {
 			return ctx.Next()
 		}
 
+		fctx := utils.FiberCtx{Fctx: ctx}
 		var claims *model.UserClaims
 		var errStr string
+
 		claims, err := auth.GetTokenFromHeader(ctx)
 		if claims != nil && err == nil {
+			refreshToken := ctx.Cookies(config.REFRESH_TOKEN_NAME)
+			cachedTokenEmail := config.AUTH_REFRESH_TOKEN + claims.Email
+
+			if cachedToken, _ := cache.Jwt.GetJwt(cachedTokenEmail); cachedToken != refreshToken {
+				return fctx.ErrResponse(msg.UNAUTHORIZED)
+			}
+
 			ctx.Locals("claims", *claims)
 			return ctx.Next()
 		} else {
@@ -35,7 +46,6 @@ func JwtMiddleware(ignorePaths ...string) fiber.Handler {
 		}
 		logger.Errorf("error jwt middleware: %v", errStr)
 
-		fctx := utils.FiberCtx{Fctx: ctx}
-		return fctx.ErrResponse(msg.UNAUTHORIZED)
+		return fctx.ErrResponse(msg.NOT_ACCEPTABLE)
 	}
 }

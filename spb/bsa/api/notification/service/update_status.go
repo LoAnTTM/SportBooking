@@ -8,11 +8,11 @@ import (
 // @author: LoanTT
 // @function: UpdateStatus
 // @description: Update notification status
-// @param: notifyID string, status enum.Progress
+// @param: senderID string, status enum.Progress
 // @return: error
-func (s *Service) UpdateStatus(notifyID string, status enum.Progress) error {
+func (s *Service) UpdateStatus(senderID string, status enum.Progress) error {
 	notify := new(tb.Notification)
-	err := s.db.Where("id = ?", notifyID).First(notify).Error
+	err := s.db.Where("sender_id = ?", senderID).First(notify).Error
 	if err != nil {
 		return err
 	}

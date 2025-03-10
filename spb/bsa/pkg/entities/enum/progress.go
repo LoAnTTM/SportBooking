@@ -11,7 +11,7 @@ const (
 	FAILURE    Progress = "failure"
 )
 
-func (st *Progress) Scan(val interface{}) error {
+func (st *Progress) Scan(val any) error {
 	*st = Progress(val.(string))
 	return nil
 }

@@ -11,7 +11,7 @@ import (
 // @description: Get children roles by parent id
 // @param: role
 // @return: *[]tb.Role, error
-func (s *Service) GetChildren(role interface{}) ([]tb.Role, error) {
+func (s *Service) GetChildren(role any) ([]tb.Role, error) {
 	var childrenRoles []tb.Role
 
 	err := s.db.

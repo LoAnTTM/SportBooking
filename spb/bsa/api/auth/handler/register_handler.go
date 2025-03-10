@@ -2,6 +2,7 @@ package handler
 
 import (
 	"spb/bsa/api/auth/model"
+	"spb/bsa/api/auth/service"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/msg"
@@ -31,16 +32,15 @@ func (h *Handler) AccountRegister(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(msg.REGISTER_FAILURE)
 	}
 
-	_, err := h.service.AccountRegister(reqBody)
+	status, err := h.service.AccountRegister(reqBody)
 	if err != nil {
 		logger.Errorf("register failed: %v", err)
+		return fctx.ErrResponse(msg.REGISTER_FAILURE)
+	}
 
-		switch err.Error() {
-		case msg.REGISTER_EMAIL_VERIFYING.Error():
-			return fctx.ErrResponse(msg.REGISTER_EMAIL_VERIFYING)
-		default:
-			return fctx.ErrResponse(msg.REGISTER_FAILURE)
-		}
+	switch status {
+	case service.AccountExisted:
+		return fctx.ErrResponse(msg.REGISTER_FAILURE)
 	}
 
 	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_REGISTER_SUCCESS)

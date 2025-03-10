@@ -22,6 +22,6 @@ type MetadatasResponse struct {
 }
 
 type UpdateMetadataRequest struct {
-	Value       *string `json:"value,omitempty" validate:"min=1,max=3000,required"`
-	Description *string `json:"description,omitempty" validate:"min=1,max=3000,required"`
+	Value       *string `json:"value,omitempty" validate:"omitempty,min=1,max=3000"`
+	Description *string `json:"description,omitempty" validate:"omitempty,min=1,max=3000"`
 }

@@ -4,6 +4,12 @@ import (
 	"spb/bsa/pkg/utils"
 )
 
+var ORDER_BY = []string{
+	"price",
+	"created_at",
+	"updated_at",
+}
+
 type GetUnitPricesRequest struct {
 	Pagination utils.Pagination `json:"pagination"`
 	UnitID     string           `json:"unit_id"`
@@ -19,7 +25,7 @@ type UnitPriceResponse struct {
 type UnitPricesResponse struct {
 	UnitPrices []UnitPriceResponse `json:"unit_prices"`
 	Total      uint                `json:"total"`
-	Pagination *utils.Pagination   `json:"pagination"`
+	Pagination utils.Pagination    `json:"pagination"`
 }
 
 type CreateUnitPriceRequest struct {

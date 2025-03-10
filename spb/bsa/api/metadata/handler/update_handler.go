@@ -33,12 +33,7 @@ func (s *Handler) Update(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(msg.METADATA_INCORRECT)
 	}
 
-	key, err := fctx.ParseUUID("key")
-	if err != nil {
-		logger.Errorf("error parse metadata key: %v", err)
-		return fctx.ErrResponse(msg.METADATA_INCORRECT)
-	}
-
+	key := fctx.ParseParam("key")
 	metadataUpdated, err := s.service.Update(key, reqBody)
 	if err != nil {
 		logger.Errorf("error create metadata: %v", err)

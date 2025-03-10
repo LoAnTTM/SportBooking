@@ -58,11 +58,11 @@ func NewZlog(configVal *config.Config) {
 	Zlog.ConsoleLogger = newConsoleLogger()
 }
 
-func (zl *ZapLog) getField(key string, value interface{}) zap.Field {
+func (zl *ZapLog) getField(key string, value any) zap.Field {
 	return zap.Any(key, value)
 }
 
-func GetField(key string, value interface{}) zap.Field {
+func GetField(key string, value any) zap.Field {
 	return Zlog.getField(key, value)
 }
 

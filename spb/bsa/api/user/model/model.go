@@ -5,6 +5,13 @@ import (
 	"spb/bsa/pkg/utils"
 )
 
+var ORDER_BY = []string{
+	"email",
+	"full_name",
+	"created_at",
+	"updated_at",
+}
+
 type GetUsersRequest struct {
 	Pagination utils.Pagination
 	Role       string
@@ -25,7 +32,7 @@ type PermissionResponse struct {
 }
 
 type GetUsersResponse struct {
-	Users      []UserResponse    `json:"users"`
+	Users      []*UserResponse   `json:"users"`
 	Total      uint              `json:"total"`
 	Pagination *utils.Pagination `json:"pagination"`
 }

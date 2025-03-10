@@ -7,29 +7,22 @@ import (
 	"gorm.io/gorm"
 )
 
-// @queries: i=?&p=?&b=?&t=?
-// @i = items
-// @p = page
-// @b = order by
-// @t = order type
-type Pagination struct {
-	Page       int    `json:"page,omitempty"`        // current page
-	Items      int    `json:"items,omitempty"`       // number item per page
-	OrderBy    string `json:"order_by,omitempty"`    // order by
-	OrderType  string `json:"order_type,omitempty"`  // order type
-	Count      int    `json:"count,omitempty"`       // total items
-	TotalPages int    `json:"total_pages,omitempty"` // total pages (count / items)
-	NextPage   string `json:"next_page,omitempty"`
-	PrevPage   string `json:"prev_page,omitempty"`
-}
+const DEFAULT_SORT_KEY = "created_at"
 
-// @author: LoanTT
-// @function: defaultSortKey
-// @description: default sort key
-// @return: string
-func defaultSortKey() string {
-	defaultSortKey := "created_at"
-	return defaultSortKey
+// @queries: i=?&p=?&b=?&t=?
+// &i = items
+// &p = page
+// &b = order by
+// &t = order type
+type Pagination struct {
+	Page       int    `json:"page"`        // current page
+	PageItems  int    `json:"page_items"`  // number item per page
+	OrderBy    string `json:"order_by"`    // order by
+	OrderType  string `json:"order_type"`  // order type
+	TotalItems int    `json:"total_items"` // total items
+	TotalPages int    `json:"total_pages"` // total pages (total_items / items per page)
+	NextPage   string `json:"next_page"`
+	PrevPage   string `json:"prev_page"`
 }
 
 // @author: LoanTT
@@ -39,37 +32,66 @@ func defaultSortKey() string {
 func getDefaultPagination() *Pagination {
 	return &Pagination{
 		Page:       1,
-		Count:      0,
-		OrderBy:    defaultSortKey(),
+		TotalItems: 0,
+		OrderBy:    DEFAULT_SORT_KEY,
 		OrderType:  "desc",
 		TotalPages: 0,
-		Items:      50,
+		PageItems:  50,
 		NextPage:   "",
 		PrevPage:   "",
 	}
 }
 
 // @author: LoanTT
-// @function: SetPagination
-// @description: set pagination info (count, total pages, next, prev)
-// @param: int count
-func (p *Pagination) SetPagination(count int) {
-	p.TotalPages = count / p.Items
-	p.Count = count
-	if count%int(p.Items) > 0 {
-		p.TotalPages++
+// @function: verifyOrderBy
+// @description: verify order by key
+// @param: string
+// @param: []string
+// @return: string
+func verifyOrderBy(orderBy string, orderByOptions []string) string {
+	isValid := false
+	for _, option := range orderByOptions {
+		if option == orderBy {
+			isValid = true
+		}
 	}
-	p.nextPageUrl()
-	p.prevPageUrl()
+	if !isValid {
+		return DEFAULT_SORT_KEY
+	}
+	return orderBy
+}
+
+// @function: verifyOrderType
+// @description: verify order type
+// @param: string
+// @return: string
+func verifyOrderType(orderType string) string {
+	if orderType == "asc" || orderType == "desc" {
+		return orderType
+	}
+	return "desc"
+}
+
+// @author: LoanTT
+// @function: SetNewPagination
+// @description: set new pagination info (total_page, total pages, next, prev)
+// @param: int total_page
+func (p *Pagination) SetNewPagination(total_page int) {
+	// convert float number to floor number
+	p.TotalPages = CeilFloatToInt(float64(total_page) / float64(p.PageItems))
+	p.TotalItems = total_page
+
+	p.NextPageUrl()
+	p.PrevPageUrl()
 }
 
 // @author: LoanTT
 // @function: nextPageUrl
 // @description: set next page url
-func (p *Pagination) nextPageUrl() {
+func (p *Pagination) NextPageUrl() {
 	var nextPageUrl string
 	if p.Page < p.TotalPages {
-		nextPageUrl = fmt.Sprintf("i=%d&p=%d&b=%s&t=%s", p.Items, p.Page+1, p.OrderBy, p.OrderType)
+		nextPageUrl = fmt.Sprintf("i=%d&p=%d&b=%s&t=%s", p.PageItems, p.Page+1, p.OrderBy, p.OrderType)
 	}
 	p.NextPage = nextPageUrl
 }
@@ -77,10 +99,10 @@ func (p *Pagination) nextPageUrl() {
 // @author: LoanTT
 // @function: prevPageUrl
 // @description: set prev page url
-func (p *Pagination) prevPageUrl() {
+func (p *Pagination) PrevPageUrl() {
 	var prevPageUrl string
 	if p.Page > 1 {
-		prevPageUrl = fmt.Sprintf("i=%d&p=%d&b=%s&t=%s", p.Items, p.Page-1, p.OrderBy, p.OrderType)
+		prevPageUrl = fmt.Sprintf("i=%d&p=%d&b=%s&t=%s", p.PageItems, p.Page-1, p.OrderBy, p.OrderType)
 	}
 	p.PrevPage = prevPageUrl
 }
@@ -89,20 +111,23 @@ func (p *Pagination) prevPageUrl() {
 // @function: GetPagination
 // @description: get pagination
 // @param: map[string]string
-// @return: *Pagination
-func GetPagination(queries map[string]string) Pagination {
+// @return: Pagination
+func GetPagination(queries map[string]string, orderByOptions []string) Pagination {
 	pagination := getDefaultPagination()
 
 	if queries["p"] != "" && queries["i"] != "" {
 		pagination.Page, _ = strconv.Atoi(queries["p"])
-		pagination.Items, _ = strconv.Atoi(queries["i"])
+		pagination.PageItems, _ = strconv.Atoi(queries["i"])
 	}
 	if pagination.Page < 1 {
 		pagination.Page = 1
 	}
-	if queries["b"] != "" && queries["y"] != "" {
-		pagination.OrderBy = queries["b"]
-		pagination.OrderType = queries["y"]
+	if queries["b"] != "" && queries["t"] != "" {
+		pagination.OrderType = verifyOrderType(queries["t"])
+		if len(orderByOptions) == 0 {
+			pagination.OrderBy = DEFAULT_SORT_KEY
+		}
+		pagination.OrderBy = verifyOrderBy(queries["b"], orderByOptions)
 	}
 
 	return *pagination
@@ -115,7 +140,21 @@ func GetPagination(queries map[string]string) Pagination {
 // @return: func(*gorm.DB) *gorm.DB
 func Paginate(p *Pagination) func(*gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		offset := int((p.Page - 1) * p.Items)
-		return db.Offset(offset).Limit(p.Items)
+		offset := int((p.Page - 1) * p.PageItems)
+		return db.Offset(offset).Limit(p.PageItems).Order(fmt.Sprintf("%s %s", p.OrderBy, p.OrderType))
 	}
+}
+
+// @author: LoanTT
+// @function: ConcatenateQueries
+// @description: concatenate queries with alias and value
+// @param: string prevQuery
+// @param: string alias
+// @param: string value
+// @return: string query
+func ConcatenateQueries(prevQuery, alias, value string) string {
+	if value != "" {
+		return fmt.Sprintf("%s&%s=%s", prevQuery, alias, value)
+	}
+	return prevQuery
 }

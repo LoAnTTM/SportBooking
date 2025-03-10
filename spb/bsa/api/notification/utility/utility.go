@@ -28,9 +28,6 @@ func MapCreateRequestToEntity(
 	notifyType *tb.NotificationType,
 ) *tb.Notification {
 	return &tb.Notification{
-		Base: tb.Base{
-			ID: reqBody.ID,
-		},
 		Status:             enum.Progress(reqBody.Status),
 		NotificationTypeID: notifyType.ID,
 		Platform:           enum.Platform(reqBody.Platform),

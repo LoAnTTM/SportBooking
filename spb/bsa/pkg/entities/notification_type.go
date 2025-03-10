@@ -19,7 +19,7 @@ func (NotificationType) TableName() string {
 	return NotificationTypeTN
 }
 
-func (nt *NotificationType) MapTemplate(data interface{}) string {
+func (nt *NotificationType) MapTemplate(data any) string {
 	var buf bytes.Buffer
 	tt := template.Must(template.New("Notification").Parse(nt.Template))
 	_ = tt.Execute(&buf, data)

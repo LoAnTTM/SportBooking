@@ -9,7 +9,7 @@ const (
 	INACTIVE Status = "inactive"
 )
 
-func (st *Status) Scan(val interface{}) error {
+func (st *Status) Scan(val any) error {
 	*st = Status(val.(string))
 	return nil
 }

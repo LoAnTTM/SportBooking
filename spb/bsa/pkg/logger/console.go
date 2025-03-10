@@ -22,28 +22,28 @@ func newConsoleLogger() *zap.Logger {
 	return zap.New(core, zap.AddCaller(), zap.AddCallerSkip(2))
 }
 
-func Debugf(format string, args ...interface{}) {
+func Debugf(format string, args ...any) {
 	Zlog.Debugf(format, args...)
 }
 
-func Infof(format string, args ...interface{}) {
+func Infof(format string, args ...any) {
 	Zlog.Infof(format, args...)
 }
 
-func Warnf(format string, args ...interface{}) {
+func Warnf(format string, args ...any) {
 	Zlog.Warnf(format, args...)
 }
 
-func RErrorf(format string, args ...interface{}) error {
+func RErrorf(format string, args ...any) error {
 	Zlog.Errorf(format, args...)
 	return fmt.Errorf(format, args...)
 }
 
-func Errorf(format string, args ...interface{}) {
+func Errorf(format string, args ...any) {
 	Zlog.Errorf(format, args...)
 }
 
-func Fatalf(format string, args ...interface{}) {
+func Fatalf(format string, args ...any) {
 	Zlog.Fatalf(format, args...)
 }
 
@@ -51,8 +51,8 @@ func Fatalf(format string, args ...interface{}) {
 // @function: Debugf
 // @description: Debugf
 // @param: format string
-// @param: args ...interface{}
-func (zl *ZapLog) Debugf(format string, args ...interface{}) {
+// @param: args ...any
+func (zl *ZapLog) Debugf(format string, args ...any) {
 	sugar := Zlog.ConsoleLogger.Sugar()
 	if zl.Level <= DebugLevel {
 		sugar.Debugf(format, args...)
@@ -63,8 +63,8 @@ func (zl *ZapLog) Debugf(format string, args ...interface{}) {
 // @function: Infof
 // @description: Infof
 // @param: format string
-// @param: args ...interface{}
-func (zl *ZapLog) Infof(format string, args ...interface{}) {
+// @param: args ...any
+func (zl *ZapLog) Infof(format string, args ...any) {
 	sugar := Zlog.ConsoleLogger.Sugar()
 	if zl.Level <= InfoLevel {
 		sugar.Infof(format, args...)
@@ -75,8 +75,8 @@ func (zl *ZapLog) Infof(format string, args ...interface{}) {
 // @function: Warnf
 // @description: Warnf
 // @param: format string
-// @param: args ...interface{}
-func (zl *ZapLog) Warnf(format string, args ...interface{}) {
+// @param: args ...any
+func (zl *ZapLog) Warnf(format string, args ...any) {
 	sugar := Zlog.ConsoleLogger.Sugar()
 	if zl.Level <= WarnLevel {
 		sugar.Warnf(format, args...)
@@ -87,8 +87,8 @@ func (zl *ZapLog) Warnf(format string, args ...interface{}) {
 // @function: Errorf
 // @description: Errorf
 // @param: format string
-// @param: args ...interface{}
-func (zl *ZapLog) Errorf(format string, args ...interface{}) {
+// @param: args ...any
+func (zl *ZapLog) Errorf(format string, args ...any) {
 	sugar := Zlog.ConsoleLogger.Sugar()
 	if zl.Level <= ErrorLevel {
 		sugar.Errorf(format, args...)
@@ -99,8 +99,8 @@ func (zl *ZapLog) Errorf(format string, args ...interface{}) {
 // @function: FErrorf
 // @description: FErrorf
 // @param: format string
-// @param: args ...interface{}
-func (zl *ZapLog) Fatalf(format string, args ...interface{}) {
+// @param: args ...any
+func (zl *ZapLog) Fatalf(format string, args ...any) {
 	sugar := Zlog.ConsoleLogger.Sugar()
 	if zl.Level <= ErrorLevel {
 		sugar.Fatalf(format, args...)

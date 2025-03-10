@@ -35,7 +35,7 @@ func MapUnitServiceEntitiesToResponse(unitServices []*tb.UnitService, reqBody *m
 	unitServiceNum := len(res.UnitServices)
 	res.Total = uint(unitServiceNum)
 	res.Pagination = &reqBody.Pagination
-	res.Pagination.SetPagination(unitServiceNum)
+	res.Pagination.SetNewPagination(unitServiceNum)
 	return res
 }
 
@@ -58,10 +58,10 @@ func MapCreateRequestToEntity(reqBody *model.CreateUnitServiceRequest) *tb.UnitS
 // @description: Mapping create unitService request to unitService entity
 // @param: reqBody []model.CreateUnitServiceRequest
 // @return: []tb.UnitService
-func MapCreateRequestToEntities(reqBody []model.CreateUnitServiceRequest) []tb.UnitService {
-	var unitServices []tb.UnitService
+func MapCreateRequestToEntities(reqBody []*model.CreateUnitServiceRequest) []*tb.UnitService {
+	var unitServices []*tb.UnitService
 	for _, unitService := range reqBody {
-		unitServices = append(unitServices, *MapCreateRequestToEntity(&unitService))
+		unitServices = append(unitServices, MapCreateRequestToEntity(unitService))
 	}
 	return unitServices
 }
@@ -71,8 +71,8 @@ func MapCreateRequestToEntities(reqBody []model.CreateUnitServiceRequest) []tb.U
 // @description: mapping update fields
 // @param: reqBody *model.UpdateUnitServiceRequest
 // @return: tb.UnitService
-func MapUpdateRequestToEntity(reqBody *model.UpdateUnitServiceRequest) tb.UnitService {
-	var unitServiceUpdate tb.UnitService
+func MapUpdateRequestToEntity(reqBody *model.UpdateUnitServiceRequest) *tb.UnitService {
+	unitServiceUpdate := new(tb.UnitService)
 
 	if reqBody.Icon != nil {
 		unitServiceUpdate.Icon = *reqBody.Icon
@@ -92,10 +92,10 @@ func MapUpdateRequestToEntity(reqBody *model.UpdateUnitServiceRequest) tb.UnitSe
 // @description: mapping update fields
 // @param: reqBody []model.UpdateUnitServiceRequest
 // @return: []tb.UnitService
-func MapUpdateRequestToEntities(reqBody []model.UpdateUnitServiceRequest) []tb.UnitService {
-	var unitServices []tb.UnitService
+func MapUpdateRequestToEntities(reqBody []*model.UpdateUnitServiceRequest) []*tb.UnitService {
+	unitServices := make([]*tb.UnitService, 0)
 	for _, unitService := range reqBody {
-		unitServices = append(unitServices, MapUpdateRequestToEntity(&unitService))
+		unitServices = append(unitServices, MapUpdateRequestToEntity(unitService))
 	}
 	return unitServices
 }

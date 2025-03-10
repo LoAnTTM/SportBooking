@@ -21,7 +21,7 @@ type UserResponse struct {
 
 type LoginRequest struct {
 	Email    string `json:"email"    validate:"min=6,max=256,required,email"`
-	Password string `json:"password" validate:"min=6,max=256,required"`
+	Password string `json:"password" validate:"min=6,max=256,required,password"`
 }
 
 type LoginResponse struct {
@@ -31,28 +31,47 @@ type LoginResponse struct {
 
 type RegisterRequest struct {
 	Email    string `json:"email"    validate:"min=6,max=256,required,email"`
-	Password string `json:"password" validate:"min=6,max=256,required"`
+	Password string `json:"password" validate:"min=6,max=256,required,password"`
 }
 
 type RefreshTokenResponse struct {
 	AccessToken string `json:"access_token"`
 }
 
-type VerifyEmailRequest struct {
-	Token string `json:"token"  validate:"uuid,required"`
+type VerifyRegisterTokenRequest struct {
+	Token int    `json:"token"  validate:"gte=999,lte=1000000"`
+	Email string `json:"email"  validate:"min=6,max=256,required,email"`
 }
 
 type ForgotPasswordRequest struct {
 	Email string `json:"email" validate:"min=6,max=256,required,email"`
 }
 
-type VerifyTokenRequest struct {
-	Token string `json:"token"  validate:"uuid,required"`
+type VerifyForgotPasswordTokenRequest struct {
+	Token int    `json:"token"  validate:"gte=999,lte=1000000"`
 	Email string `json:"email"  validate:"min=6,max=256,required,email"`
 }
 
 type ResetPasswordRequest struct {
-	Token    string `json:"token"    validate:"uuid,required"`
+	Token    int    `json:"token"    validate:"gte=999,lte=1000000"`
 	Email    string `json:"email"    validate:"min=6,max=256,required,email"`
-	Password string `json:"password" validate:"min=6,max=256,required"`
+	Password string `json:"password" validate:"min=6,max=256,required,password"`
+}
+
+type SendVerificationRequest struct {
+	Email string `json:"email" validate:"required,email"`
+}
+
+type GoogleCallbackRequest struct {
+	Code string `json:"code" validate:"required"`
+}
+
+type GooglePayload struct {
+	Email string `json:"email"`
+	Name  string `json:"name"`
+	Sub   string `json:"sub"`
+}
+
+type ResendVerifyRegisterTokenRequest struct {
+	Email string `json:"email" validate:"min=6,max=256,required,email"`
 }

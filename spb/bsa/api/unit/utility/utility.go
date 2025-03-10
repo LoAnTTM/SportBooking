@@ -35,7 +35,7 @@ func MapCreateRequestToEntity(reqBody *model.CreateUnitRequest) *tb.Unit {
 		Description:  reqBody.Description,
 		Status:       reqBody.Status,
 		ClubID:       reqBody.ClubID,
-		Address:      *au.MapCreateRequestToEntity(&reqBody.Address),
+		Address:      au.MapCreateRequestToEntity(reqBody.Address),
 		UnitPrice:    upu.MapCreateRequestToEntities(reqBody.UnitPrices),
 		UnitServices: usu.MapCreateRequestToEntities(reqBody.UnitServices),
 		Media:        mu.MapCreateRequestToEntities(reqBody.Media),
@@ -48,8 +48,8 @@ func MapCreateRequestToEntity(reqBody *model.CreateUnitRequest) *tb.Unit {
 // @description: mapping update fields
 // @param: reqBody *model.UpdateUnitRequest
 // @return: tb.Unit
-func MapUpdateRequestToEntity(reqBody *model.UpdateUnitRequest) tb.Unit {
-	var unitUpdate tb.Unit
+func MapUpdateRequestToEntity(reqBody *model.UpdateUnitRequest) *tb.Unit {
+	unitUpdate := new(tb.Unit)
 
 	if reqBody.Name != nil {
 		unitUpdate.Name = *reqBody.Name
@@ -73,16 +73,16 @@ func MapUpdateRequestToEntity(reqBody *model.UpdateUnitRequest) tb.Unit {
 		unitUpdate.Address = au.MapUpdateRequestToEntity(reqBody.Address)
 	}
 	if reqBody.UnitPrices != nil {
-		unitUpdate.UnitPrice = upu.MapUpdateRequestToEntities(*reqBody.UnitPrices)
+		unitUpdate.UnitPrice = upu.MapUpdateRequestToEntities(reqBody.UnitPrices)
 	}
 	if reqBody.UnitServices != nil {
-		unitUpdate.UnitServices = usu.MapUpdateRequestToEntities(*reqBody.UnitServices)
+		unitUpdate.UnitServices = usu.MapUpdateRequestToEntities(reqBody.UnitServices)
 	}
 	if reqBody.Media != nil {
-		unitUpdate.Media = mu.MapUpdateRequestToEntities(*reqBody.Media)
+		unitUpdate.Media = mu.MapUpdateRequestToEntities(reqBody.Media)
 	}
 	if reqBody.SportTypes != nil {
-		unitUpdate.SportTypes = stu.MapUpdateRequestToEntities(*reqBody.SportTypes)
+		unitUpdate.SportTypes = stu.MapUpdateRequestToEntities(reqBody.SportTypes)
 	}
 
 	return unitUpdate

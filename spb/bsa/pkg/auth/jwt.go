@@ -26,7 +26,7 @@ func ParseJwt(token string) (*model.UserClaims, error) {
 	}
 
 	tokenValue := tokenPaths[1]
-	jwtToken, err := jwt.ParseWithClaims(tokenValue, &model.UserClaims{}, func(token *jwt.Token) (interface{}, error) {
+	jwtToken, err := jwt.ParseWithClaims(tokenValue, &model.UserClaims{}, func(token *jwt.Token) (any, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, msg.ErrUnexpectedSignMethod(token.Header["alg"])
 		}
@@ -65,7 +65,7 @@ func GetToken(claims jwt.Claims) *jwt.Token {
 // @param: ctx fiber.Ctx
 // @return: *model.UserClaims, error
 func GetTokenFromCookie(ctx fiber.Ctx) (*model.UserClaims, error) {
-	jwtCookie := ctx.Cookies(config.ACCESS_TOKEN_NAME)
+	jwtCookie := ctx.Cookies(config.REFRESH_TOKEN_NAME)
 	if jwtCookie == "" {
 		return nil, msg.ErrAccessKeyNotFound
 	}

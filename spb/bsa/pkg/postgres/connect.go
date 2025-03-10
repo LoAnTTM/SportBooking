@@ -76,7 +76,8 @@ func AutoMigrate(db *gorm.DB) error {
 		&tb.Payments{},
 		&tb.SportType{},
 		&tb.Transactions{},
-		&tb.WebHook{})
+		&tb.WebHook{},
+		&tb.AuthenticationProvider{})
 	if err != nil {
 		return msg.ErrMigrationFailed(err)
 	}

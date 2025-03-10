@@ -12,7 +12,7 @@ import (
 func (s *Service) GetByID(sportTypeId string) (*tb.SportType, error) {
 	sportType := new(tb.SportType)
 
-	if err := s.db.Where("id = ?", sportTypeId).Error; err != nil {
+	if err := s.db.Where("id = ?", sportTypeId).First(sportType).Error; err != nil {
 		return nil, err
 	}
 

@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/gofiber/storage/redis/v3"
@@ -11,6 +12,7 @@ type IJwtCache interface {
 	SetToBlackList(token string, expires int) error
 	GetJwt(key string) (string, error)
 	SetJwt(key string, value string, expires int) error
+	DelJwt(key string)
 }
 
 type JwtCache struct {
@@ -69,4 +71,15 @@ func (j *JwtCache) SetJwt(key, value string, expires int) error {
 	}
 
 	return nil
+}
+
+// @author: LoanTT
+// @function: DelJwt
+// @description: delete jwt from cache
+// @param: key string
+func (j *JwtCache) DelJwt(key string) {
+	err := j.client.Delete(key)
+	if err != nil {
+		fmt.Printf("error delete jwt from cache: %v\n", err)
+	}
 }

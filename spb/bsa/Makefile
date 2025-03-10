@@ -24,10 +24,10 @@ build: test
 	CGO_ENABLED=0 go build -ldflags="-w -s" -o $(BUILD_DIR)/$(APP_NAME) ./main.go
 
 run: build
-	$(BUILD_DIR)/$(APP_NAME) start
+	$(BUILD_DIR)/$(APP_NAME) bsa
 
 dev: 
-	go run $(PWD) start
+	go run $(PWD) bsa
 
 swag:
 	swag init

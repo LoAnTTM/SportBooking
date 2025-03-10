@@ -29,7 +29,7 @@ func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	reqBody := new(model.GetUnitPricesRequest)
 	fctx := utils.FiberCtx{Fctx: ctx}
 
-	pagination := utils.GetPagination(ctx.Queries())
+	pagination := utils.GetPagination(ctx.Queries(), model.ORDER_BY)
 	reqBody.Pagination = pagination
 
 	unit_prices, err := s.service.GetAll(reqBody)

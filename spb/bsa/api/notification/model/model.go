@@ -31,7 +31,6 @@ type NotificationsResponse struct {
 }
 
 type CreateNotificationRequest struct {
-	ID               string        `json:"id"`
 	Status           enum.Progress `json:"status"`
 	Platform         enum.Platform `json:"platform"`
 	Title            string        `json:"title"`

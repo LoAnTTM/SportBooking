@@ -12,7 +12,7 @@ import (
 func (s *Service) GetByID(unitPriceId string) (*tb.UnitPrice, error) {
 	unitPrice := new(tb.UnitPrice)
 
-	err := s.db.Where("id = ?", unitPriceId).Find(unitPrice).Error
+	err := s.db.Where("id = ?", unitPriceId).First(unitPrice).Error
 	if err != nil {
 		return nil, err
 	}

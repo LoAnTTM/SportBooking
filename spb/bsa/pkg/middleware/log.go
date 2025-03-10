@@ -32,7 +32,7 @@ func LogMiddleware() fiber.Handler {
 			if string(ctx.Request().Header.ContentType()) == "application/json" {
 				reqBodyJson = utils.ToPtr(string(bodyBytes))
 			} else {
-				nonJsonMap := map[string]interface{}{}
+				nonJsonMap := map[string]any{}
 				b64Str := base64.StdEncoding.EncodeToString(bodyBytes)
 				nonJsonMap["requestType"] = string(ctx.Request().Header.ContentType())
 				nonJsonMap["base64"] = b64Str
@@ -58,7 +58,7 @@ func LogMiddleware() fiber.Handler {
 				if string(ctx.Response().Header.ContentType()) == "application/json" {
 					resBodyJson = utils.ToPtr(string(ctx.Response().Body()))
 				} else {
-					nonJsonMap := map[string]interface{}{}
+					nonJsonMap := map[string]any{}
 					b64Str := base64.StdEncoding.EncodeToString(ctx.Response().Body())
 					nonJsonMap["responseType"] = string(ctx.Response().Header.ContentType())
 					nonJsonMap["base64"] = b64Str

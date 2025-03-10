@@ -4,6 +4,11 @@ import (
 	"spb/bsa/pkg/utils"
 )
 
+var ORDER_BY = []string{
+	"created_at",
+	"updated_at",
+}
+
 type GetUnitServicesRequest struct {
 	Pagination utils.Pagination `json:"pagination"`
 	UnitID     string           `json:"unit_id"`

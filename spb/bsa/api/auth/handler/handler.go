@@ -122,6 +122,7 @@ func TokenNext(fctx *utils.FiberCtx, ctx fiber.Ctx, user *entities.User, tokens 
 	jwtExpire := global.SPB_CONFIG.JWT.RefreshTokenExp
 
 	switch {
+	// first time login
 	case err == nil && prevToken == "":
 		if err := cache.Jwt.SetJwt(cacheKey, tokens[config.REFRESH_TOKEN_NAME], jwtExpire); err != nil {
 			return logger.RErrorf("error set token to cache: %v", err)
@@ -130,9 +131,11 @@ func TokenNext(fctx *utils.FiberCtx, ctx fiber.Ctx, user *entities.User, tokens 
 			return err
 		}
 
+	// error get token from cache
 	case err != nil:
 		return logger.RErrorf("error get token to cache: %v", err)
 
+	// refresh token
 	case prevToken != "":
 		blPrevToken := config.AUTH_REFRESH_TOKEN_BLACKLIST + prevToken
 		if err := cache.Jwt.SetToBlackList(blPrevToken, global.SPB_CONFIG.JWT.RefreshTokenExp); err != nil {

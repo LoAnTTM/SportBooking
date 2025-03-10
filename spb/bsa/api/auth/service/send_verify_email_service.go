@@ -48,7 +48,8 @@ func (s *Service) SendVerifyEmail(token, email, notifyType string, tx *gorm.DB) 
 
 	if err != nil {
 		tx.Rollback()
-		return nil, logger.RErrorf("Can't make message: %v", err)
+		logger.Errorf("Can't make message: %v", err)
+		return nil, err
 	}
 
 	notify := &notification.PushNotification{
@@ -65,7 +66,8 @@ func (s *Service) SendVerifyEmail(token, email, notifyType string, tx *gorm.DB) 
 	// Send notification
 	if err := global.SPB_NOTIFY.Notify(notify); err != nil {
 		tx.Rollback()
-		return nil, logger.RErrorf("Can't send notification: %v", err)
+		logger.Errorf("Can't send notification: %v", err)
+		return nil, err
 	}
 	return notify, nil
 }
@@ -73,16 +75,16 @@ func (s *Service) SendVerifyEmail(token, email, notifyType string, tx *gorm.DB) 
 // @author: LoanTT
 // @function: ResetPasswordMessage
 // @description: Make message for email template
-// @param: verifyToken string
+// @param: otpCode string
 // @param: email string
 // @param: oEmailTemplate *tb.NotificationType
 // @return: string, error
-func ResetPasswordMessage(verifyToken, email string, oEmailTemplate *tb.NotificationType) (string, error) {
+func ResetPasswordMessage(otpCode, email string, oEmailTemplate *tb.NotificationType) (string, error) {
 	oEmailTemplateData := map[string]string{
-		"VerificationLink": VerificationUrl(verifyToken, global.SPB_CONFIG.Server.ResetPasswordUri),
-		"Name":             email,
-		"CompanyName":      global.SPB_CONFIG.ProjectName,
-		"Expire":           fmt.Sprintf("%d minutes", global.SPB_CONFIG.Cache.ResetPasswordExp),
+		"OTPCode":     otpCode,
+		"Name":        email,
+		"CompanyName": global.SPB_CONFIG.ProjectName,
+		"Expire":      fmt.Sprintf("%d minutes", global.SPB_CONFIG.OTP.OTPExp),
 	}
 
 	temp := oEmailTemplate.MapTemplate(oEmailTemplateData)
@@ -92,15 +94,16 @@ func ResetPasswordMessage(verifyToken, email string, oEmailTemplate *tb.Notifica
 // @author: LoanTT
 // @function: RegisterMessage
 // @description: Make message for email template
-// @param: verifyToken string
+// @param: otpCode string
 // @param: email string
 // @param: oEmailTemplate *tb.NotificationType
 // @return: string, error
-func RegisterMessage(verifyToken, email string, oEmailTemplate *tb.NotificationType) (string, error) {
+func RegisterMessage(otpCode, email string, oEmailTemplate *tb.NotificationType) (string, error) {
 	oEmailTemplateData := map[string]string{
-		"VerificationLink": VerificationUrl(verifyToken, global.SPB_CONFIG.Server.VerifyEmailUri),
-		"Name":             email,
-		"CompanyName":      global.SPB_CONFIG.ProjectName,
+		"OTPCode":     otpCode,
+		"Name":        email,
+		"CompanyName": global.SPB_CONFIG.ProjectName,
+		"Expire":      fmt.Sprintf("%d minutes", global.SPB_CONFIG.OTP.OTPExp),
 	}
 
 	temp := oEmailTemplate.MapTemplate(oEmailTemplateData)

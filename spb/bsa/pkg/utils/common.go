@@ -1,14 +1,16 @@
 package utils
 
 import (
-	"crypto/rand"
 	"fmt"
 	"math"
+	"math/rand"
 	"path"
 	"path/filepath"
 	"regexp"
 	"runtime"
+	"strconv"
 	"strings"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -139,8 +141,35 @@ func ContainBit(bit, val uint64) bool {
 // @return: string
 func CreateSlug(val string) string {
 	slug := strings.ToLower(val)
-	reg := regexp.MustCompile(`\w+`)
-	slug = reg.ReplaceAllString(slug, "-")
+	aRegex := regexp.MustCompile(`(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)`)
+	slug = aRegex.ReplaceAllString(slug, "a")
+
+	eRegex := regexp.MustCompile(`(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)`)
+	slug = eRegex.ReplaceAllString(slug, "e")
+
+	iRegex := regexp.MustCompile(`(ì|í|ị|ỉ|ĩ)`)
+	slug = iRegex.ReplaceAllString(slug, "i")
+
+	oRegex := regexp.MustCompile(`(ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ)`)
+	slug = oRegex.ReplaceAllString(slug, "o")
+
+	uRegex := regexp.MustCompile(`(ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ)`)
+	slug = uRegex.ReplaceAllString(slug, "u")
+
+	yRegex := regexp.MustCompile(`(ỳ|ý|ỵ|ỷ|ỹ)`)
+	slug = yRegex.ReplaceAllString(slug, "y")
+
+	dRegex := regexp.MustCompile(`(đ)`)
+	slug = dRegex.ReplaceAllString(slug, "d")
+
+	specRegex := regexp.MustCompile(`([^0-9a-z-\s])`)
+	slug = specRegex.ReplaceAllString(slug, "")
+
+	splitRegex := regexp.MustCompile(`(\s+)`)
+	slug = splitRegex.ReplaceAllString(slug, "-")
+
+	splitsRegex := regexp.MustCompile(`-+`)
+	slug = splitsRegex.ReplaceAllString(slug, "-")
 
 	slug = strings.Trim(slug, "-")
 	return slug
@@ -151,4 +180,48 @@ func SafeUint64ToInt(val uint64) int {
 		return int(val)
 	}
 	return 0
+}
+
+func SafeInt64ToUint(val int64) uint {
+	if val <= math.MaxInt {
+		return uint(val)
+	}
+	return 0
+}
+
+func SafeInt64ToInt(val int64) int {
+	if val <= math.MaxInt {
+		return int(val)
+	} else if val >= math.MinInt {
+		return int(val)
+	}
+	return 0
+}
+
+func FloorFloatToInt(val float64) int {
+	return int(math.Floor(val))
+}
+
+func CeilFloatToInt(val float64) int {
+	return int(math.Ceil(val))
+}
+
+func GenerateOTPCode(length int) string {
+	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	min := int(math.Pow10(length - 1))
+	max := int(math.Pow10(length)) - 1
+
+	randomNum := rng.Intn(max-min+1) + min
+	return strconv.Itoa(randomNum)
+}
+
+func ConcatStr(joinCharacter string, values ...string) string {
+	var builder strings.Builder
+	for index := range len(values) - 1 {
+		builder.WriteString(values[index])
+	}
+
+	builder.WriteString(values[len(values)-1])
+	return builder.String()
 }

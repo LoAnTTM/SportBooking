@@ -3,8 +3,9 @@ package utility
 import (
 	"spb/bsa/api/auth/model"
 	"spb/bsa/pkg/config"
-	"spb/bsa/pkg/entities"
+	tb "spb/bsa/pkg/entities"
 
+	"google.golang.org/api/idtoken"
 	"gorm.io/gorm"
 )
 
@@ -14,7 +15,7 @@ import (
 // @param: user *entities.User
 // @param: tokens map[string]string
 // @return: *model.LoginResponse
-func MappingLoginResponse(user *entities.User, tokens map[string]string) model.LoginResponse {
+func MappingLoginResponse(user *tb.User, tokens map[string]string) model.LoginResponse {
 	return model.LoginResponse{
 		AccessToken: tokens[config.ACCESS_TOKEN_NAME],
 		User: model.UserResponse{
@@ -51,4 +52,17 @@ func EmailIsVerity(db *gorm.DB) *gorm.DB {
 // @return: *gorm.DB
 func EmailIsNotVerity(db *gorm.DB) *gorm.DB {
 	return db.Where("is_email_verified = ?", false)
+}
+
+// @author: LoanTT
+// @function: MapRawGooglePayload
+// @description: Mapping google payload to user
+// @param: payload *idtoken.Payload
+// @return: *model.GooglePayload
+func MapRawGooglePayload(payload *idtoken.Payload) *model.GooglePayload {
+	return &model.GooglePayload{
+		Email: payload.Claims["email"].(string),
+		Name:  payload.Claims["name"].(string),
+		Sub:   payload.Claims["sub"].(string),
+	}
 }

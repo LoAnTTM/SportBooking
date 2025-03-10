@@ -26,5 +26,5 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 
 	metadataRoute := router.Group("/api/v1/metadatas")
 	metadataRoute.Get("/:key", customMiddleware.CheckAccess("metadata:read"), MetadataHandler.GetByKey)
-	metadataRoute.Put("/:id", customMiddleware.CheckAccess("metadata:update"), MetadataHandler.Update)
+	metadataRoute.Put("/:key", customMiddleware.CheckAccess("metadata:update"), MetadataHandler.Update)
 }

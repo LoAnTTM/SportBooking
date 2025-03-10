@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	UnitService *service.Service
-	UnitHandler *handler.Handler
+	UnitService service.IService
+	UnitHandler handler.IHandler
 )
 
 // @author: LoanTT
@@ -25,7 +25,7 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	UnitHandler = handler.NewHandler(UnitService)
 
 	unitRoute := router.Group("/api/v1/units")
-	unitRoute.Get("/:id", UnitHandler.GetByID, customMiddleware.CheckAccess("unit:read"))
+	unitRoute.Get("/:id", UnitHandler.GetByID)
 	unitRoute.Post("/", UnitHandler.Create, customMiddleware.CheckAccess("unit:create"))
 	unitRoute.Put("/:id", UnitHandler.Update, customMiddleware.CheckAccess("unit:update"))
 	unitRoute.Delete("/:id", UnitHandler.Delete, customMiddleware.CheckAccess("unit:delete"))
