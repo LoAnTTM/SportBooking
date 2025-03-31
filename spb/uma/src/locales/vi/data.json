@@ -1,0 +1,102 @@
+{
+    "onboarding": {
+        "get-started": "Get Started"
+    },
+    "login": {
+        "title": "Welcome back",
+        "forgot": "Forgot password?",
+        "submit": "Login",
+        "email": "Email Address",
+        "password": "Password",
+        "redirect": "Don't have an account?"
+    },
+    "register": {
+        "title": "Get started",
+        "your_name": "Your Name",
+        "email": "Email Address",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "submit": "Register",
+        "redirect": "Already have an account?",
+        "google": "Sign up with Google"
+    },
+    "forgot": {
+        "title": "Forgot password",
+        "description": "Enter your email address to reset your password",
+        "submit": "Send",
+        "email": "Email Address",
+        "popup": {
+            "title": "Check your email",
+            "description": "We have send password recovery code to your email address"
+        },
+        "verification": {
+            "title": "OTP Verification",
+            "description": "Please check your email to see the verification code",
+            "submit": "Verify",
+            "resend": "Resend OTP code in"
+        }
+    },
+    "notification": {
+        "login_success": "Login successful!",
+        "register_success": "Register successful!",
+        "login_failed": "Login failed!",
+        "register_failed": "Register failed!"
+    },
+    "error": {
+        "ERS001": "",
+        "ERS002": "",
+        "ERA001": "",
+        "ERA002": "",
+        "ERA003": "",
+        "ERA004": "",
+        "ERA005": "",
+        "ERA006": "",
+        "ERA007": "",
+        "ERA008": "",
+        "ERA009": "",
+        "ERA010": "",
+        "ERL001": "",
+        "ERL002": "",
+        "ERL003": "",
+        "ERL004": "",
+        "ERMT001": "",
+        "ERMT002": "",
+        "ERMT003": "",
+        "ERUN001": "",
+        "ERUN002": "",
+        "ERUN003": "",
+        "ERUN004": "",
+        "ERUN005": "",
+        "ERUP001": "",
+        "ERUP002": "",
+        "ERUP003": "",
+        "ERUP004": "",
+        "ERUP005": "",
+        "ERUS001": "",
+        "ERUS002": "",
+        "ERUS003": "",
+        "ERUS004": "",
+        "ERUS005": "",
+        "ERST001": "",
+        "ERST002": "",
+        "ERST003": "",
+        "ERST004": "",
+        "ERST005": "",
+        "ERST006": "",
+        "ERM001": "",
+        "ERM002": "",
+        "ERM003": "",
+        "ERM004": "",
+        "ERM005": "",
+        "ERPI001": "",
+        "ERPI002": "",
+        "ERPI003": "",
+        "ERPI004": "",
+        "ERPI005": "",
+        "ERU001": "",
+        "ERU002": "",
+        "ERU003": "",
+        "ERU004": "",
+        "ERU005": ""
+    }
+}

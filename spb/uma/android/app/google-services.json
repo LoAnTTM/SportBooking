@@ -1,0 +1,39 @@
+{
+    "project_info": {
+        "project_id": "your-project-id",
+        "project_number": "your-project-number",
+        "name": "sport-booking"
+    },
+    "client": [
+        {
+            "client_info": {
+                "mobilesdk_app_id": "your-mobilesdk-app-id",
+                "android_client_info": {
+                    "package_name": "com.uma"
+                }
+            },
+            "oauth_client": [
+                {
+                    "client_id": "12163156491-vec0etdic5l77r6po4qfvl3h4e30gj2v.apps.googleusercontent.com",
+                    "client_type": 3
+                }
+            ],
+            "api_key": [
+                {
+                    "current_key": "your-api-key"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": [
+                        {
+                            "client_id": "12163156491-vec0etdic5l77r6po4qfvl3h4e30gj2v.apps.googleusercontent.com",
+                            "client_type": 3
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "configuration_version": "1"
+}

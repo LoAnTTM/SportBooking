@@ -1,0 +1,124 @@
+{
+    "onboarding": {
+        "get_started": "Get Started"
+    },
+    "login": {
+        "title": "Sign In",
+        "forgot": "Forgot password?",
+        "submit": "Sign In",
+        "email": "Email Address",
+        "password": "Password",
+        "google": "Continue with Google"
+    },
+    "register": {
+        "title": "Create Account",
+        "email": "Email Address",
+        "password": "Password",
+        "confirm_password": "Confirm Password",
+        "submit": "Sign Up",
+        "google": "Continue with Google"
+    },
+    "forgot": {
+        "title": "Forgot Password",
+        "description": "Enter your email address to reset your password",
+        "submit": "Reset Password",
+        "email": "Enter your email",
+        "verification": {
+            "title": "OTP Verification",
+            "description": "Please check your email to see the verification code",
+            "submit": "Reset Password"
+        },
+        "confirm": {
+            "submit": "Confirm",
+            "title": "Password Reset",
+            "description": "Your password has been successfully reset. Click the button below to set a new password."
+        },
+        "reset": {
+            "title": "Set New Password",
+            "description": "Enter your new password below",
+            "password": "Enter your new password",
+            "confirm_password": "Re-enter password",
+            "submit": "Update Password",
+            "confirm": {
+                "title": "Successful",
+                "submit": "Continue",
+                "description": "Congratulations! Your password has been successfully updated. Click continue to login."
+            }
+        }
+    },
+    "verification": {
+        "title": "OTP Verification",
+        "description": "Please check your email to see the verification code",
+        "submit": "Verify Code",
+        "resend_ask": "Haven't received the code?",
+        "resend": "Resend Email",
+        "otp_invalid": "OTP Code is invalid"
+    },
+    "notification": {
+        "login_success": "Login successful!",
+        "register_success": "Register successful!",
+        "login_failed": "Login failed!",
+        "register_failed": "Register failed!"
+    },
+    "search": {
+        "placeholder": "Search here",
+        "placeholder_description": "Choose the best Football Field"
+    },
+    "error": {
+        "ERS001": "ERS001",
+        "ERS002": "ERS002",
+        "ERA001": "ERA001",
+        "ERA002": "ERA002",
+        "ERA003": "ERA003",
+        "ERA004": "ERA004",
+        "ERA005": "ERA005",
+        "ERA006": "ERA006",
+        "ERA007": "ERA007",
+        "ERA008": "ERA008",
+        "ERA009": "ERA009",
+        "ERA010": "ERA010",
+        "ERL001": "ERL001",
+        "ERL002": "ERL002",
+        "ERL003": "ERL003",
+        "ERL004": "ERL004",
+        "ERMT001": "ERMT001",
+        "ERMT002": "ERMT002",
+        "ERMT003": "ERMT003",
+        "ERUN001": "ERUN001",
+        "ERUN002": "ERUN002",
+        "ERUN003": "ERUN003",
+        "ERUN004": "ERUN004",
+        "ERUN005": "ERUN005",
+        "ERUP001": "ERUP001",
+        "ERUP002": "ERUP002",
+        "ERUP003": "ERUP003",
+        "ERUP004": "ERUP004",
+        "ERUP005": "ERUP005",
+        "ERUS001": "ERUS001",
+        "ERUS002": "ERUS002",
+        "ERUS003": "ERUS003",
+        "ERUS004": "ERUS004",
+        "ERUS005": "ERUS005",
+        "ERST001": "ERST001",
+        "ERST002": "ERST002",
+        "ERST003": "ERST003",
+        "ERST004": "ERST004",
+        "ERST005": "ERST005",
+        "ERST006": "ERST006",
+        "ERM001": "ERM001",
+        "ERM002": "ERM002",
+        "ERM003": "ERM003",
+        "ERM004": "ERM004",
+        "ERM005": "ERM005",
+        "ERPI001": "ERPI001",
+        "ERPI002": "ERPI002",
+        "ERPI003": "ERPI003",
+        "ERPI004": "ERPI004",
+        "ERPI005": "ERPI005",
+        "ERU001": "ERU001",
+        "ERU002": "ERU002",
+        "ERU003": "ERU003",
+        "ERU004": "ERU004",
+        "ERU005": "ERU005"
+    }
+}
