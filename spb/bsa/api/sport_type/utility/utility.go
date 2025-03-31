@@ -21,8 +21,22 @@ func MapSportTypeEntityToResponse(sportType *tb.SportType) *model.SportTypeRespo
 // @function: MapSportTypeEntitiesToResponse
 // @description: Mapping sportType entities to response
 // @param: sportTypes []*tb.SportType
-// @return: []model.SportTypeResponse
-func MapSportTypeEntitiesToResponse(sportTypes []*tb.SportType) []*model.SportTypeResponse {
+// @return: model.SportTypesResponse
+func MapSportTypeEntitiesToResponse(sportTypes []*tb.SportType) *model.SportTypesResponse {
+	sportTypeResponses := new(model.SportTypesResponse)
+	for _, sportType := range sportTypes {
+		sportTypeResponses.SportTypes = append(sportTypeResponses.SportTypes, *MapSportTypeEntityToResponse(sportType))
+	}
+	sportTypeResponses.Total = uint(len(sportTypes))
+	return sportTypeResponses
+}
+
+// @author: LoanTT
+// @function: MapSportTypeEntitiesToListResponse
+// @description: Mapping sportType entities to list response
+// @param: sportTypes []*tb.SportType
+// @return: []*model.SportTypeResponse
+func MapSportTypeEntitiesToListResponse(sportTypes []*tb.SportType) []*model.SportTypeResponse {
 	sportTypeResponses := make([]*model.SportTypeResponse, 0)
 	for _, sportType := range sportTypes {
 		sportTypeResponses = append(sportTypeResponses, MapSportTypeEntityToResponse(sportType))

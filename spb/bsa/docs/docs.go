@@ -23,6 +23,46 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/auth/google/callback": {
+            "post": {
+                "description": "Google callback api",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Google callback api",
+                "parameters": [
+                    {
+                        "description": "Google callback",
+                        "name": "Group",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.GoogleCallbackRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Google callback success",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Google callback failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/auth/forgot-password": {
             "post": {
                 "description": "Forgot password api",
@@ -115,6 +155,47 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/auth/logout": {
+            "post": {
+                "description": "Logout api",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Logout api",
+                "responses": {
+                    "200": {
+                        "description": "Logout success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Logout failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/auth/refresh": {
             "post": {
                 "description": "Refresh token api",
@@ -188,7 +269,7 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Register failed",
+                        "description": "Register email verifying",
                         "schema": {
                             "$ref": "#/definitions/utils.JSONResult"
                         }
@@ -236,9 +317,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/auth/verify-email": {
+        "/api/v1/auth/ses-verify": {
             "post": {
-                "description": "Verify email api",
+                "description": "Send verification email api",
                 "consumes": [
                     "application/json"
                 ],
@@ -248,27 +329,27 @@ const docTemplate = `{
                 "tags": [
                     "auth"
                 ],
-                "summary": "Verify email api",
+                "summary": "Send verification email api",
                 "parameters": [
                     {
-                        "description": "Verify email",
+                        "description": "Send verification email",
                         "name": "group",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.VerifyEmailRequest"
+                            "$ref": "#/definitions/model.SendVerificationRequest"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Email verification success",
+                        "description": "Send verification email success",
                         "schema": {
                             "$ref": "#/definitions/utils.JSONResult"
                         }
                     },
                     "400": {
-                        "description": "Verify token error",
+                        "description": "Send verification email failed",
                         "schema": {
                             "$ref": "#/definitions/utils.JSONResult"
                         }
@@ -276,7 +357,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/auth/verify-reset-token": {
+        "/api/v1/auth/verify-forgot-password-token": {
             "post": {
                 "description": "Verify reset token api",
                 "consumes": [
@@ -296,7 +377,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.VerifyTokenRequest"
+                            "$ref": "#/definitions/model.VerifyForgotPasswordTokenRequest"
                         }
                     }
                 ],
@@ -309,6 +390,274 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Verify reset token failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/verify-register-token": {
+            "post": {
+                "description": "Verify email api",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Verify email api",
+                "parameters": [
+                    {
+                        "description": "Verify email",
+                        "name": "group",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.VerifyRegisterTokenRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Email verification success",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Verify token error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/verify-register-token/resend": {
+            "post": {
+                "description": "Resend verify register token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Resend verify register token",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.ResendVerifyRegisterTokenRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Resend verify email OTP success",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Resend verify email OTP failed",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/clubs": {
+            "post": {
+                "description": "Create club api",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "clubs"
+                ],
+                "summary": "Create club api",
+                "parameters": [
+                    {
+                        "description": "Create club",
+                        "name": "Group",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateClubRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Create club success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/model.ClubResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Create club failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/clubs/{id}": {
+            "get": {
+                "description": "Get club by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "clubs"
+                ],
+                "summary": "Get club by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Club ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get club by id success",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Get club by id failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update club by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "clubs"
+                ],
+                "summary": "Update club by id",
+                "parameters": [
+                    {
+                        "description": "Club data",
+                        "name": "club",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateClubRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Update club by id success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/model.ClubResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Update club by id failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete club api",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "clubs"
+                ],
+                "summary": "Delete club api",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "club id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Delete club success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Delete club failed",
                         "schema": {
                             "$ref": "#/definitions/utils.JSONResult"
                         }
@@ -521,7 +870,43 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/metadatas": {
+        "/api/v1/metadatas/{key}": {
+            "get": {
+                "description": "Get metadata by key",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "metadatas"
+                ],
+                "summary": "Get metadata by key",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Metadata Key",
+                        "name": "key",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get metadata by key success",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Get metadata by key failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            },
             "put": {
                 "description": "Update metadata by key",
                 "consumes": [
@@ -573,9 +958,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/metadatas/{key}": {
+        "/api/v1/sport_types": {
             "get": {
-                "description": "Get metadata by key",
+                "description": "Get all sport type api",
                 "consumes": [
                     "application/json"
                 ],
@@ -583,27 +968,223 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "metadatas"
+                    "sport types"
                 ],
-                "summary": "Get metadata by key",
+                "summary": "Get all sport type api",
+                "responses": {
+                    "200": {
+                        "description": "Get all sport type success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/spb_bsa_api_sport_type_model.SportTypesResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Get all sport type failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create sport type api",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sport types"
+                ],
+                "summary": "Create sport type api",
+                "parameters": [
+                    {
+                        "description": "Create sport type",
+                        "name": "Group",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/spb_bsa_api_sport_type_model.CreateSportTypeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Create sport type success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/spb_bsa_api_sport_type_model.SportTypeResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Create sport type failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/sport_types/{id}": {
+            "get": {
+                "description": "Get sport type by ID api",
+                "tags": [
+                    "sport types"
+                ],
+                "summary": "Get sport type by ID api",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Metadata Key",
-                        "name": "key",
+                        "description": "Sport type ID",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Get metadata by key success",
+                        "description": "Get sport type by ID success",
                         "schema": {
-                            "$ref": "#/definitions/utils.JSONResult"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/spb_bsa_api_sport_type_model.SportTypeResponse"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "400": {
-                        "description": "Get metadata by key failed",
+                        "description": "Get sport type by ID failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update sport type api",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sport types"
+                ],
+                "summary": "Update sport type api",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Sport type ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update sport type",
+                        "name": "Group",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/spb_bsa_api_sport_type_model.UpdateSportTypeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Update sport type success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/spb_bsa_api_sport_type_model.SportTypeResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Update sport type failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete sport type api",
+                "tags": [
+                    "sport types"
+                ],
+                "summary": "Delete sport type api",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Sport type ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Delete sport type success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/utils.JSONResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Delete sport type failed",
                         "schema": {
                             "$ref": "#/definitions/utils.JSONResult"
                         }
@@ -765,43 +1346,7 @@ const docTemplate = `{
                     }
                 }
             },
-            "delete": {
-                "description": "Delete unit price",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "unit-prices"
-                ],
-                "summary": "Delete unit price",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "unit price id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Delete unit price success",
-                        "schema": {
-                            "$ref": "#/definitions/utils.JSONResult"
-                        }
-                    },
-                    "400": {
-                        "description": "Delete unit price failed",
-                        "schema": {
-                            "$ref": "#/definitions/utils.JSONResult"
-                        }
-                    }
-                }
-            },
-            "patch": {
+            "put": {
                 "description": "Update unit price by id",
                 "consumes": [
                     "application/json"
@@ -845,6 +1390,42 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Update unit price by id failed",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete unit price",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "unit-prices"
+                ],
+                "summary": "Delete unit price",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "unit price id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Delete unit price success",
+                        "schema": {
+                            "$ref": "#/definitions/utils.JSONResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Delete unit price failed",
                         "schema": {
                             "$ref": "#/definitions/utils.JSONResult"
                         }
@@ -1394,7 +1975,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/spb_bsa_internal_user_model.UserResponse"
+                                            "$ref": "#/definitions/spb_bsa_api_user_model.UserResponse"
                                         }
                                     }
                                 }
@@ -1482,7 +2063,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/spb_bsa_internal_user_model.UserResponse"
+                                            "$ref": "#/definitions/spb_bsa_api_user_model.UserResponse"
                                         }
                                     }
                                 }
@@ -1550,9 +2131,47 @@ const docTemplate = `{
                 },
                 "location_geography": {
                     "$ref": "#/definitions/model.LocationGeography"
+                }
+            }
+        },
+        "model.ClubResponse": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "$ref": "#/definitions/model.AddressResponse"
                 },
-                "unit_id": {
+                "close_time": {
                     "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "media": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.MediaResponse"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "open_time": {
+                    "type": "string"
+                },
+                "owner_id": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "sport_types": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/spb_bsa_api_sport_type_model.SportTypeResponse"
+                    }
                 }
             }
         },
@@ -1573,9 +2192,54 @@ const docTemplate = `{
                 },
                 "location_geography": {
                     "$ref": "#/definitions/model.LocationGeography"
+                }
+            }
+        },
+        "model.CreateClubRequest": {
+            "type": "object",
+            "required": [
+                "address",
+                "close_time",
+                "media",
+                "name",
+                "open_time",
+                "owner_id",
+                "phone",
+                "sport_types"
+            ],
+            "properties": {
+                "address": {
+                    "$ref": "#/definitions/model.CreateAddressRequest"
                 },
-                "unit_id": {
+                "close_time": {
                     "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "media": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.CreateMediaRequest"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "open_time": {
+                    "type": "string"
+                },
+                "owner_id": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "sport_types": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/spb_bsa_api_sport_type_model.CreateSportTypeRequest"
+                    }
                 }
             }
         },
@@ -1617,18 +2281,6 @@ const docTemplate = `{
                 },
                 "uploaded_at": {
                     "type": "string"
-                }
-            }
-        },
-        "model.CreateSportTypeRequest": {
-            "type": "object",
-            "required": [
-                "name"
-            ],
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "maxLength": 255
                 }
             }
         },
@@ -1692,7 +2344,7 @@ const docTemplate = `{
                 "sport_types": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.CreateSportTypeRequest"
+                        "$ref": "#/definitions/spb_bsa_api_sport_type_model.CreateSportTypeRequest"
                     }
                 },
                 "status": {
@@ -1786,8 +2438,19 @@ const docTemplate = `{
                 "users": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/spb_bsa_internal_user_model.UserResponse"
+                        "$ref": "#/definitions/spb_bsa_api_user_model.UserResponse"
                     }
+                }
+            }
+        },
+        "model.GoogleCallbackRequest": {
+            "type": "object",
+            "required": [
+                "code"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
                 }
             }
         },
@@ -1873,6 +2536,9 @@ const docTemplate = `{
                         "$ref": "#/definitions/model.LocationResponse"
                     }
                 },
+                "pagination": {
+                    "$ref": "#/definitions/utils.Pagination"
+                },
                 "total": {
                     "type": "integer"
                 }
@@ -1904,7 +2570,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "user": {
-                    "$ref": "#/definitions/spb_bsa_internal_auth_model.UserResponse"
+                    "$ref": "#/definitions/spb_bsa_api_auth_model.UserResponse"
                 }
             }
         },
@@ -1964,12 +2630,24 @@ const docTemplate = `{
                 }
             }
         },
+        "model.ResendVerifyRegisterTokenRequest": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "maxLength": 256,
+                    "minLength": 6
+                }
+            }
+        },
         "model.ResetPasswordRequest": {
             "type": "object",
             "required": [
                 "email",
-                "password",
-                "token"
+                "password"
             ],
             "properties": {
                 "email": {
@@ -1983,7 +2661,9 @@ const docTemplate = `{
                     "minLength": 6
                 },
                 "token": {
-                    "type": "string"
+                    "type": "integer",
+                    "maximum": 1000000,
+                    "minimum": 999
                 }
             }
         },
@@ -1991,10 +2671,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "permissions": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/spb_bsa_internal_role_model.PermissionResponse"
-                    }
+                    "type": "integer"
                 },
                 "role_id": {
                     "type": "string"
@@ -2004,13 +2681,13 @@ const docTemplate = `{
                 }
             }
         },
-        "model.SportTypeResponse": {
+        "model.SendVerificationRequest": {
             "type": "object",
+            "required": [
+                "email"
+            ],
             "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "sportType_id": {
+                "email": {
                     "type": "string"
                 }
             }
@@ -2082,7 +2759,7 @@ const docTemplate = `{
                 "sport_types": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.SportTypeResponse"
+                        "$ref": "#/definitions/spb_bsa_api_sport_type_model.SportTypeResponse"
                     }
                 },
                 "status": {
@@ -2154,9 +2831,41 @@ const docTemplate = `{
                 },
                 "location_geography": {
                     "$ref": "#/definitions/model.LocationGeography"
+                }
+            }
+        },
+        "model.UpdateClubRequest": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "$ref": "#/definitions/model.UpdateAddressRequest"
                 },
-                "unit_id": {
+                "close_time": {
                     "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "media": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.UpdateMediaRequest"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "open_time": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "sport_types": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/spb_bsa_api_sport_type_model.UpdateSportTypeRequest"
+                    }
                 }
             }
         },
@@ -2176,9 +2885,6 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 255,
                     "minLength": 2
-                },
-                "locationID": {
-                    "type": "string"
                 },
                 "province": {
                     "type": "string",
@@ -2209,38 +2915,16 @@ const docTemplate = `{
         },
         "model.UpdateMetadataRequest": {
             "type": "object",
-            "required": [
-                "description",
-                "key",
-                "value"
-            ],
             "properties": {
                 "description": {
                     "type": "string",
                     "maxLength": 3000,
                     "minLength": 1
                 },
-                "key": {
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 1
-                },
                 "value": {
                     "type": "string",
                     "maxLength": 3000,
                     "minLength": 1
-                }
-            }
-        },
-        "model.UpdateSportTypeRequest": {
-            "type": "object",
-            "required": [
-                "name"
-            ],
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "maxLength": 255
                 }
             }
         },
@@ -2293,7 +2977,7 @@ const docTemplate = `{
                 "sport_types": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.UpdateSportTypeRequest"
+                        "$ref": "#/definitions/spb_bsa_api_sport_type_model.UpdateSportTypeRequest"
                     }
                 },
                 "status": {
@@ -2349,22 +3033,10 @@ const docTemplate = `{
                 }
             }
         },
-        "model.VerifyEmailRequest": {
+        "model.VerifyForgotPasswordTokenRequest": {
             "type": "object",
             "required": [
-                "token"
-            ],
-            "properties": {
-                "token": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.VerifyTokenRequest": {
-            "type": "object",
-            "required": [
-                "email",
-                "token"
+                "email"
             ],
             "properties": {
                 "email": {
@@ -2373,11 +3045,31 @@ const docTemplate = `{
                     "minLength": 6
                 },
                 "token": {
-                    "type": "string"
+                    "type": "integer",
+                    "maximum": 1000000,
+                    "minimum": 999
                 }
             }
         },
-        "spb_bsa_internal_auth_model.UserResponse": {
+        "model.VerifyRegisterTokenRequest": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "maxLength": 256,
+                    "minLength": 6
+                },
+                "token": {
+                    "type": "integer",
+                    "maximum": 1000000,
+                    "minimum": 999
+                }
+            }
+        },
+        "spb_bsa_api_auth_model.UserResponse": {
             "type": "object",
             "properties": {
                 "email": {
@@ -2394,18 +3086,56 @@ const docTemplate = `{
                 }
             }
         },
-        "spb_bsa_internal_role_model.PermissionResponse": {
+        "spb_bsa_api_sport_type_model.CreateSportTypeRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "maxLength": 255
+                }
+            }
+        },
+        "spb_bsa_api_sport_type_model.SportTypeResponse": {
             "type": "object",
             "properties": {
-                "permission_id": {
+                "id": {
                     "type": "string"
                 },
-                "permission_name": {
+                "name": {
                     "type": "string"
                 }
             }
         },
-        "spb_bsa_internal_user_model.UserResponse": {
+        "spb_bsa_api_sport_type_model.SportTypesResponse": {
+            "type": "object",
+            "properties": {
+                "sport_types": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/spb_bsa_api_sport_type_model.SportTypeResponse"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "spb_bsa_api_sport_type_model.UpdateSportTypeRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "maxLength": 255
+                }
+            }
+        },
+        "spb_bsa_api_user_model.UserResponse": {
             "type": "object",
             "properties": {
                 "email": {
@@ -2434,23 +3164,12 @@ const docTemplate = `{
                 "code": {
                     "type": "string"
                 },
-                "data": {},
-                "status": {
-                    "type": "string"
-                }
+                "data": {}
             }
         },
         "utils.Pagination": {
             "type": "object",
             "properties": {
-                "count": {
-                    "description": "total items",
-                    "type": "integer"
-                },
-                "items": {
-                    "description": "number item per page",
-                    "type": "integer"
-                },
                 "next_page": {
                     "type": "string"
                 },
@@ -2466,11 +3185,19 @@ const docTemplate = `{
                     "description": "current page",
                     "type": "integer"
                 },
+                "page_items": {
+                    "description": "number item per page",
+                    "type": "integer"
+                },
                 "prev_page": {
                     "type": "string"
                 },
+                "total_items": {
+                    "description": "total items",
+                    "type": "integer"
+                },
                 "total_pages": {
-                    "description": "total pages (count / items)",
+                    "description": "total pages (total_items / items per page)",
                     "type": "integer"
                 }
             }

@@ -60,7 +60,7 @@ func MapCreateRequestToEntities(reqBody []*model.CreateUnitPriceRequest) []*tb.U
 	unitPrices := make([]*tb.UnitPrice, 0)
 
 	for id := range reqBody {
-		unitPrices[id] = MapCreateRequestToEntity(reqBody[id])
+		unitPrices = append(unitPrices, MapCreateRequestToEntity(reqBody[id]))
 	}
 	return unitPrices
 }

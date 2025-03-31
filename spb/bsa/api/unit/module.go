@@ -29,4 +29,5 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	unitRoute.Post("/", UnitHandler.Create, customMiddleware.CheckAccess("unit:create"))
 	unitRoute.Put("/:id", UnitHandler.Update, customMiddleware.CheckAccess("unit:update"))
 	unitRoute.Delete("/:id", UnitHandler.Delete, customMiddleware.CheckAccess("unit:delete"))
+	unitRoute.Get("/", UnitHandler.Search)
 }

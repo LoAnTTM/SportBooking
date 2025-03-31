@@ -11,6 +11,7 @@ type IHandler interface {
 	GetByID(ctx fiber.Ctx) error
 	Delete(ctx fiber.Ctx) error
 	Create(ctx fiber.Ctx) error
+	Search(ctx fiber.Ctx) error
 }
 
 type Handler struct {

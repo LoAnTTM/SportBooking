@@ -12,7 +12,7 @@ import (
 // @param: *model.GetLocationsRequest
 // @return: []*entities.Location, int64, error
 func (s *Service) GetAll(reqBody *model.GetLocationsRequest) ([]*tb.Location, int64, error) {
-	var locations []*tb.Location
+	locations := make([]*tb.Location, 0)
 	var count int64
 
 	err := s.db.Model(tb.Location{}).Count(&count).Error

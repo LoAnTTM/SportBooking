@@ -2,7 +2,6 @@ package handler
 
 import (
 	"spb/bsa/api/unit/utility"
-	"spb/bsa/pkg/auth"
 	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/msg"
@@ -28,19 +27,12 @@ func (s *Handler) GetByID(ctx fiber.Ctx) error {
 	var unit *tb.Unit
 
 	fctx := utils.FiberCtx{Fctx: ctx}
-	claims, err := auth.GetTokenFromCookie(ctx)
-	if err != nil {
-		logger.Errorf("error parse jwt: %v", err)
-		return fctx.ErrResponse(msg.GET_UNIT_FAILED)
-	}
-
 	if unitId, err = fctx.ParseUUID("id"); err != nil {
 		logger.Errorf("error parse unit id: %v", err)
 		return fctx.ErrResponse(msg.GET_UNIT_FAILED)
 	}
 
-	role := claims.Role
-	if unit, err = s.service.GetByID(unitId, role); err != nil {
+	if unit, err = s.service.GetByID(unitId); err != nil {
 		logger.Errorf("error get unit by id: %v", err)
 		return fctx.ErrResponse(msg.UNIT_NOTFOUND)
 	}

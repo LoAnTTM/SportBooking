@@ -30,7 +30,7 @@ func MapCreateRequestToEntity(reqBody *model.CreateAddressRequest) *tb.Address {
 	return &tb.Address{
 		Address:           reqBody.Address,
 		LocationGeography: reqBody.LocationGeography.GetGeography(),
-		Location:          *lu.MapCreateRequestToEntity(&reqBody.Location),
+		LocationID:        reqBody.LocationID,
 	}
 }
 
@@ -38,6 +38,6 @@ func MapUpdateRequestToEntity(reqBody *model.UpdateAddressRequest) *tb.Address {
 	return &tb.Address{
 		Address:           *reqBody.Address,
 		LocationGeography: reqBody.LocationGeography.GetGeography(),
-		Location:          lu.MapUpdateRequestToEntity(reqBody.Location),
+		LocationID:        reqBody.LocationID,
 	}
 }

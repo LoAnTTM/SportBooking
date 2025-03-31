@@ -8,6 +8,7 @@ import (
 	upu "spb/bsa/api/unit_price/utility"
 	usu "spb/bsa/api/unit_service/utility"
 	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/utils"
 )
 
 // @author: LoanTT
@@ -22,24 +23,48 @@ func MapUnitEntityToResponse(unit *tb.Unit) model.UnitResponse {
 }
 
 // @author: LoanTT
+// @function: MapUnitEntitiesToResponse
+// @description: Mapping unit entities to response
+// @param: units []*tb.Unit
+// @param: reqBody *model.SearchUnitRequest
+// @param: total int64
+// @return: *model.UnitsResponse
+func MapUnitEntitiesToResponse(units []*tb.Unit, reqBody *model.SearchUnitRequest, total int64) *model.UnitsResponse {
+	unitResponse := make([]*model.UnitResponse, 0)
+	for _, unit := range units {
+		unitResponse = append(unitResponse, &model.UnitResponse{
+			UnitID: unit.ID,
+		})
+	}
+
+	response := new(model.UnitsResponse)
+	response.Units = unitResponse
+	response.Total = len(unitResponse)
+	response.Pagination = reqBody.Pagination
+	response.Pagination.SetNewPagination(utils.SafeInt64ToInt(total))
+
+	return response
+}
+
+// @author: LoanTT
 // @function: mapCreateRequestToEntity
 // @description: Mapping create unit request to unit entity
 // @param: reqBody *model.CreateUnitRequest
 // @return: *tb.Unit
 func MapCreateRequestToEntity(reqBody *model.CreateUnitRequest) *tb.Unit {
 	return &tb.Unit{
-		Name:         reqBody.Name,
-		OpenTime:     reqBody.OpenTime,
-		CloseTime:    reqBody.CloseTime,
-		Phone:        reqBody.Phone,
-		Description:  reqBody.Description,
-		Status:       reqBody.Status,
-		ClubID:       reqBody.ClubID,
-		Address:      au.MapCreateRequestToEntity(reqBody.Address),
-		UnitPrice:    upu.MapCreateRequestToEntities(reqBody.UnitPrices),
-		UnitServices: usu.MapCreateRequestToEntities(reqBody.UnitServices),
-		Media:        mu.MapCreateRequestToEntities(reqBody.Media),
-		SportTypes:   stu.MapCreateRequestToEntities(reqBody.SportTypes),
+		Name:        reqBody.Name,
+		OpenTime:    reqBody.OpenTime,
+		CloseTime:   reqBody.CloseTime,
+		Phone:       reqBody.Phone,
+		Description: reqBody.Description,
+		Status:      reqBody.Status,
+		ClubID:      reqBody.ClubID,
+		Address:     au.MapCreateRequestToEntity(reqBody.Address),
+		UnitPrice:   upu.MapCreateRequestToEntities(reqBody.UnitPrices),
+		UnitService: usu.MapCreateRequestToEntities(reqBody.UnitServices),
+		Media:       mu.MapCreateRequestToEntities(reqBody.Media),
+		SportTypes:  stu.MapCreateRequestToEntities(reqBody.SportTypes),
 	}
 }
 
@@ -76,7 +101,7 @@ func MapUpdateRequestToEntity(reqBody *model.UpdateUnitRequest) *tb.Unit {
 		unitUpdate.UnitPrice = upu.MapUpdateRequestToEntities(reqBody.UnitPrices)
 	}
 	if reqBody.UnitServices != nil {
-		unitUpdate.UnitServices = usu.MapUpdateRequestToEntities(reqBody.UnitServices)
+		unitUpdate.UnitService = usu.MapUpdateRequestToEntities(reqBody.UnitServices)
 	}
 	if reqBody.Media != nil {
 		unitUpdate.Media = mu.MapUpdateRequestToEntities(reqBody.Media)

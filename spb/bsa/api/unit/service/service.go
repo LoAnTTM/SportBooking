@@ -10,9 +10,10 @@ import (
 
 type IService interface {
 	Update(reqBody *model.UpdateUnitRequest, unitId string) (*tb.Unit, error)
-	GetByID(unitId, currentUnitRoleName string) (*tb.Unit, error)
+	GetByID(unitId string) (*tb.Unit, error)
 	Delete(unitId string) error
 	Create(reqBody *model.CreateUnitRequest) (*tb.Unit, error)
+	Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, error)
 }
 
 type Service struct {

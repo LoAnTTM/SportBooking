@@ -48,3 +48,17 @@ type UpdateLocationRequest struct {
 type GetLocationsRequest struct {
 	Pagination utils.Pagination
 }
+
+type SearchLocationRequest struct {
+	Province string `json:"province"`
+	City     string `json:"city"`
+	District string `json:"district"`
+}
+
+func NewSearchLocationRequest(province, city, district string) *SearchLocationRequest {
+	return &SearchLocationRequest{
+		Province: province,
+		City:     city,
+		District: district,
+	}
+}

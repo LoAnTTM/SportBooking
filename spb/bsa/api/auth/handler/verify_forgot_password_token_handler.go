@@ -16,10 +16,10 @@ import (
 // @tags	 	auth
 // @accept		json
 // @produce		json
-// @param		group body model.VerifyTokenRequest true "Verify reset token"
+// @param		group body model.VerifyForgotPasswordTokenRequest true "Verify reset token"
 // @success		200 {object} utils.JSONResult{}			 "Verify reset token success"
 // @failure		400 {object} utils.JSONResult{}			 "Verify reset token failed"
-// @router		/api/v1/auth/verify-reset-token [post]
+// @router		/api/v1/auth/verify-forgot-password-token [post]
 func (h *Handler) VerifyForgotPasswordToken(ctx fiber.Ctx) error {
 	reqBody := new(model.VerifyForgotPasswordTokenRequest)
 	fctx := utils.FiberCtx{Fctx: ctx}

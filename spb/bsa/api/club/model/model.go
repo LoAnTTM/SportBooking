@@ -11,7 +11,7 @@ type CreateClubRequest struct {
 	OpenTime    string                              `json:"open_time" validate:"yy:mm,required"`
 	CloseTime   string                              `json:"close_time" validate:"yy:mm,required"`
 	Phone       string                              `json:"phone" validate:"required,e164"`
-	OwnerID     string                              `json:"owner_id" validate:"required,type=uuid"`
+	OwnerID     string                              `json:"owner_id" validate:"required"`
 	Address     *addressModel.CreateAddressRequest  `json:"address" validate:"required"`
 	Description string                              `json:"description"`
 	Media       []*mediaModel.CreateMediaRequest    `json:"media" validate:"required"`

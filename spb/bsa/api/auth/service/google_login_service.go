@@ -91,7 +91,7 @@ func (s *Service) GoogleLogin(reqBody model.GoogleCallbackRequest) (*tb.User, er
 			FullName:        utils.ToPtr(payload.Name),
 			Password:        "",
 			Role:            role,
-			IsEmailVerified: true,
+			IsEmailVerified: false,
 			AuthenticationProviders: []tb.AuthenticationProvider{
 				{
 					Provider:    enum.GOOGLE,

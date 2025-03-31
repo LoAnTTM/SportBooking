@@ -17,7 +17,6 @@ const (
 	CODE_EMAIL_DOES_NOT_EXIST      = "ERA006"
 	CODE_RESET_PASSWORD_INCORRECT  = "ERA007"
 	CODE_REGISTER_EMAIL_VERIFYING  = "ERA009"
-	CODE_LOGOUT_SUCCESS            = "ERA010"
 
 	// location error code
 	CODE_LOCATION_INCORRECT     = "ERL001"
@@ -79,6 +78,14 @@ const (
 	CODE_GET_USER_FAILED    = "ERU003"
 	CODE_UPDATE_USER_FAILED = "ERU004"
 	CODE_USER_NOTFOUND      = "ERU005"
+
+	// club error code
+	CODE_CLUB_INCORRECT     = "ERCL001"
+	CODE_CREATE_CLUB_FAILED = "ERCL002"
+	CODE_DELETE_CLUB_FAILED = "ERCL003"
+	CODE_GET_CLUB_FAILED    = "ERCL004"
+	CODE_UPDATE_CLUB_FAILED = "ERCL005"
+	CODE_CLUB_NOTFOUND      = "ERCL006"
 )
 
 var (
@@ -145,4 +152,12 @@ var (
 	GET_USER_FAILED    = fiber.NewError(fiber.StatusBadRequest, CODE_GET_USER_FAILED)
 	UPDATE_USER_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_UPDATE_USER_FAILED)
 	USER_NOTFOUND      = fiber.NewError(fiber.StatusBadRequest, CODE_USER_NOTFOUND)
+
+	// club error
+	CLUB_INCORRECT     = fiber.NewError(fiber.StatusBadRequest, CODE_CLUB_INCORRECT)
+	CREATE_CLUB_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_CREATE_CLUB_FAILED)
+	DELETE_CLUB_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_DELETE_CLUB_FAILED)
+	GET_CLUB_FAILED    = fiber.NewError(fiber.StatusBadRequest, CODE_GET_CLUB_FAILED)
+	UPDATE_CLUB_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_UPDATE_CLUB_FAILED)
+	CLUB_NOTFOUND      = fiber.NewError(fiber.StatusBadRequest, CODE_CLUB_NOTFOUND)
 )

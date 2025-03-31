@@ -20,7 +20,7 @@ import (
 // @param	  	group body model.VerifyRegisterTokenRequest true "Verify email"
 // @success		200 {object} utils.JSONResult{}			 "Email verification success"
 // @failure		400 {object} utils.JSONResult{}			 "Verify token error"
-// @router		/api/v1/auth/verify-email [post]
+// @router		/api/v1/auth/verify-register-token [post]
 func (h *Handler) VerifyRegisterToken(ctx fiber.Ctx) error {
 	reqBody := new(model.VerifyRegisterTokenRequest)
 	fctx := utils.FiberCtx{Fctx: ctx}

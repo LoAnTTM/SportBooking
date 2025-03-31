@@ -21,15 +21,15 @@ type GetAddressesRequest struct {
 }
 
 type CreateAddressRequest struct {
-	Address           string                `json:"address" validate:"required,max=255"`
-	LocationGeography LocationGeography     `json:"location_geography" validate:"required"`
-	Location          model.LocationRequest `json:"location" validate:"required"`
+	Address           string            `json:"address" validate:"required,max=255"`
+	LocationGeography LocationGeography `json:"location_geography" validate:"required"`
+	LocationID        string            `json:"location_id" validate:"required"`
 }
 
 type UpdateAddressRequest struct {
-	Address           *string                      `json:"address" validate:"omitempty,max=255"`
-	LocationGeography *LocationGeography           `json:"location_geography" validate:"omitempty"`
-	Location          *model.UpdateLocationRequest `json:"location" validate:"omitempty"`
+	Address           *string            `json:"address" validate:"omitempty,max=255"`
+	LocationGeography *LocationGeography `json:"location_geography" validate:"omitempty"`
+	LocationID        string             `json:"location_id" validate:"omitempty"`
 }
 type AddressResponse struct {
 	AddressID         string                 `json:"address_id"`

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	_ "spb/bsa/api/sport_type/model"
 	"spb/bsa/api/sport_type/utility"
 	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"

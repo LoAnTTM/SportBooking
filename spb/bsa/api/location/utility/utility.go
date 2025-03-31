@@ -130,3 +130,13 @@ func MapUpdateRequestToEntity(reqBody *model.UpdateLocationRequest) tb.Location 
 	}
 	return locationUpdate
 }
+
+func MapLocationEntitiesToIDs(location []*tb.Location) []string {
+	locations := make([]string, len(location))
+
+	for id := range location {
+		locations[id] = location[id].ID
+	}
+
+	return locations
+}

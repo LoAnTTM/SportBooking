@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"spb/bsa/api/auth"
+	"spb/bsa/api/club"
 	"spb/bsa/api/location"
 	"spb/bsa/api/metadata"
 	"spb/bsa/api/notification"
@@ -157,6 +158,7 @@ func (f *Fiber) LoadRoutes() {
 	metadata.LoadModule(router, custMiddlewares)
 	notification_type.LoadModule(router, custMiddlewares)
 	notification.LoadModule(router, custMiddlewares)
+	club.LoadModule(router, custMiddlewares)
 
 	permissions, err := permission.GetPermissions()
 	if err != nil {

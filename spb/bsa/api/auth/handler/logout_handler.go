@@ -16,8 +16,8 @@ import (
 //
 // @Summary Logout api
 // @Description Logout api
-// @Tags auth
-// @Accept json
+// @Tags 	auth
+// @Accept 	json
 // @Produce json
 // @Success 200 {object} utils.JSONResult{data=string} "Logout success"
 // @Failure 400 {object} utils.JSONResult{} "Logout failed"

@@ -45,6 +45,6 @@ func (s *Handler) Update(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(msg.UPDATE_UNIT_FAILED)
 	}
 
-	clubResponse := utility.MapClubEntityToResponse(clubUpdated)
+	clubResponse := utility.MapEntityToResponse(clubUpdated)
 	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_UPDATE_UNIT_SUCCESS, clubResponse)
 }

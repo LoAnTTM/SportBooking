@@ -19,8 +19,9 @@ import (
 // @accept  		json
 // @produce 		json
 // @param 			Group body model.GoogleCallbackRequest true 	"Google callback"
-// @success 		200 {object} utils.JSONResult{}				"Google callback success"
-// @failure 		400 {object} utils.JSONResult{}        		"Google callback failed"
+// @success 		200 {object} utils.JSONResult{}					"Google callback success"
+// @failure 		400 {object} utils.JSONResult{}        			"Google callback failed"
+// @router 			/api/auth/google/callback [post]
 func (h *Handler) GoogleCallback(ctx fiber.Ctx) error {
 	var err error
 	reqBody := new(model.GoogleCallbackRequest)

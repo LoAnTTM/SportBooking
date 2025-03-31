@@ -1,6 +1,7 @@
 package handler
 
 import (
+	_ "spb/bsa/api/sport_type/model"
 	"spb/bsa/api/sport_type/utility"
 	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
@@ -15,8 +16,8 @@ import (
 // @tags 			sport types
 // @accept  		json
 // @produce 		json
-// @success 		200 {object} utils.JSONResult{data=[]model.SportTypeResponse}	"Get all sport type success"
-// @failure 		400 {object} utils.JSONResult{}        						"Get all sport type failed"
+// @success 		200 {object} utils.JSONResult{data=model.SportTypesResponse}	"Get all sport type success"
+// @failure 		400 {object} utils.JSONResult{}        							"Get all sport type failed"
 // @router 			/api/v1/sport_types [get]
 func (h *Handler) GetAll(ctx fiber.Ctx) error {
 	var err error

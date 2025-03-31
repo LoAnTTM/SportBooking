@@ -28,15 +28,15 @@ func (s *Handler) Create(ctx fiber.Ctx) error {
 
 	if err := fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
 		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.ErrResponse(msg.UNIT_INCORRECT)
+		return fctx.ErrResponse(msg.CLUB_INCORRECT)
 	}
 
 	clubCreated, err := s.service.Create(reqBody)
 	if err != nil {
 		logger.Errorf("error create club: %v", err)
-		return fctx.ErrResponse(msg.UNIT_INCORRECT)
+		return fctx.ErrResponse(msg.CLUB_INCORRECT)
 	}
 
-	clubResponse := utility.MapClubEntityToResponse(clubCreated)
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_CREATE_UNIT_SUCCESS, clubResponse)
+	clubResponse := utility.MapEntityToResponse(clubCreated)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_CREATE_CLUB_FAILED, clubResponse)
 }

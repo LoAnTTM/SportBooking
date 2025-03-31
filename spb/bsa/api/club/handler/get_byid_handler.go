@@ -45,6 +45,6 @@ func (s *Handler) GetByID(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(msg.UNIT_NOTFOUND)
 	}
 
-	clubResponse := utility.MapClubEntityToResponse(club)
+	clubResponse := utility.MapEntityToResponse(club)
 	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_GET_UNIT_SUCCESS, clubResponse)
 }

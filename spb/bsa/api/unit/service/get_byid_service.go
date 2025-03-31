@@ -7,9 +7,9 @@ import (
 // @author: LoanTT
 // @function: GetByID
 // @description: Service for get unit
-// @param: unitId string, currentUnitRoleName string
+// @param: unitId string,
 // @return: *tb.Unit, error
-func (s *Service) GetByID(unitId, currentUnitRoleName string) (*tb.Unit, error) {
+func (s *Service) GetByID(unitId string) (*tb.Unit, error) {
 	unit := new(tb.Unit)
 
 	err := s.db.Where("id = ?", unitId).First(unit).Error

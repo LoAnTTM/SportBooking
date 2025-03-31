@@ -10,8 +10,33 @@ definitions:
         $ref: '#/definitions/model.LocationResponse'
       location_geography:
         $ref: '#/definitions/model.LocationGeography'
-      unit_id:
+    type: object
+  model.ClubResponse:
+    properties:
+      address:
+        $ref: '#/definitions/model.AddressResponse'
+      close_time:
         type: string
+      description:
+        type: string
+      id:
+        type: string
+      media:
+        items:
+          $ref: '#/definitions/model.MediaResponse'
+        type: array
+      name:
+        type: string
+      open_time:
+        type: string
+      owner_id:
+        type: string
+      phone:
+        type: string
+      sport_types:
+        items:
+          $ref: '#/definitions/spb_bsa_api_sport_type_model.SportTypeResponse'
+        type: array
     type: object
   model.CreateAddressRequest:
     properties:
@@ -22,12 +47,44 @@ definitions:
         $ref: '#/definitions/model.LocationRequest'
       location_geography:
         $ref: '#/definitions/model.LocationGeography'
-      unit_id:
-        type: string
     required:
     - address
     - location
     - location_geography
+    type: object
+  model.CreateClubRequest:
+    properties:
+      address:
+        $ref: '#/definitions/model.CreateAddressRequest'
+      close_time:
+        type: string
+      description:
+        type: string
+      media:
+        items:
+          $ref: '#/definitions/model.CreateMediaRequest'
+        type: array
+      name:
+        type: string
+      open_time:
+        type: string
+      owner_id:
+        type: string
+      phone:
+        type: string
+      sport_types:
+        items:
+          $ref: '#/definitions/spb_bsa_api_sport_type_model.CreateSportTypeRequest'
+        type: array
+    required:
+    - address
+    - close_time
+    - media
+    - name
+    - open_time
+    - owner_id
+    - phone
+    - sport_types
     type: object
   model.CreateLocationRequest:
     properties:
@@ -57,14 +114,6 @@ definitions:
     - file_type
     - hash
     - uploaded_at
-    type: object
-  model.CreateSportTypeRequest:
-    properties:
-      name:
-        maxLength: 255
-        type: string
-    required:
-    - name
     type: object
   model.CreateUnitPriceRequest:
     properties:
@@ -99,7 +148,7 @@ definitions:
         type: string
       sport_types:
         items:
-          $ref: '#/definitions/model.CreateSportTypeRequest'
+          $ref: '#/definitions/spb_bsa_api_sport_type_model.CreateSportTypeRequest'
         type: array
       status:
         enum:
@@ -174,8 +223,15 @@ definitions:
         type: integer
       users:
         items:
-          $ref: '#/definitions/spb_bsa_internal_user_model.UserResponse'
+          $ref: '#/definitions/spb_bsa_api_user_model.UserResponse'
         type: array
+    type: object
+  model.GoogleCallbackRequest:
+    properties:
+      code:
+        type: string
+    required:
+    - code
     type: object
   model.LocationGeography:
     properties:
@@ -234,6 +290,8 @@ definitions:
         items:
           $ref: '#/definitions/model.LocationResponse'
         type: array
+      pagination:
+        $ref: '#/definitions/utils.Pagination'
       total:
         type: integer
     type: object
@@ -256,7 +314,7 @@ definitions:
       access_token:
         type: string
       user:
-        $ref: '#/definitions/spb_bsa_internal_auth_model.UserResponse'
+        $ref: '#/definitions/spb_bsa_api_auth_model.UserResponse'
     type: object
   model.MediaResponse:
     properties:
@@ -296,6 +354,15 @@ definitions:
     - email
     - password
     type: object
+  model.ResendVerifyRegisterTokenRequest:
+    properties:
+      email:
+        maxLength: 256
+        minLength: 6
+        type: string
+    required:
+    - email
+    type: object
   model.ResetPasswordRequest:
     properties:
       email:
@@ -307,29 +374,28 @@ definitions:
         minLength: 6
         type: string
       token:
-        type: string
+        maximum: 1000000
+        minimum: 999
+        type: integer
     required:
     - email
     - password
-    - token
     type: object
   model.RoleResponse:
     properties:
       permissions:
-        items:
-          $ref: '#/definitions/spb_bsa_internal_role_model.PermissionResponse'
-        type: array
+        type: integer
       role_id:
         type: string
       role_name:
         type: string
     type: object
-  model.SportTypeResponse:
+  model.SendVerificationRequest:
     properties:
-      name:
+      email:
         type: string
-      sportType_id:
-        type: string
+    required:
+    - email
     type: object
   model.UnitPriceResponse:
     properties:
@@ -375,7 +441,7 @@ definitions:
         type: string
       sport_types:
         items:
-          $ref: '#/definitions/model.SportTypeResponse'
+          $ref: '#/definitions/spb_bsa_api_sport_type_model.SportTypeResponse'
         type: array
       status:
         type: integer
@@ -423,8 +489,29 @@ definitions:
         $ref: '#/definitions/model.UpdateLocationRequest'
       location_geography:
         $ref: '#/definitions/model.LocationGeography'
-      unit_id:
+    type: object
+  model.UpdateClubRequest:
+    properties:
+      address:
+        $ref: '#/definitions/model.UpdateAddressRequest'
+      close_time:
         type: string
+      description:
+        type: string
+      media:
+        items:
+          $ref: '#/definitions/model.UpdateMediaRequest'
+        type: array
+      name:
+        type: string
+      open_time:
+        type: string
+      phone:
+        type: string
+      sport_types:
+        items:
+          $ref: '#/definitions/spb_bsa_api_sport_type_model.UpdateSportTypeRequest'
+        type: array
     type: object
   model.UpdateLocationRequest:
     properties:
@@ -438,8 +525,6 @@ definitions:
       district:
         maxLength: 255
         minLength: 2
-        type: string
-      locationID:
         type: string
       province:
         maxLength: 255
@@ -466,26 +551,10 @@ definitions:
         maxLength: 3000
         minLength: 1
         type: string
-      key:
-        maxLength: 255
-        minLength: 1
-        type: string
       value:
         maxLength: 3000
         minLength: 1
         type: string
-    required:
-    - description
-    - key
-    - value
-    type: object
-  model.UpdateSportTypeRequest:
-    properties:
-      name:
-        maxLength: 255
-        type: string
-    required:
-    - name
     type: object
   model.UpdateUnitPriceRequest:
     properties:
@@ -520,7 +589,7 @@ definitions:
         type: string
       sport_types:
         items:
-          $ref: '#/definitions/model.UpdateSportTypeRequest'
+          $ref: '#/definitions/spb_bsa_api_sport_type_model.UpdateSportTypeRequest'
         type: array
       status:
         enum:
@@ -558,26 +627,33 @@ definitions:
       role:
         type: string
     type: object
-  model.VerifyEmailRequest:
-    properties:
-      token:
-        type: string
-    required:
-    - token
-    type: object
-  model.VerifyTokenRequest:
+  model.VerifyForgotPasswordTokenRequest:
     properties:
       email:
         maxLength: 256
         minLength: 6
         type: string
       token:
-        type: string
+        maximum: 1000000
+        minimum: 999
+        type: integer
     required:
     - email
-    - token
     type: object
-  spb_bsa_internal_auth_model.UserResponse:
+  model.VerifyRegisterTokenRequest:
+    properties:
+      email:
+        maxLength: 256
+        minLength: 6
+        type: string
+      token:
+        maximum: 1000000
+        minimum: 999
+        type: integer
+    required:
+    - email
+    type: object
+  spb_bsa_api_auth_model.UserResponse:
     properties:
       email:
         type: string
@@ -588,14 +664,39 @@ definitions:
       user_id:
         type: string
     type: object
-  spb_bsa_internal_role_model.PermissionResponse:
+  spb_bsa_api_sport_type_model.CreateSportTypeRequest:
     properties:
-      permission_id:
+      name:
+        maxLength: 255
         type: string
-      permission_name:
+    required:
+    - name
+    type: object
+  spb_bsa_api_sport_type_model.SportTypeResponse:
+    properties:
+      id:
+        type: string
+      name:
         type: string
     type: object
-  spb_bsa_internal_user_model.UserResponse:
+  spb_bsa_api_sport_type_model.SportTypesResponse:
+    properties:
+      sport_types:
+        items:
+          $ref: '#/definitions/spb_bsa_api_sport_type_model.SportTypeResponse'
+        type: array
+      total:
+        type: integer
+    type: object
+  spb_bsa_api_sport_type_model.UpdateSportTypeRequest:
+    properties:
+      name:
+        maxLength: 255
+        type: string
+    required:
+    - name
+    type: object
+  spb_bsa_api_user_model.UserResponse:
     properties:
       email:
         type: string
@@ -615,17 +716,9 @@ definitions:
       code:
         type: string
       data: {}
-      status:
-        type: string
     type: object
   utils.Pagination:
     properties:
-      count:
-        description: total items
-        type: integer
-      items:
-        description: number item per page
-        type: integer
       next_page:
         type: string
       order_by:
@@ -637,10 +730,16 @@ definitions:
       page:
         description: current page
         type: integer
+      page_items:
+        description: number item per page
+        type: integer
       prev_page:
         type: string
+      total_items:
+        description: total items
+        type: integer
       total_pages:
-        description: total pages (count / items)
+        description: total pages (total_items / items per page)
         type: integer
     type: object
 host: localhost:3000
@@ -656,6 +755,32 @@ info:
   title: Sport Booking API
   version: "1.0"
 paths:
+  /api/auth/google/callback:
+    post:
+      consumes:
+      - application/json
+      description: Google callback api
+      parameters:
+      - description: Google callback
+        in: body
+        name: Group
+        required: true
+        schema:
+          $ref: '#/definitions/model.GoogleCallbackRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Google callback success
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+        "400":
+          description: Google callback failed
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Google callback api
+      tags:
+      - auth
   /api/v1/auth/forgot-password:
     post:
       consumes:
@@ -713,6 +838,30 @@ paths:
       summary: Login api
       tags:
       - auth
+  /api/v1/auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: Logout api
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Logout success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Logout failed
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Logout api
+      tags:
+      - auth
   /api/v1/auth/refresh:
     post:
       consumes:
@@ -757,7 +906,7 @@ paths:
           schema:
             $ref: '#/definitions/utils.JSONResult'
         "400":
-          description: Register failed
+          description: Register email verifying
           schema:
             $ref: '#/definitions/utils.JSONResult'
       summary: Register new user api
@@ -789,33 +938,33 @@ paths:
       summary: Reset password api
       tags:
       - auth
-  /api/v1/auth/verify-email:
+  /api/v1/auth/ses-verify:
     post:
       consumes:
       - application/json
-      description: Verify email api
+      description: Send verification email api
       parameters:
-      - description: Verify email
+      - description: Send verification email
         in: body
         name: group
         required: true
         schema:
-          $ref: '#/definitions/model.VerifyEmailRequest'
+          $ref: '#/definitions/model.SendVerificationRequest'
       produces:
       - application/json
       responses:
         "200":
-          description: Email verification success
+          description: Send verification email success
           schema:
             $ref: '#/definitions/utils.JSONResult'
         "400":
-          description: Verify token error
+          description: Send verification email failed
           schema:
             $ref: '#/definitions/utils.JSONResult'
-      summary: Verify email api
+      summary: Send verification email api
       tags:
       - auth
-  /api/v1/auth/verify-reset-token:
+  /api/v1/auth/verify-forgot-password-token:
     post:
       consumes:
       - application/json
@@ -826,7 +975,7 @@ paths:
         name: group
         required: true
         schema:
-          $ref: '#/definitions/model.VerifyTokenRequest'
+          $ref: '#/definitions/model.VerifyForgotPasswordTokenRequest'
       produces:
       - application/json
       responses:
@@ -841,6 +990,173 @@ paths:
       summary: Verify reset token api
       tags:
       - auth
+  /api/v1/auth/verify-register-token:
+    post:
+      consumes:
+      - application/json
+      description: Verify email api
+      parameters:
+      - description: Verify email
+        in: body
+        name: group
+        required: true
+        schema:
+          $ref: '#/definitions/model.VerifyRegisterTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Email verification success
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+        "400":
+          description: Verify token error
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Verify email api
+      tags:
+      - auth
+  /api/v1/auth/verify-register-token/resend:
+    post:
+      consumes:
+      - application/json
+      description: Resend verify register token
+      parameters:
+      - description: body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.ResendVerifyRegisterTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Resend verify email OTP success
+          schema:
+            type: string
+        "400":
+          description: Resend verify email OTP failed
+          schema:
+            type: string
+      summary: Resend verify register token
+      tags:
+      - auth
+  /api/v1/clubs:
+    post:
+      consumes:
+      - application/json
+      description: Create club api
+      parameters:
+      - description: Create club
+        in: body
+        name: Group
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateClubRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Create club success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.ClubResponse'
+              type: object
+        "400":
+          description: Create club failed
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Create club api
+      tags:
+      - clubs
+  /api/v1/clubs/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete club api
+      parameters:
+      - description: club id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Delete club success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+        "400":
+          description: Delete club failed
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Delete club api
+      tags:
+      - clubs
+    get:
+      consumes:
+      - application/json
+      description: Get club by id
+      parameters:
+      - description: Club ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get club by id success
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+        "400":
+          description: Get club by id failed
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Get club by id
+      tags:
+      - clubs
+    put:
+      consumes:
+      - application/json
+      description: Update club by id
+      parameters:
+      - description: Club data
+        in: body
+        name: club
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateClubRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Update club by id success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.ClubResponse'
+              type: object
+        "400":
+          description: Update club by id failed
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Update club by id
+      tags:
+      - clubs
   /api/v1/locations:
     get:
       consumes:
@@ -967,7 +1283,31 @@ paths:
       summary: Update location by id api
       tags:
       - locations
-  /api/v1/metadatas:
+  /api/v1/metadatas/{key}:
+    get:
+      consumes:
+      - application/json
+      description: Get metadata by key
+      parameters:
+      - description: Metadata Key
+        in: path
+        name: key
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get metadata by key success
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+        "400":
+          description: Get metadata by key failed
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Get metadata by key
+      tags:
+      - metadatas
     put:
       consumes:
       - application/json
@@ -998,31 +1338,146 @@ paths:
       summary: Update metadata by key
       tags:
       - metadatas
-  /api/v1/metadatas/{key}:
+  /api/v1/sport_types:
     get:
       consumes:
       - application/json
-      description: Get metadata by key
-      parameters:
-      - description: Metadata Key
-        in: path
-        name: key
-        required: true
-        type: string
+      description: Get all sport type api
       produces:
       - application/json
       responses:
         "200":
-          description: Get metadata by key success
+          description: Get all sport type success
           schema:
-            $ref: '#/definitions/utils.JSONResult'
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/spb_bsa_api_sport_type_model.SportTypesResponse'
+              type: object
         "400":
-          description: Get metadata by key failed
+          description: Get all sport type failed
           schema:
             $ref: '#/definitions/utils.JSONResult'
-      summary: Get metadata by key
+      summary: Get all sport type api
       tags:
-      - metadatas
+      - sport types
+    post:
+      consumes:
+      - application/json
+      description: Create sport type api
+      parameters:
+      - description: Create sport type
+        in: body
+        name: Group
+        required: true
+        schema:
+          $ref: '#/definitions/spb_bsa_api_sport_type_model.CreateSportTypeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Create sport type success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/spb_bsa_api_sport_type_model.SportTypeResponse'
+              type: object
+        "400":
+          description: Create sport type failed
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Create sport type api
+      tags:
+      - sport types
+  /api/v1/sport_types/{id}:
+    delete:
+      description: Delete sport type api
+      parameters:
+      - description: Sport type ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Delete sport type success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Delete sport type failed
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Delete sport type api
+      tags:
+      - sport types
+    get:
+      description: Get sport type by ID api
+      parameters:
+      - description: Sport type ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Get sport type by ID success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/spb_bsa_api_sport_type_model.SportTypeResponse'
+              type: object
+        "400":
+          description: Get sport type by ID failed
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Get sport type by ID api
+      tags:
+      - sport types
+    put:
+      consumes:
+      - application/json
+      description: Update sport type api
+      parameters:
+      - description: Sport type ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update sport type
+        in: body
+        name: Group
+        required: true
+        schema:
+          $ref: '#/definitions/spb_bsa_api_sport_type_model.UpdateSportTypeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Update sport type success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/spb_bsa_api_sport_type_model.SportTypeResponse'
+              type: object
+        "400":
+          description: Update sport type failed
+          schema:
+            $ref: '#/definitions/utils.JSONResult'
+      summary: Update sport type api
+      tags:
+      - sport types
   /api/v1/unit-prices:
     get:
       consumes:
@@ -1143,7 +1598,7 @@ paths:
       summary: Get unit price by id
       tags:
       - unit-prices
-    patch:
+    put:
       consumes:
       - application/json
       description: Update unit price by id
@@ -1505,7 +1960,7 @@ paths:
             - $ref: '#/definitions/utils.JSONResult'
             - properties:
                 data:
-                  $ref: '#/definitions/spb_bsa_internal_user_model.UserResponse'
+                  $ref: '#/definitions/spb_bsa_api_user_model.UserResponse'
               type: object
         "400":
           description: Create user failed
@@ -1584,7 +2039,7 @@ paths:
             - $ref: '#/definitions/utils.JSONResult'
             - properties:
                 data:
-                  $ref: '#/definitions/spb_bsa_internal_user_model.UserResponse'
+                  $ref: '#/definitions/spb_bsa_api_user_model.UserResponse'
               type: object
         "400":
           description: Update user by id failed

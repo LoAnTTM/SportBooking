@@ -1,8 +1,9 @@
 package model
 
-import (
-	"spb/bsa/pkg/utils"
-)
+var ORDER_BY = []string{
+	"created_at",
+	"updated_at",
+}
 
 type CreateSportTypeRequest struct {
 	Name string `json:"name" validate:"required,max=255"`
@@ -20,5 +21,4 @@ type SportTypeResponse struct {
 type SportTypesResponse struct {
 	SportTypes []SportTypeResponse `json:"sport_types"`
 	Total      uint                `json:"total"`
-	Pagination *utils.Pagination   `json:"pagination"`
 }

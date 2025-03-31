@@ -12,15 +12,15 @@ import (
 
 // ResendVerifyRegisterToken godoc
 //
-// @Summary Resend verify email OTP
-// @Description Resend verify email OTP
-// @Tags Auth
-// @Accept json
+// @Summary Resend verify register token
+// @Description Resend verify register token
+// @Tags 	auth
+// @Accept 	json
 // @Produce json
 // @Param body body model.ResendVerifyRegisterTokenRequest true "body"
 // @Success 200 {string} string "Resend verify email OTP success"
 // @Failure 400 {string} string "Resend verify email OTP failed"
-// @Router /auth/resend-verify-email-otp [post]
+// @Router /api/v1/auth/verify-register-token/resend [post]
 func (h *Handler) ResendVerifyRegisterToken(ctx fiber.Ctx) error {
 	reqBody := new(model.ResendVerifyRegisterTokenRequest)
 	fctx := utils.FiberCtx{Fctx: ctx}

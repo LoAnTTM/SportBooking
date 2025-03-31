@@ -6,7 +6,6 @@ import (
 	st "spb/bsa/api/sport_type/model"
 	up "spb/bsa/api/unit_price/model"
 	us "spb/bsa/api/unit_service/model"
-	"spb/bsa/pkg/utils"
 )
 
 var ORDER_BY = []string{
@@ -15,19 +14,14 @@ var ORDER_BY = []string{
 	"updated_at",
 }
 
-type SearchUnitsRequest struct {
-	Pagination utils.Pagination
-	Search     string
-}
-
 type CreateUnitRequest struct {
 	Name         string                         `json:"name" validate:"required,max=255"`
-	OpenTime     string                         `json:"open_time" validate:"required,yy_mm"`
-	CloseTime    string                         `json:"close_time" validate:"required,yy_mm"`
+	OpenTime     string                         `json:"open_time" validate:"required,yy:mm"`
+	CloseTime    string                         `json:"close_time" validate:"required,yy:mm"`
 	Phone        string                         `json:"phone" validate:"required,e164"`
 	Description  string                         `json:"description" validate:"omitempty,max=3000"`
 	Status       int8                           `json:"status" validate:"oneof=0 1"`
-	ClubID       string                         `json:"club_id" validate:"required,type=uuid"`
+	ClubID       string                         `json:"club_id" validate:"required"`
 	Address      *address.CreateAddressRequest  `json:"address" validate:"required"`
 	UnitPrices   []*up.CreateUnitPriceRequest   `json:"unit_prices" validate:"required"`
 	UnitServices []*us.CreateUnitServiceRequest `json:"unit_services" validate:"omitempty"`
@@ -37,12 +31,12 @@ type CreateUnitRequest struct {
 
 type UpdateUnitRequest struct {
 	Name         *string                        `json:"name,omitempty" validate:"omitempty,max=255"`
-	OpenTime     *string                        `json:"open_time,omitempty" validate:"omitempty,yy_mm"`
-	CloseTime    *string                        `json:"close_time,omitempty" validate:"omitempty,yy_mm"`
+	OpenTime     *string                        `json:"open_time,omitempty" validate:"omitempty,yy:mm"`
+	CloseTime    *string                        `json:"close_time,omitempty" validate:"omitempty,yy:mm"`
 	Phone        *string                        `json:"phone,omitempty" validate:"omitempty,e164"`
 	Description  *string                        `json:"description,omitempty" validate:"omitempty,max=3000"`
 	Status       *int8                          `json:"status,omitempty" validate:"omitempty,oneof=0 1"`
-	ClubID       *string                        `json:"club_id" validate:"type=uuid"`
+	ClubID       *string                        `json:"club_id"`
 	Address      *address.UpdateAddressRequest  `json:"address,omitempty" validate:"omitempty"`
 	UnitPrices   []*up.UpdateUnitPriceRequest   `json:"unit_prices,omitempty" validate:"omitempty"`
 	UnitServices []*us.UpdateUnitServiceRequest `json:"unit_services,omitempty" validate:"omitempty"`
@@ -67,7 +61,11 @@ type UnitResponse struct {
 }
 
 type UnitsResponse struct {
-	Units      []*UnitResponse   `json:"units"`
-	Total      uint              `json:"total"`
-	Pagination *utils.Pagination `json:"pagination"`
+	Units      []*UnitResponse `json:"units"`
+	Total      int             `json:"total"`
+	Pagination *UnitPagination `json:"pagination"`
+}
+
+type SearchUnitRequest struct {
+	Pagination *UnitPagination
 }

@@ -24,6 +24,7 @@ import (
 // @param		group body model.SendVerificationRequest true  "Send verification email"
 // @success		200 {object} utils.JSONResult{}				"Send verification email success"
 // @failure		400 {object} utils.JSONResult{}				"Send verification email failed"
+// @router		/api/v1/auth/ses-verify [post]
 func (h *Handler) SendVerification(ctx fiber.Ctx) error {
 	reqBody := new(model.SendVerificationRequest)
 	fctx := utils.FiberCtx{Fctx: ctx}

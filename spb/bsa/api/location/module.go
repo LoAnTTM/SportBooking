@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	LocationService *service.Service
-	LocationHandler *handler.Handler
+	LocationService service.IService
+	LocationHandler handler.IHandler
 )
 
 // @author: LoanTT

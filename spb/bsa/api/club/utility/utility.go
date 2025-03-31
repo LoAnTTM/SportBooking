@@ -9,11 +9,11 @@ import (
 )
 
 // @author: LoanTT
-// @function: MapClubEntityToResponse
+// @function: MapEntityToResponse
 // @description: Mapping club entity to response
 // @param: club *tb.Club
 // @return: model.ClubResponse
-func MapClubEntityToResponse(club *tb.Club) *model.ClubResponse {
+func MapEntityToResponse(club *tb.Club) *model.ClubResponse {
 	return &model.ClubResponse{
 		ClubID:      club.ID,
 		Name:        club.Name,
@@ -24,6 +24,20 @@ func MapClubEntityToResponse(club *tb.Club) *model.ClubResponse {
 		OwnerID:     club.OwnerID,
 		Description: club.Description,
 		Media:       media.MapMediaEntitiesToResponse(club.Media),
-		SportTypes:  st.MapSportTypeEntitiesToResponse(club.SportTypes),
+		SportTypes:  st.MapSportTypeEntitiesToListResponse(club.SportTypes),
+	}
+}
+
+func MapCreateRequestToEntity(reqBody *model.CreateClubRequest) *tb.Club {
+	return &tb.Club{
+		Name:        reqBody.Name,
+		OpenTime:    reqBody.OpenTime,
+		CloseTime:   reqBody.CloseTime,
+		Phone:       reqBody.Phone,
+		OwnerID:     reqBody.OwnerID,
+		Address:     addr.MapCreateRequestToEntity(reqBody.Address),
+		Description: reqBody.Description,
+		Media:       media.MapCreateRequestToEntities(reqBody.Media),
+		SportTypes:  st.MapCreateRequestToEntities(reqBody.SportTypes),
 	}
 }
