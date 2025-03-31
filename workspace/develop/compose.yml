@@ -10,8 +10,8 @@ services:
             - POSTGRES_USER=spb_user
             - POSTGRES_PASSWORD=spb_password
             - POSTGRES_DB=spb_database
-        volumes:
-            - postgres_data:/var/lib/postgresql/data
+        # volumes:
+        #     - postgres_data:/var/lib/postgresql/data
         networks:
             - app-tier
 
@@ -40,5 +40,5 @@ networks:
         driver: bridge
 
 volumes:
-    postgres_data:
+    # postgres_data:
     redis_data:
