@@ -1,6 +1,8 @@
 package utility
 
 import (
+	"strings"
+
 	"spb/bsa/api/unit_service/model"
 	tb "spb/bsa/pkg/entities"
 )
@@ -12,11 +14,14 @@ import (
 // @return: *model.UnitServiceResponse
 func MapUnitServiceEntityToResponse(unitService *tb.UnitService) *model.UnitServiceResponse {
 	return &model.UnitServiceResponse{
-		UnitServiceId: unitService.ID,
-		Icon:          unitService.Icon,
-		Price:         unitService.Price,
-		Description:   unitService.Description,
-		UnitID:        unitService.UnitID,
+		ID:          unitService.ID,
+		Icon:        unitService.Icon,
+		Price:       unitService.Price,
+		Description: unitService.Description,
+		Status:      unitService.Status,
+		Currency:    unitService.Currency,
+		Name:        unitService.Name,
+		UnitID:      unitService.UnitID,
 	}
 }
 
@@ -46,9 +51,12 @@ func MapUnitServiceEntitiesToResponse(unitServices []*tb.UnitService, reqBody *m
 // @return: *tb.UnitService
 func MapCreateRequestToEntity(reqBody *model.CreateUnitServiceRequest) *tb.UnitService {
 	return &tb.UnitService{
+		Name:        reqBody.Name,
 		Icon:        reqBody.Icon,
 		Price:       reqBody.Price,
 		Description: reqBody.Description,
+		Status:      reqBody.Status,
+		Currency:    reqBody.Currency,
 		UnitID:      reqBody.UnitID,
 	}
 }
@@ -69,33 +77,50 @@ func MapCreateRequestToEntities(reqBody []*model.CreateUnitServiceRequest) []*tb
 // @author: LoanTT
 // @function: MapUpdateRequestToEntity
 // @description: mapping update fields
-// @param: reqBody *model.UpdateUnitServiceRequest
-// @return: tb.UnitService
-func MapUpdateRequestToEntity(reqBody *model.UpdateUnitServiceRequest) *tb.UnitService {
-	unitServiceUpdate := new(tb.UnitService)
+// @param: reqBody model.UpdateUnitServiceRequest
+// @return: *tb.UnitService
+func MapUpdateRequestToEntity(reqBody model.UpdateUnitServiceRequest) *tb.UnitService {
+	updates := new(tb.UnitService)
 
-	if reqBody.Icon != nil {
-		unitServiceUpdate.Icon = *reqBody.Icon
+	if trimmed := strings.TrimSpace(reqBody.Name); trimmed != "" {
+		updates.Name = trimmed
+	}
+	if trimmed := strings.TrimSpace(reqBody.Icon); trimmed != "" {
+		updates.Icon = trimmed
 	}
 	if reqBody.Price != nil {
-		unitServiceUpdate.Price = *reqBody.Price
+		updates.Price = *reqBody.Price
 	}
-	if reqBody.Description != nil {
-		unitServiceUpdate.Description = *reqBody.Description
+	if trimmed := strings.TrimSpace(reqBody.Currency); trimmed != "" {
+		updates.Currency = trimmed
+	}
+	if trimmed := strings.TrimSpace(reqBody.Description); trimmed != "" {
+		updates.Description = trimmed
+	}
+	if reqBody.Status != nil {
+		updates.Status = *reqBody.Status
 	}
 
-	return unitServiceUpdate
+	return updates
 }
 
 // @author: LoanTT
 // @function: MapUpdateRequestToEntities
 // @description: mapping update fields
-// @param: reqBody []model.UpdateUnitServiceRequest
-// @return: []tb.UnitService
-func MapUpdateRequestToEntities(reqBody []*model.UpdateUnitServiceRequest) []*tb.UnitService {
-	unitServices := make([]*tb.UnitService, 0)
-	for _, unitService := range reqBody {
-		unitServices = append(unitServices, MapUpdateRequestToEntity(unitService))
+// @param: reqBody []*model.UpdateUnitServiceRequest
+// @return: []*tb.UnitService
+func MapUpdateRequestToEntities(reqBody []model.UpdateUnitServiceRequest) []*tb.UnitService {
+	updates := make([]*tb.UnitService, 0, len(reqBody))
+	for _, service := range reqBody {
+		updates = append(updates, MapUpdateRequestToEntity(service))
 	}
-	return unitServices
+	return updates
+}
+
+func MapUnitServicesEntitiesToListResponse(unitServices []*tb.UnitService) []*model.UnitServiceResponse {
+	unitServicesResponse := make([]*model.UnitServiceResponse, len(unitServices))
+	for i, unitService := range unitServices {
+		unitServicesResponse[i] = MapUnitServiceEntityToResponse(unitService)
+	}
+	return unitServicesResponse
 }

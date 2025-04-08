@@ -34,5 +34,5 @@ func (s *Handler) Delete(ctx fiber.Ctx) error {
 		logger.Errorf("error delete club: %v", err)
 		return fctx.ErrResponse(msg.DELETE_UNIT_FAILED)
 	}
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_DELETE_UNIT_SUCCESS)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_DELETE_CLUB_SUCCESS)
 }

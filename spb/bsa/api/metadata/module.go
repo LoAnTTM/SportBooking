@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	MetadataService *service.Service
-	MetadataHandler *handler.Handler
+	MetadataService service.IService
+	MetadataHandler handler.IHandler
 )
 
 // @author: LoanTT

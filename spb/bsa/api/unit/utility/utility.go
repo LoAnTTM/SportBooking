@@ -1,6 +1,11 @@
 package utility
 
 import (
+	"fmt"
+	"sort"
+	"strings"
+	"time"
+
 	au "spb/bsa/api/address/utility"
 	mu "spb/bsa/api/media/utility"
 	stu "spb/bsa/api/sport_type/utility"
@@ -15,10 +20,22 @@ import (
 // @function: MapUnitEntityToResponse
 // @description: Mapping unit entity to response
 // @param: unit tb.Unit
-// @return: model.UnitResponse
-func MapUnitEntityToResponse(unit *tb.Unit) model.UnitResponse {
-	return model.UnitResponse{
-		UnitID: unit.ID,
+// @return: *model.UnitResponse
+func MapUnitEntityToResponse(unit *tb.Unit) *model.UnitResponse {
+	return &model.UnitResponse{
+		UnitID:       unit.ID,
+		Name:         unit.Name,
+		OpenTime:     unit.OpenTime,
+		CloseTime:    unit.CloseTime,
+		Phone:        unit.Phone,
+		Description:  unit.Description,
+		Status:       unit.Status,
+		ClubID:       unit.ClubID,
+		Address:      au.MapAddressEntityToResponse(unit.Address),
+		UnitPrices:   upu.MapUnitPriceEntitiesToListResponse(unit.UnitPrice),
+		UnitServices: usu.MapUnitServicesEntitiesToListResponse(unit.UnitService),
+		Media:        mu.MapMediaEntitiesToResponse(unit.Media),
+		SportTypes:   stu.MapSportTypeEntitiesToListResponse(unit.SportTypes),
 	}
 }
 
@@ -32,9 +49,7 @@ func MapUnitEntityToResponse(unit *tb.Unit) model.UnitResponse {
 func MapUnitEntitiesToResponse(units []*tb.Unit, reqBody *model.SearchUnitRequest, total int64) *model.UnitsResponse {
 	unitResponse := make([]*model.UnitResponse, 0)
 	for _, unit := range units {
-		unitResponse = append(unitResponse, &model.UnitResponse{
-			UnitID: unit.ID,
-		})
+		unitResponse = append(unitResponse, MapUnitEntityToResponse(unit))
 	}
 
 	response := new(model.UnitsResponse)
@@ -54,6 +69,7 @@ func MapUnitEntitiesToResponse(units []*tb.Unit, reqBody *model.SearchUnitReques
 func MapCreateRequestToEntity(reqBody *model.CreateUnitRequest) *tb.Unit {
 	return &tb.Unit{
 		Name:        reqBody.Name,
+		NameEn:      utils.VietNameseCharacterToASCII(reqBody.Name),
 		OpenTime:    reqBody.OpenTime,
 		CloseTime:   reqBody.CloseTime,
 		Phone:       reqBody.Phone,
@@ -63,8 +79,7 @@ func MapCreateRequestToEntity(reqBody *model.CreateUnitRequest) *tb.Unit {
 		Address:     au.MapCreateRequestToEntity(reqBody.Address),
 		UnitPrice:   upu.MapCreateRequestToEntities(reqBody.UnitPrices),
 		UnitService: usu.MapCreateRequestToEntities(reqBody.UnitServices),
-		Media:       mu.MapCreateRequestToEntities(reqBody.Media),
-		SportTypes:  stu.MapCreateRequestToEntities(reqBody.SportTypes),
+		SportTypes:  stu.MapIdsToEntities(reqBody.SportTypes),
 	}
 }
 
@@ -72,43 +87,90 @@ func MapCreateRequestToEntity(reqBody *model.CreateUnitRequest) *tb.Unit {
 // @function: MapUpdateRequestToEntity
 // @description: mapping update fields
 // @param: reqBody *model.UpdateUnitRequest
-// @return: tb.Unit
-func MapUpdateRequestToEntity(reqBody *model.UpdateUnitRequest) *tb.Unit {
-	unitUpdate := new(tb.Unit)
+// @return: map[string]interface{}
+func MapUpdateRequestToEntity(reqBody *model.UpdateUnitRequest) map[string]interface{} {
+	unitUpdate := make(map[string]interface{})
 
-	if reqBody.Name != nil {
-		unitUpdate.Name = *reqBody.Name
+	// Trim and check non-empty strings
+	if trimmed := strings.TrimSpace(reqBody.Name); trimmed != "" {
+		unitUpdate["name"] = trimmed
+		unitUpdate["name_en"] = utils.VietNameseCharacterToASCII(trimmed)
 	}
-	if reqBody.OpenTime != nil {
-		unitUpdate.OpenTime = *reqBody.OpenTime
+	if trimmed := strings.TrimSpace(reqBody.OpenTime); trimmed != "" {
+		unitUpdate["open_time"] = trimmed
 	}
-	if reqBody.CloseTime != nil {
-		unitUpdate.CloseTime = *reqBody.CloseTime
+	if trimmed := strings.TrimSpace(reqBody.CloseTime); trimmed != "" {
+		unitUpdate["close_time"] = trimmed
 	}
-	if reqBody.Phone != nil {
-		unitUpdate.Phone = *reqBody.Phone
+	if trimmed := strings.TrimSpace(reqBody.Phone); trimmed != "" {
+		unitUpdate["phone"] = trimmed
 	}
-	if reqBody.Description != nil {
-		unitUpdate.Description = *reqBody.Description
+	if trimmed := strings.TrimSpace(reqBody.Description); trimmed != "" {
+		unitUpdate["description"] = trimmed
 	}
 	if reqBody.Status != nil {
-		unitUpdate.Status = *reqBody.Status
-	}
-	if reqBody.Address != nil {
-		unitUpdate.Address = au.MapUpdateRequestToEntity(reqBody.Address)
-	}
-	if reqBody.UnitPrices != nil {
-		unitUpdate.UnitPrice = upu.MapUpdateRequestToEntities(reqBody.UnitPrices)
-	}
-	if reqBody.UnitServices != nil {
-		unitUpdate.UnitService = usu.MapUpdateRequestToEntities(reqBody.UnitServices)
-	}
-	if reqBody.Media != nil {
-		unitUpdate.Media = mu.MapUpdateRequestToEntities(reqBody.Media)
-	}
-	if reqBody.SportTypes != nil {
-		unitUpdate.SportTypes = stu.MapUpdateRequestToEntities(reqBody.SportTypes)
+		unitUpdate["status"] = *reqBody.Status
 	}
 
 	return unitUpdate
+}
+
+func ValidateUnitPriceTime(unitPrices []map[string]interface{}, openTime, closeTime string) error {
+	if len(unitPrices) == 0 {
+		return nil
+	}
+
+	// Convert unit open/close time to time.Time
+	unitOpen, err := time.Parse("15:04", openTime)
+	if err != nil {
+		return fmt.Errorf("invalid unit open time format: %w", err)
+	}
+	unitClose, err := time.Parse("15:04", closeTime)
+	if err != nil {
+		return fmt.Errorf("invalid unit close time format: %w", err)
+	}
+
+	// Convert and sort unit prices by start time
+	type timeRange struct {
+		startTime time.Time
+		endTime   time.Time
+		index     int
+	}
+
+	ranges := make([]timeRange, len(unitPrices))
+	for i, price := range unitPrices {
+		start, err := time.Parse("15:04", price["start_time"].(string))
+		if err != nil {
+			return fmt.Errorf("invalid start time format at index %d: %w", i, err)
+		}
+		end, err := time.Parse("15:04", price["end_time"].(string))
+		if err != nil {
+			return fmt.Errorf("invalid end time format at index %d: %w", i, err)
+		}
+		// Subtract 1 minute from end time
+		end = end.Add(-time.Minute)
+		ranges[i] = timeRange{start, end, i}
+	}
+
+	// Sort by start time
+	sort.Slice(ranges, func(i, j int) bool {
+		return ranges[i].startTime.Before(ranges[j].startTime)
+	})
+
+	// Check if times are within unit operating hours
+	for i, r := range ranges {
+		if r.startTime.Before(unitOpen) || r.endTime.After(unitClose) {
+			return fmt.Errorf("price time range at index %d is outside unit operating hours", ranges[i].index)
+		}
+	}
+
+	// Check for overlaps
+	for i := range len(ranges) - 1 {
+		if !ranges[i].endTime.Before(ranges[i+1].startTime) {
+			return fmt.Errorf("overlapping time ranges at indices %d and %d",
+				ranges[i].index, ranges[i+1].index)
+		}
+	}
+
+	return nil
 }

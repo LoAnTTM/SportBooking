@@ -16,7 +16,7 @@ func (h *Handler) Create(ctx fiber.Ctx) error {
 
 	if err := fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
 		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.ErrResponse(msg.UNIT_INCORRECT)
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
 	return nil

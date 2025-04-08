@@ -74,12 +74,12 @@ func verifyOrderType(orderType string) string {
 
 // @author: LoanTT
 // @function: SetNewPagination
-// @description: set new pagination info (total_page, total pages, next, prev)
-// @param: int total_page
-func (p *Pagination) SetNewPagination(total_page int) {
+// @description: set new pagination info (totalItem, total pages, next, prev)
+// @param: int totalItem
+func (p *Pagination) SetNewPagination(totalItem int) {
 	// convert float number to floor number
-	p.TotalPages = CeilFloatToInt(float64(total_page) / float64(p.PageItems))
-	p.TotalItems = total_page
+	p.TotalPages = CeilFloatToInt(float64(totalItem) / float64(p.PageItems))
+	p.TotalItems = totalItem
 
 	p.NextPageUrl()
 	p.PrevPageUrl()

@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	UnitPriceService *service.Service
-	UnitPriceHandler *handler.Handler
+	UnitPriceService service.IService
+	UnitPriceHandler handler.IHandler
 )
 
 // @author: LoanTT

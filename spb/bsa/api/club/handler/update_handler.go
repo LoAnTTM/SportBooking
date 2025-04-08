@@ -2,7 +2,6 @@ package handler
 
 import (
 	"spb/bsa/api/club/model"
-	"spb/bsa/api/club/utility"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/msg"
@@ -39,12 +38,10 @@ func (s *Handler) Update(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(msg.UPDATE_UNIT_FAILED)
 	}
 
-	clubUpdated, err := s.service.Update(reqBody, clubId)
-	if err != nil {
-		logger.Errorf("error create club: %v", err)
+	if err = s.service.Update(reqBody, clubId); err != nil {
+		logger.Errorf("error update club: %v", err)
 		return fctx.ErrResponse(msg.UPDATE_UNIT_FAILED)
 	}
 
-	clubResponse := utility.MapEntityToResponse(clubUpdated)
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_UPDATE_UNIT_SUCCESS, clubResponse)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_UPDATE_CLUB_SUCCESS)
 }

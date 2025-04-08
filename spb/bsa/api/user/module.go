@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	UserService *service.Service
-	UserHandler *handler.Handler
+	UserService service.IService
+	UserHandler handler.IHandler
 )
 
 // @author: LoanTT

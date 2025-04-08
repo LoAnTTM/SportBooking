@@ -6,6 +6,7 @@ import (
 	media "spb/bsa/api/media/utility"
 	st "spb/bsa/api/sport_type/utility"
 	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/utils"
 )
 
 // @author: LoanTT
@@ -31,13 +32,54 @@ func MapEntityToResponse(club *tb.Club) *model.ClubResponse {
 func MapCreateRequestToEntity(reqBody *model.CreateClubRequest) *tb.Club {
 	return &tb.Club{
 		Name:        reqBody.Name,
+		NameEn:      utils.VietNameseCharacterToASCII(reqBody.Name),
+		Slug:        utils.CreateSlug(reqBody.Name),
 		OpenTime:    reqBody.OpenTime,
 		CloseTime:   reqBody.CloseTime,
 		Phone:       reqBody.Phone,
 		OwnerID:     reqBody.OwnerID,
-		Address:     addr.MapCreateRequestToEntity(reqBody.Address),
 		Description: reqBody.Description,
-		Media:       media.MapCreateRequestToEntities(reqBody.Media),
-		SportTypes:  st.MapCreateRequestToEntities(reqBody.SportTypes),
+		Address:     addr.MapCreateRequestToEntity(reqBody.Address),
+		SportTypes:  st.MapIdsToEntities(reqBody.SportTypes),
 	}
+}
+
+func MapUpdateRequestToEntity(reqBody *model.UpdateClubRequest) map[string]interface{} {
+	clubUpdate := make(map[string]interface{})
+
+	if reqBody.Name != "" {
+		clubUpdate["name"] = reqBody.Name
+		clubUpdate["name_en"] = utils.VietNameseCharacterToASCII(reqBody.Name)
+		clubUpdate["slug"] = utils.CreateSlug(reqBody.Name)
+	}
+	if reqBody.OpenTime != "" {
+		clubUpdate["open_time"] = reqBody.OpenTime
+	}
+	if reqBody.CloseTime != "" {
+		clubUpdate["close_time"] = reqBody.CloseTime
+	}
+	if reqBody.Phone != "" {
+		clubUpdate["phone"] = reqBody.Phone
+	}
+	if reqBody.Description != "" {
+		clubUpdate["description"] = reqBody.Description
+	}
+
+	return clubUpdate
+}
+
+func MapEntitiesToResponse(clubs []*tb.Club, total int64, reqBody *model.GetClubsRequest) *model.ClubsResponse {
+	clubsResponse := &model.ClubsResponse{
+		Clubs: make([]*model.ClubResponse, 0),
+	}
+
+	for _, club := range clubs {
+		clubsResponse.Clubs = append(clubsResponse.Clubs, MapEntityToResponse(club))
+	}
+	// Set pagination
+	clubsResponse.Total = uint(len(clubsResponse.Clubs))
+	clubsResponse.Pagination = reqBody.Pagination
+	clubsResponse.Pagination.SetNewPagination(utils.SafeInt64ToInt(total))
+
+	return clubsResponse
 }

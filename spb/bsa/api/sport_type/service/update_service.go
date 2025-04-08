@@ -33,7 +33,6 @@ func (s *Service) Update(reqBody *model.UpdateSportTypeRequest, sportTypeId stri
 	err := s.db.Model(&sportTypes).
 		Clauses(clause.Returning{}).
 		Where("id = ?", sportTypeId).
-		Preload("Role.Permissions").
 		Updates(sportTypeUpdate).Error
 	if err != nil {
 		return nil, err

@@ -26,22 +26,21 @@ type CreateUnitRequest struct {
 	UnitPrices   []*up.CreateUnitPriceRequest   `json:"unit_prices" validate:"required"`
 	UnitServices []*us.CreateUnitServiceRequest `json:"unit_services" validate:"omitempty"`
 	Media        []*media.CreateMediaRequest    `json:"media" validate:"required"`
-	SportTypes   []*st.CreateSportTypeRequest   `json:"sport_types" validate:"required"`
+	SportTypes   []string                       `json:"sport_types" validate:"required"`
 }
 
 type UpdateUnitRequest struct {
-	Name         *string                        `json:"name,omitempty" validate:"omitempty,max=255"`
-	OpenTime     *string                        `json:"open_time,omitempty" validate:"omitempty,yy:mm"`
-	CloseTime    *string                        `json:"close_time,omitempty" validate:"omitempty,yy:mm"`
-	Phone        *string                        `json:"phone,omitempty" validate:"omitempty,e164"`
-	Description  *string                        `json:"description,omitempty" validate:"omitempty,max=3000"`
-	Status       *int8                          `json:"status,omitempty" validate:"omitempty,oneof=0 1"`
-	ClubID       *string                        `json:"club_id"`
-	Address      *address.UpdateAddressRequest  `json:"address,omitempty" validate:"omitempty"`
-	UnitPrices   []*up.UpdateUnitPriceRequest   `json:"unit_prices,omitempty" validate:"omitempty"`
-	UnitServices []*us.UpdateUnitServiceRequest `json:"unit_services,omitempty" validate:"omitempty"`
-	Media        []*media.UpdateMediaRequest    `json:"media,omitempty" validate:"omitempty"`
-	SportTypes   []*st.UpdateSportTypeRequest   `json:"sport_types,omitempty" validate:"omitempty"`
+	Name         string                        `json:"name,omitempty" validate:"omitempty,max=255"`
+	OpenTime     string                        `json:"open_time,omitempty" validate:"omitempty,yy:mm"`
+	CloseTime    string                        `json:"close_time,omitempty" validate:"omitempty,yy:mm"`
+	Phone        string                        `json:"phone,omitempty" validate:"omitempty,e164"`
+	Description  string                        `json:"description,omitempty" validate:"omitempty,max=3000"`
+	Status       *int8                         `json:"status,omitempty" validate:"omitempty,oneof=0 1"`
+	ClubID       string                        `json:"club_id"`
+	Address      *address.UpdateAddressRequest `json:"address,omitempty" validate:"omitempty"`
+	UnitPrices   []up.UpdateUnitPriceRequest   `json:"unit_prices,omitempty" validate:"omitempty"`
+	UnitServices []us.UpdateUnitServiceRequest `json:"unit_services,omitempty" validate:"omitempty"`
+	SportTypes   []string                      `json:"sport_types,omitempty" validate:"omitempty"`
 }
 
 type UnitResponse struct {

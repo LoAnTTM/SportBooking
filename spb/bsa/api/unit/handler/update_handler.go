@@ -3,6 +3,7 @@ package handler
 import (
 	"spb/bsa/api/unit/model"
 	"spb/bsa/api/unit/utility"
+	unitPriceUtil "spb/bsa/api/unit_price/utility"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/msg"
@@ -39,12 +40,19 @@ func (s *Handler) Update(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(msg.UPDATE_UNIT_FAILED)
 	}
 
-	unitUpdated, err := s.service.Update(reqBody, unitId)
-	if err != nil {
-		logger.Errorf("error create unit: %v", err)
+	// validate unit price time
+	unitPriceJSON := unitPriceUtil.MapUpdateRequestToJSON(reqBody.UnitPrices)
+	if len(reqBody.UnitPrices) > 0 {
+		if err = utility.ValidateUnitPriceTime(unitPriceJSON, reqBody.OpenTime, reqBody.CloseTime); err != nil {
+			logger.Errorf("error validate unit price time: %v", err)
+			return fctx.ErrResponse(msg.BAD_REQUEST)
+		}
+	}
+
+	if err = s.service.Update(reqBody, unitId); err != nil {
+		logger.Errorf("error update unit: %v", err)
 		return fctx.ErrResponse(msg.UPDATE_UNIT_FAILED)
 	}
 
-	unitResponse := utility.MapUnitEntityToResponse(unitUpdated)
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_UPDATE_UNIT_SUCCESS, unitResponse)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_UPDATE_UNIT_SUCCESS)
 }

@@ -2472,12 +2472,12 @@ const docTemplate = `{
         "model.LocationRequest": {
             "type": "object",
             "required": [
-                "city",
+                "ward",
                 "district",
                 "province"
             ],
             "properties": {
-                "city": {
+                "ward": {
                     "type": "string",
                     "maxLength": 255,
                     "minLength": 2
@@ -2501,10 +2501,10 @@ const docTemplate = `{
         "model.LocationResponse": {
             "type": "object",
             "properties": {
-                "city": {
+                "ward": {
                     "type": "string"
                 },
-                "city_slug": {
+                "ward_slug": {
                     "type": "string"
                 },
                 "description": {
@@ -2872,7 +2872,7 @@ const docTemplate = `{
         "model.UpdateLocationRequest": {
             "type": "object",
             "properties": {
-                "city": {
+                "ward": {
                     "type": "string",
                     "maxLength": 255,
                     "minLength": 2

@@ -1,7 +1,7 @@
 package handler
 
 import (
-	service "spb/bsa/api/unit/service"
+	"spb/bsa/api/unit/service"
 
 	"github.com/gofiber/fiber/v3"
 )
@@ -12,6 +12,8 @@ type IHandler interface {
 	Delete(ctx fiber.Ctx) error
 	Create(ctx fiber.Ctx) error
 	Search(ctx fiber.Ctx) error
+	AddMedia(ctx fiber.Ctx) error
+	DeleteMedia(ctx fiber.Ctx) error
 }
 
 type Handler struct {

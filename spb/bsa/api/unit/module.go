@@ -30,4 +30,6 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	unitRoute.Put("/:id", UnitHandler.Update, customMiddleware.CheckAccess("unit:update"))
 	unitRoute.Delete("/:id", UnitHandler.Delete, customMiddleware.CheckAccess("unit:delete"))
 	unitRoute.Get("/", UnitHandler.Search)
+	unitRoute.Post("/:id/media", UnitHandler.AddMedia, customMiddleware.CheckAccess("unit:update"))
+	unitRoute.Delete("/media/:id", UnitHandler.DeleteMedia, customMiddleware.CheckAccess("unit:update"))
 }

@@ -245,7 +245,7 @@ definitions:
     type: object
   model.LocationRequest:
     properties:
-      city:
+      ward:
         maxLength: 255
         minLength: 2
         type: string
@@ -261,15 +261,15 @@ definitions:
         minLength: 2
         type: string
     required:
-    - city
+    - ward
     - district
     - province
     type: object
   model.LocationResponse:
     properties:
-      city:
+      ward:
         type: string
-      city_slug:
+      ward_slug:
         type: string
       description:
         type: string
@@ -515,7 +515,7 @@ definitions:
     type: object
   model.UpdateLocationRequest:
     properties:
-      city:
+      ward:
         maxLength: 255
         minLength: 2
         type: string

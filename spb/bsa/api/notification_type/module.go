@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
-var NotificationTypeService *service.Service
+var NotificationTypeService service.IService
 
 func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddleware) {
 	NotificationTypeService = service.NewService()

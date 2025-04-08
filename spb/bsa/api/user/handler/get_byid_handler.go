@@ -38,7 +38,7 @@ func (s *Handler) GetByID(ctx fiber.Ctx) error {
 	role := claims.Role
 	if user, err = s.service.GetByID(userId, role); err != nil {
 		logger.Errorf("error get user by id: %v", err)
-		return fctx.ErrResponse(msg.USER_NOTFOUND)
+		return fctx.ErrResponse(msg.NOT_FOUND)
 	}
 
 	userResponse := utility.MapUserEntityToResponse(user)

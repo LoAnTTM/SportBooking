@@ -9,8 +9,8 @@ import (
 )
 
 var (
-	SportTypeService *service.Service
-	SportTypeHandler *handler.Handler
+	SportTypeService service.IService
+	SportTypeHandler handler.IHandler
 )
 
 // @author: LoanTT

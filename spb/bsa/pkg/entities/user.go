@@ -11,7 +11,7 @@ type User struct {
 	IsEmailVerified         bool                     `gorm:"not null" json:"is_email_verified"`
 	RoleID                  string                   `gorm:"type:uuid;not null" json:"role_id"`
 	Role                    Role                     `gorm:"foreignKey:RoleID" json:"role"`
-	AuthenticationProviders []AuthenticationProvider `gorm:"foreignKey:UserID"`
+	AuthenticationProviders []AuthenticationProvider `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE" json:"authentication_providers"`
 }
 
 func (User) TableName() string {

@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
-var RoleService *service.Service
+var RoleService service.IService
 
 // @author: LoanTT
 // @function: LoadModule

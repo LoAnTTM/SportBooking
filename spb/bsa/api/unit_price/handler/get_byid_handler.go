@@ -35,7 +35,7 @@ func (s *Handler) GetByID(ctx fiber.Ctx) error {
 
 	if unitPrice, err = s.service.GetByID(unitPriceId); err != nil {
 		logger.Errorf("error get unitPrice by id: %v", err)
-		return fctx.ErrResponse(msg.UNITPRICE_NOTFOUND)
+		return fctx.ErrResponse(msg.NOT_FOUND)
 	}
 
 	unitPriceResponse := utility.MapUnitPriceEntityToResponse(unitPrice)

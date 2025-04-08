@@ -32,7 +32,7 @@ func (s *Handler) GetByKey(ctx fiber.Ctx) error {
 
 	if metadata, err = s.service.GetByKey(metadataKey); err != nil {
 		logger.Errorf("error get metadata by key: %v", err)
-		return fctx.ErrResponse(msg.METADATA_NOTFOUND)
+		return fctx.ErrResponse(msg.NOT_FOUND)
 	}
 
 	metadataResponse := utility.MapMetadataEntityToResponse(metadata)

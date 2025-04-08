@@ -28,7 +28,7 @@ func (s *Service) Update(reqBody *model.UpdateUnitServiceRequest, unitServiceId 
 		return nil, err
 	}
 
-	unitServiceUpdate := utility.MapUpdateRequestToEntity(reqBody)
+	unitServiceUpdate := utility.MapUpdateRequestToEntity(*reqBody)
 	// update unitService
 	err = s.db.Model(&unitServices).
 		Clauses(clause.Returning{}).

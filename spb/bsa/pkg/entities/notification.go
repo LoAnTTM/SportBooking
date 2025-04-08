@@ -17,9 +17,9 @@ type Notification struct {
 	NotificationTypeID string           `gorm:"type:uuid;not null" json:"notification_type_id"`
 	NotificationType   NotificationType `gorm:"foreignKey:NotificationTypeID" json:"notification_type"`
 	SenderID           *string          `gorm:"type:uuid;" json:"sender_id"`
-	Sender             *User            `gorm:"foreignKey:SenderID" json:"sender"`
+	Sender             *User            `gorm:"foreignKey:SenderID;constraint:OnDelete:CASCADE" json:"sender"`
 	ReceiverID         *string          `gorm:"type:uuid;" json:"receiver_id"`
-	Receiver           *User            `gorm:"foreignKey:ReceiverID" json:"receiver"`
+	Receiver           *User            `gorm:"foreignKey:ReceiverID;constraint:OnDelete:CASCADE" json:"receiver"`
 	ReadAt             *time.Time       `json:"read_at"`
 }
 

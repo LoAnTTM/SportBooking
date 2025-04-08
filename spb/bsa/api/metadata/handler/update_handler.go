@@ -30,7 +30,7 @@ func (s *Handler) Update(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err := fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
 		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.ErrResponse(msg.METADATA_INCORRECT)
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
 	key := fctx.ParseParam("key")

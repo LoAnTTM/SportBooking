@@ -23,8 +23,10 @@ import (
 // @param 			q query string false "Query"
 // @param 			st query string false "Sport type"
 // @param 			pv query string false "Province"
-// @param 			ct query string false "City"
+// @param 			wd query string false "Ward"
 // @param 			dt query string false "District"
+// @param 			lng query float false "Longitude"
+// @param 			lat query float false "Latitude"
 // @success 		200 {object} utils.JSONResult{data=[]model.UnitResponse}	"Search unit success"
 // @failure 		400 {object} utils.JSONResult{}      						"Search unit failed"
 // @router 			/api/v1/units [get]
@@ -38,7 +40,7 @@ func (h *Handler) Search(ctx fiber.Ctx) error {
 
 	units, total, err := h.service.Search(reqBody)
 	if err != nil {
-		return fctx.ErrResponse(msg.UNIT_NOTFOUND)
+		return fctx.ErrResponse(msg.NOT_FOUND)
 	}
 
 	response := utility.MapUnitEntitiesToResponse(units, reqBody, total)

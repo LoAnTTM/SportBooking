@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
-var PaymentInfoService *service.Service
+var PaymentInfoService service.IService
 
 // @author: LoanTT
 // @function: LoadModule

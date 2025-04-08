@@ -29,8 +29,7 @@ func (s *Handler) Delete(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(msg.DELETE_UNIT_FAILED)
 	}
 
-	err = s.service.Delete(unitId)
-	if err != nil {
+	if err = s.service.Delete(unitId); err != nil {
 		logger.Errorf("error delete unit: %v", err)
 		return fctx.ErrResponse(msg.DELETE_UNIT_FAILED)
 	}

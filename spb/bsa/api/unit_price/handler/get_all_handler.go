@@ -38,6 +38,6 @@ func (s *Handler) GetAll(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(msg.GET_UNITPRICE_FAILED)
 	}
 
-	unitPriceResponse := utility.MapUnitPricesEntityToResponse(unit_prices, reqBody)
+	unitPriceResponse := utility.MapUnitPriceEntitiesToResponse(unit_prices, reqBody)
 	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_GET_UNIT_PRICE_SUCCESS, unitPriceResponse)
 }

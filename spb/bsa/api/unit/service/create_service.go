@@ -1,6 +1,11 @@
 package service
 
 import (
+	"fmt"
+
+	mediaModel "spb/bsa/api/media/model"
+	mediaServ "spb/bsa/api/media/service"
+	spt "spb/bsa/api/sport_type"
 	"spb/bsa/api/unit/model"
 	"spb/bsa/api/unit/utility"
 	tb "spb/bsa/pkg/entities"
@@ -14,19 +19,51 @@ import (
 // @return: unit entities.Unit, error
 func (s *Service) Create(reqBody *model.CreateUnitRequest) (*tb.Unit, error) {
 	var count int64
-
-	err := s.db.Model(&tb.Unit{}).
-		Where("club_id = ?", reqBody.ClubID).
+	if err := s.db.Model(&tb.Unit{}).
 		Where("name = ?", reqBody.Name).
-		Count(&count).Error
-	if count > 0 || err != nil {
+		Count(&count).Error; err != nil {
+		return nil, err
+	}
+	if count > 0 {
 		return nil, msg.ErrUnitNameExists
 	}
 
-	unit := utility.MapCreateRequestToEntity(reqBody)
-	if err := s.db.Create(unit).Error; err != nil {
+	tx := s.db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	// Check if sport types exist
+	if isExist, err := spt.SportTypeService.CheckManyExist(reqBody.SportTypes); err != nil || !isExist {
+		tx.Rollback()
 		return nil, err
 	}
 
-	return unit, nil
+	// Begin transaction
+	unit := utility.MapCreateRequestToEntity(reqBody)
+	if err := s.db.Create(unit).Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	if len(reqBody.Media) > 0 {
+		if _, err := mediaServ.CreateMedia(tx, reqBody.Media, unit.ID, mediaModel.OwnerTypeUnit); err != nil {
+			return nil, fmt.Errorf("failed to create media: %w", err)
+		}
+	}
+
+	// Commit transaction
+	if err := tx.Commit().Error; err != nil {
+		return nil, fmt.Errorf("failed to commit transaction: %w", err)
+	}
+
+	// get unit by id
+	completedUnit, err := s.GetByID(unit.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return completedUnit, nil
 }

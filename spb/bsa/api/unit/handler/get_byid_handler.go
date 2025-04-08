@@ -29,12 +29,12 @@ func (s *Handler) GetByID(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if unitId, err = fctx.ParseUUID("id"); err != nil {
 		logger.Errorf("error parse unit id: %v", err)
-		return fctx.ErrResponse(msg.GET_UNIT_FAILED)
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
 	if unit, err = s.service.GetByID(unitId); err != nil {
 		logger.Errorf("error get unit by id: %v", err)
-		return fctx.ErrResponse(msg.UNIT_NOTFOUND)
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
 	unitResponse := utility.MapUnitEntityToResponse(unit)

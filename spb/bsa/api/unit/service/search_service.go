@@ -1,12 +1,13 @@
 package service
 
 import (
-	location "spb/bsa/api/location"
-	locationModel "spb/bsa/api/location/model"
-	locationUtility "spb/bsa/api/location/utility"
+	address "spb/bsa/api/address"
+	am "spb/bsa/api/address/model"
+	au "spb/bsa/api/address/utility"
 	"spb/bsa/api/unit/model"
 	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 )
 
@@ -16,12 +17,10 @@ import (
 // @param: reqBody *model.SearchUnitRequest
 // @return: []*tb.Unit, int64, error
 func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, error) {
-	var locations []*tb.Location
 	var err error
 	units := make([]*tb.Unit, 0)
 
 	query := s.db.
-		Preload("Address").
 		Preload("UnitPrice").
 		Preload("UnitService").
 		Preload("Media").
@@ -29,15 +28,26 @@ func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, e
 
 	// search by location
 	if IsSearchByLocation(reqBody) {
-		requestLocation := locationModel.NewSearchLocationRequest(reqBody.Pagination.Province, reqBody.Pagination.City, reqBody.Pagination.District)
-		locations, err = location.LocationService.Search(requestLocation)
+		requestLocation := am.NewSearchLocationRequest(reqBody.Pagination.Province, reqBody.Pagination.District, reqBody.Pagination.Ward)
+		wards, err := address.AddressService.SearchByIDs(requestLocation)
 		if err != nil {
 			logger.Errorf("Error when searching location: %v", err)
 			return nil, 0, err
 		}
 
-		locationIds := locationUtility.MapLocationEntitiesToIDs(locations)
-		query = query.Where("location_id IN (?)", locationIds)
+		wardIds := au.MapWardEntitiesToIDs(wards)
+		query = query.Where("address_id IN (SELECT id from address WHERE ward_id IN ?)", wardIds)
+	}
+
+	if IsSearchByGeography(reqBody) {
+		// search by geography
+		addresses, err := address.AddressService.SearchByGeography(reqBody.Pagination.Longitude, reqBody.Pagination.Latitude, reqBody.Pagination.Radius)
+		if err != nil {
+			logger.Errorf("Error when searching geography: %v", err)
+			return nil, 0, err
+		}
+		addressIds := au.MapAddressEntitiesToIDs(addresses)
+		query = query.Where("address_id IN ?", addressIds)
 	}
 
 	// get by sport type
@@ -58,6 +68,14 @@ func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, e
 		return nil, 0, err
 	}
 
+	// Get address
+	for i := 0; i < len(units); i++ {
+		units[i].Address, err = address.AddressService.GetAddressByID(units[i].AddressID)
+		if err != nil {
+			return nil, 0, msg.ErrAddressNotFound
+		}
+	}
+
 	// count total unit
 	var count int64
 	err = s.db.Model(tb.Unit{}).Count(&count).Error
@@ -70,7 +88,7 @@ func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, e
 }
 
 func IsSearchByLocation(reqBody *model.SearchUnitRequest) bool {
-	return reqBody.Pagination.Province != "" || reqBody.Pagination.City != "" || reqBody.Pagination.District != ""
+	return reqBody.Pagination.Province != "" || reqBody.Pagination.Ward != "" || reqBody.Pagination.District != ""
 }
 
 func IsSearchByQuery(reqBody *model.SearchUnitRequest) bool {
@@ -79,4 +97,8 @@ func IsSearchByQuery(reqBody *model.SearchUnitRequest) bool {
 
 func IsSearchBySportType(reqBody *model.SearchUnitRequest) bool {
 	return reqBody.Pagination.SportType != ""
+}
+
+func IsSearchByGeography(reqBody *model.SearchUnitRequest) bool {
+	return reqBody.Pagination.Latitude != 0 || reqBody.Pagination.Longitude != 0
 }

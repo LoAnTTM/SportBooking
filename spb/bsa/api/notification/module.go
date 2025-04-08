@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	NotificationService *service.Service
-	NotificationHandler *handler.Handler
+	NotificationService service.IService
+	NotificationHandler handler.IHandler
 )
 
 // @author: LoanTT

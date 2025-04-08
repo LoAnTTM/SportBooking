@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
-var PermissionService *service.Service
+var PermissionService service.IService
 
 // @author: LoanTT
 // @function: LoadModule

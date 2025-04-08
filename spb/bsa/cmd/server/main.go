@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
+	"spb/bsa/api/address"
 	"spb/bsa/api/auth"
 	"spb/bsa/api/club"
-	"spb/bsa/api/location"
 	"spb/bsa/api/metadata"
 	"spb/bsa/api/notification"
 	"spb/bsa/api/notification_type"
@@ -154,11 +154,11 @@ func (f *Fiber) LoadRoutes() {
 	unit_price.LoadModule(router, custMiddlewares)
 	unit.LoadModule(router, custMiddlewares)
 	sport_type.LoadModule(router, custMiddlewares)
-	location.LoadModule(router, custMiddlewares)
 	metadata.LoadModule(router, custMiddlewares)
 	notification_type.LoadModule(router, custMiddlewares)
 	notification.LoadModule(router, custMiddlewares)
 	club.LoadModule(router, custMiddlewares)
+	address.LoadModule(router, custMiddlewares)
 
 	permissions, err := permission.GetPermissions()
 	if err != nil {

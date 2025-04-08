@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	AuthService *service.Service
-	AuthHandler *handler.Handler
+	AuthService service.IService
+	AuthHandler handler.IHandler
 )
 
 // @author: LoanTT

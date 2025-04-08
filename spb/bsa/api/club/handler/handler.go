@@ -7,10 +7,13 @@ import (
 )
 
 type IHandler interface {
+	GetAll(ctx fiber.Ctx) error
 	GetByID(ctx fiber.Ctx) error
 	Create(ctx fiber.Ctx) error
 	Update(ctx fiber.Ctx) error
 	Delete(ctx fiber.Ctx) error
+	AddMedia(ctx fiber.Ctx) error
+	DeleteMedia(ctx fiber.Ctx) error
 }
 
 type Handler struct {

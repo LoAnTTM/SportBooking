@@ -19,16 +19,30 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+type IHandler interface {
+	ForgotPasswordHandler(ctx fiber.Ctx) error
+	GoogleCallback(ctx fiber.Ctx) error
+	AccountLogin(ctx fiber.Ctx) error
+	AccountLogout(ctx fiber.Ctx) error
+	AccountRefreshToken(ctx fiber.Ctx) error
+	AccountRegister(ctx fiber.Ctx) error
+	ResendVerifyRegisterToken(ctx fiber.Ctx) error
+	ResetPassword(ctx fiber.Ctx) error
+	SendVerification(ctx fiber.Ctx) error
+	VerifyForgotPasswordToken(ctx fiber.Ctx) error
+	VerifyRegisterToken(ctx fiber.Ctx) error
+}
+
 type Handler struct {
-	service *serv.Service
+	service serv.IService
 }
 
 // @author: LoanTT
 // @function: NewHandler
 // @description: Create a new auth handler
 // @param: auth service
-// @return: fiber.Handler
-func NewHandler(service *serv.Service) *Handler {
+// @return: fiber.IHandler
+func NewHandler(service serv.IService) IHandler {
 	return &Handler{
 		service: service,
 	}

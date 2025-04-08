@@ -68,6 +68,16 @@ func MapCreateRequestToEntities(reqBody []*model.CreateSportTypeRequest) []*tb.S
 	return sportTypes
 }
 
+func MapIdsToEntities(ids []string) []*tb.SportType {
+	sportTypes := make([]*tb.SportType, 0)
+	for _, id := range ids {
+		sportType := new(tb.SportType)
+		sportType.ID = id
+		sportTypes = append(sportTypes, sportType)
+	}
+	return sportTypes
+}
+
 // @author: LoanTT
 // @function: MapUpdateRequestToEntity
 // @description: mapping update fields
