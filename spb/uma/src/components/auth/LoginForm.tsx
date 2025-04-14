@@ -85,10 +85,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
               disable={!(values.email && values.password)}
             />
             <Line title="Or" theme={theme} />
-            <GoogleSignIn
-              onPress={onGoogleSignIn}
-              title={i18next.t('login.google')}
-            />
+            <GoogleSignIn onPress={onGoogleSignIn} />
           </View>
         </View>
       )}

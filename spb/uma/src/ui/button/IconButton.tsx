@@ -1,8 +1,8 @@
 import React, { FC, useContext, useRef } from 'react';
 import { Animated, Pressable, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 
-import { IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { IColorScheme, Radius } from '@/constants';
+import { ThemeContext } from '@/contexts/theme';
 import { hp } from '@/helpers/dimensions';
 
 interface IButtonProps {
@@ -84,11 +84,10 @@ const createStyle = (theme: IColorScheme) =>
     button: {
       backgroundColor: theme.primary,
       alignItems: 'center',
-      borderRadius: '50%',
+      borderRadius: Radius.xs,
       flexDirection: 'row',
       justifyContent: 'center',
-      height: hp(7),
-      width: hp(7),
+      padding: hp(1),
     },
     shadow: {
       shadowColor: theme.shadow,

@@ -1,3 +1,5 @@
 <resources>
-	<string name="app_name">Sports</string>
+	<string name="app_name">Sport Booking</string>
+	<string name="location_permission">The app requires location permission to determine your
+		address.</string>
 </resources>

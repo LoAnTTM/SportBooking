@@ -1,15 +1,15 @@
 import React, { FC, useContext } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import VectorIcon from 'react-native-vector-icons/Ionicons';
 
 import ForgotPasswordForm from '@/components/auth/ForgotPasswordForm';
 import { IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import { logError } from '@/helpers/logger';
 import { ParamList } from '@/screens';
 import BackButton from '@/ui/button/Back';
+import CloseIcon from '@/ui/icon/Close';
 import { useAuthStore } from '@/zustand';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -37,9 +37,7 @@ const ForgotPassword: FC = () => {
         contentContainerStyle={styles.scrollContent}
       >
         <View style={styles.header}>
-          <BackButton
-            icon={<VectorIcon name="close" color={theme.icon} size={20} />}
-          />
+          <BackButton icon={<CloseIcon color={theme.icon} />} />
         </View>
         <ForgotPasswordForm theme={theme} onSubmit={handleSubmit} />
       </ScrollView>

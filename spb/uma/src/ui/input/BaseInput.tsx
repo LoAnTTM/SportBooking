@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import EyeIcon from '@/ui/icon/Eye';
 import EyeOffIcon from '@/ui/icon/EyeOff';
@@ -54,7 +54,7 @@ const createStyles = (theme: IColorScheme, hasError: boolean) => {
       alignItems: 'center',
       borderCurve: 'continuous',
       borderColor: hasError ? theme.error : theme.borderLight,
-      borderWidth: 2,
+      borderWidth: 1,
       borderRadius: Radius.xs,
     },
     input: {

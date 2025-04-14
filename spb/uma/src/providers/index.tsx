@@ -2,7 +2,7 @@ import React, { FC, ReactNode, useContext } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 
-import { ThemeContext, ThemeProvider } from '@/contexts/theme.context';
+import { ThemeContext, ThemeProvider } from '@/contexts/theme';
 import { hp } from '@/helpers/dimensions';
 import { toastConfig } from '@/helpers/toast';
 

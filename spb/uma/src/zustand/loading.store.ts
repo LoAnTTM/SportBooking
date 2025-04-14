@@ -4,10 +4,13 @@ import { createSelectors } from '@/zustand/selectors';
 
 interface LoadingState {
   isLoading: boolean;
+}
+
+interface LoadingActions {
   setLoading: (isLoading: boolean) => void;
 }
 
-const useLoadingStoreBase = create<LoadingState>((set) => ({
+const useLoadingStoreBase = create<LoadingState & LoadingActions>((set) => ({
   isLoading: false,
   setLoading: (isLoading: LoadingState['isLoading']) =>
     set(() => ({ isLoading })),

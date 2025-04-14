@@ -6,16 +6,11 @@ import Toast, {
   ErrorToast,
   ToastProps,
 } from 'react-native-toast-message';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-import {
-  DEFAULT_ICON_SIZE,
-  fontFamily,
-  fontSize,
-  IColorScheme,
-} from '@/constants';
+import { fontFamily, fontSize, IColorScheme } from '@/constants';
 import { hp } from '@/helpers/dimensions';
+import CloseIcon from '@/ui/icon/Close';
+import TickIcon from '@/ui/icon/Tick';
 
 // Types
 interface ToastStyles {
@@ -27,17 +22,13 @@ interface ToastStyles {
 
 interface ToastIconProps {
   color: string;
-  name: string;
-  size: number;
-  IconComponent: typeof AntDesign | typeof MaterialIcons;
+  IconComponent: typeof TickIcon | typeof CloseIcon;
 }
 
 const TOAST_CONFIG = {
   success: {
     iconProps: {
-      name: 'check',
-      size: DEFAULT_ICON_SIZE,
-      IconComponent: AntDesign,
+      IconComponent: TickIcon,
     },
     textStyles: {
       text1: fontFamily.RALEWAY_BOLD,
@@ -46,9 +37,7 @@ const TOAST_CONFIG = {
   },
   error: {
     iconProps: {
-      name: 'error-outline',
-      size: DEFAULT_ICON_SIZE,
-      IconComponent: MaterialIcons,
+      IconComponent: CloseIcon,
     },
     textStyles: {
       text1: fontFamily.RALEWAY_BOLD,
@@ -57,12 +46,7 @@ const TOAST_CONFIG = {
   },
 } as const;
 
-const ToastIcon: React.FC<ToastIconProps> = ({
-  color,
-  name,
-  size,
-  IconComponent,
-}) => {
+const ToastIcon: React.FC<ToastIconProps> = ({ color, IconComponent }) => {
   const styles = StyleSheet.create({
     iconContainer: {
       height: '100%',
@@ -75,7 +59,7 @@ const ToastIcon: React.FC<ToastIconProps> = ({
 
   return (
     <View style={styles.iconContainer}>
-      <IconComponent name={name} size={size} color={color} />
+      <IconComponent color={color} />
     </View>
   );
 };
@@ -115,7 +99,7 @@ const createToastStyles = (
 export const toastConfig = (theme: IColorScheme) => ({
   success: (props: BaseToastProps): React.ReactNode => {
     const styles = createToastStyles(theme, 'success');
-    const { name, size, IconComponent } = TOAST_CONFIG.success.iconProps;
+    const { IconComponent } = TOAST_CONFIG.success.iconProps;
 
     return (
       <BaseToast
@@ -125,19 +109,14 @@ export const toastConfig = (theme: IColorScheme) => ({
         text1Style={styles.text1}
         onPress={() => Toast.hide()}
         renderLeadingIcon={() => (
-          <ToastIcon
-            color={theme.success}
-            name={name}
-            size={size}
-            IconComponent={IconComponent}
-          />
+          <ToastIcon color={theme.success} IconComponent={IconComponent} />
         )}
       />
     );
   },
   error: (props: ToastProps) => {
     const styles = createToastStyles(theme, 'error');
-    const { name, size, IconComponent } = TOAST_CONFIG.error.iconProps;
+    const { IconComponent } = TOAST_CONFIG.error.iconProps;
 
     return (
       <ErrorToast
@@ -148,12 +127,7 @@ export const toastConfig = (theme: IColorScheme) => ({
         text2Style={styles.text2}
         onPress={() => Toast.hide()}
         renderLeadingIcon={() => (
-          <ToastIcon
-            color={theme.error}
-            name={name}
-            size={size}
-            IconComponent={IconComponent}
-          />
+          <ToastIcon color={theme.error} IconComponent={IconComponent} />
         )}
       />
     );

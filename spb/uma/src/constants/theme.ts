@@ -9,6 +9,7 @@ export interface IColorScheme {
   icon: string;
   textLight: string;
   textDark: string;
+  white: string;
   success: string;
   error: string;
   warning: string;
@@ -32,6 +33,7 @@ export const Color: IColor = {
     icon: '#6A6A6A',
     textLight: '#707B81',
     textDark: '#000000',
+    white: '#FFFFFF',
     success: '#4CAF50',
     error: '#F44336',
     warning: '#FFFF00',
@@ -49,6 +51,7 @@ export const Color: IColor = {
     icon: '#6A6A6A',
     textLight: '#707B81',
     textDark: '#000000',
+    white: '#FFFFFF',
     success: '#008000',
     error: '#FF0000',
     warning: '#FFFF00',

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { OtpInput } from 'react-native-otp-entry';
 
 import { fontFamily, fontSize, IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import i18next from '@/helpers/i18n';
 import { logError } from '@/helpers/logger';

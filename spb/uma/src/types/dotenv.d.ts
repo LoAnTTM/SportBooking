@@ -8,4 +8,5 @@ declare module '@env' {
   export const CLOUD_MEDIA_BUCKET: string;
   export const CLOUD_REGION: string;
   export const OTP_LENGTH: number;
+  export const OPENCAGE_API_KEY: string;
 }

@@ -1,17 +1,17 @@
 import React, { FC, useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import VectorIcon from 'react-native-vector-icons/AntDesign';
 
 import VerifyForgotPasswordForm from '@/components/auth/VerifyForgotPasswordForm';
-import { DEFAULT_ICON_SIZE, IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { IColorScheme } from '@/constants';
+import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import i18next from '@/helpers/i18n';
 import { logError } from '@/helpers/logger';
 import { toastError } from '@/helpers/toast';
 import { ParamList } from '@/screens';
 import BackButton from '@/ui/button/Back';
+import LeftIcon from '@/ui/icon/Left';
 import { useAuthStore } from '@/zustand';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -42,15 +42,7 @@ const VerifyForgotPassword: FC<Props> = ({ route }) => {
     <SafeAreaView style={styles.safeView}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <BackButton
-            icon={
-              <VectorIcon
-                name="left"
-                color={theme.icon}
-                size={DEFAULT_ICON_SIZE}
-              />
-            }
-          />
+          <BackButton icon={<LeftIcon color={theme.icon} />} />
         </View>
         <VerifyForgotPasswordForm email={email} onSubmit={handleSubmit} />
       </View>

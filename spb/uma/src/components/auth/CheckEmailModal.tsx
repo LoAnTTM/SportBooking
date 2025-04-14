@@ -1,16 +1,11 @@
 import React, { FC, useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import VectorIcon from 'react-native-vector-icons/Fontisto';
 
-import {
-  DEFAULT_ICON_SIZE,
-  fontFamily,
-  fontSize,
-  IColorScheme,
-} from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { fontFamily, fontSize, IColorScheme } from '@/constants';
+import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import i18next from '@/helpers/i18n';
+import EmailIcon from '@/ui/icon/Email';
 import BaseModal from '@/ui/modal/BaseModal';
 
 type Props = {
@@ -26,11 +21,7 @@ const CheckEmailModal: FC<Props> = ({ visible, onClose }) => {
     <BaseModal visible={visible} onClose={onClose}>
       <View style={styles.container}>
         <View style={styles.icon}>
-          <VectorIcon
-            name="email"
-            color={theme.backgroundLight}
-            size={DEFAULT_ICON_SIZE}
-          />
+          <EmailIcon color={theme.backgroundLight} />
         </View>
         <View style={styles.notify}>
           <Text style={styles.title}>{i18next.t('forgot.popup.title')}</Text>

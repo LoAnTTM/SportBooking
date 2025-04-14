@@ -2,7 +2,7 @@ import React, { useContext, useRef } from 'react';
 import { Animated, Pressable, StyleSheet, ViewStyle } from 'react-native';
 
 import { IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { ThemeContext } from '@/contexts/theme';
 import { ParamList } from '@/screens';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

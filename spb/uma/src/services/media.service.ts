@@ -58,4 +58,5 @@ class MediaService implements IMediaService {
   }
 }
 
-export default MediaService;
+const mediaService = new MediaService();
+export default mediaService;

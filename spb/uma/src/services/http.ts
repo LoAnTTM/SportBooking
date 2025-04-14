@@ -1,10 +1,5 @@
 import axios, {
-  Axios,
-  AxiosError,
-  AxiosHeaders,
-  AxiosResponse,
-  HttpStatusCode,
-  InternalAxiosRequestConfig,
+    Axios, AxiosError, AxiosHeaders, AxiosResponse, HttpStatusCode, InternalAxiosRequestConfig
 } from 'axios';
 
 import ConcurrencyHandler from '@/helpers/concurrency';
@@ -165,7 +160,7 @@ const responseParse = <K, T extends ApiResponse<K> = ApiResponse<K>>(
     });
 };
 
-export const apiFactory = (url: string, protectedApi: boolean = true) => {
+export function apiFactory(url: string, protectedApi: boolean = true) {
   const http = HttpService.getInstance();
   if (protectedApi) {
     http.protected();
@@ -173,7 +168,23 @@ export const apiFactory = (url: string, protectedApi: boolean = true) => {
     http.guess();
   }
 
-  return {
+  const api = {
+    addParam: (param: string, value: string) => {
+      url += `/${param}/${value}`;
+      return api;
+    },
+    addQuery: (param: string, value: string | null) => {
+      if (!value) return api;
+
+      if (url.includes('?')) {
+        url += `&${param}=${value}`;
+      } else {
+        url += `?${param}=${value}`;
+      }
+      return api;
+    },
+
+    // GET, POST, PUT, DELETE
     get: <K, T extends ApiResponse<K> = ApiResponse<K>>(params?: any) =>
       responseParse(http.get<T>(url, { params })),
     post: <K, T extends ApiResponse<K> = ApiResponse<K>>(data?: any) =>
@@ -183,4 +194,6 @@ export const apiFactory = (url: string, protectedApi: boolean = true) => {
     delete: <K, T extends ApiResponse<K> = ApiResponse<K>>(config?: any) =>
       responseParse(http.delete<T>(url, { config })),
   };
-};
+
+  return api;
+}

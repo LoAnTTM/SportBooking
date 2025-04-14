@@ -3,7 +3,7 @@ import { Image, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Color, fontFamily, fontSize, IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import i18next from '@/helpers/i18n';
 import { ParamList } from '@/screens';

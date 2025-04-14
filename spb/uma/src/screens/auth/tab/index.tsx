@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import AuthTabView from '@/components/auth/AuthTabView';
 import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import LoginScreen from '@/screens/auth/tab/login';
 import RegisterScreen from '@/screens/auth/tab/register';

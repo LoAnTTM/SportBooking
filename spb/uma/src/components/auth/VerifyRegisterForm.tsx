@@ -3,10 +3,11 @@ import { StyleSheet, Text, View } from 'react-native';
 import { OtpInput } from 'react-native-otp-entry';
 
 import { fontFamily, fontSize, IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import i18next from '@/helpers/i18n';
 import { logDebug, logError } from '@/helpers/logger';
+import { toastError, toastSuccess } from '@/helpers/toast';
 import { ParamList } from '@/screens';
 import Button from '@/ui/button/BaseButton';
 import { useAuthStore } from '@/zustand';
@@ -33,8 +34,10 @@ const VerifyRegisterForm: FC<IVerifyRegisterFormProps> = ({ email }) => {
 
       await verifyRegisterEmail({ token: otpNumber, email });
       navigation.navigate('Tabs');
+      toastSuccess(i18next.t('notification.register_success'));
     } catch (err) {
       logError(err as Error);
+      toastError(i18next.t('notification.register_failed'));
     }
   };
 

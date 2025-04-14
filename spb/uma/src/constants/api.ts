@@ -1,5 +1,6 @@
 const V1_PREFIX = '/api/v1';
 
+// Auth API paths
 export const GOOGLE_SIGNIN_CALLBACK_PATH = '/api/auth/google/callback';
 
 export const LOGIN_PATH = `${V1_PREFIX}/auth/login`;
@@ -19,3 +20,8 @@ export const FORGOT_PASSWORD_PATH = `${V1_PREFIX}/auth/forgot-password`;
 export const VERIFY_FORGOT_PASSWORD_TOKEN_PATH = `${V1_PREFIX}/auth/verify-forgot-password-token`;
 
 export const RESET_PASSWORD_PATH = `${V1_PREFIX}/auth/reset-password`;
+
+// Unit API paths
+export const POPULAR_UNITS_PATH = `${V1_PREFIX}/units/popular`;
+
+export const SEARCH_UNITS_PATH = `${V1_PREFIX}/units`;

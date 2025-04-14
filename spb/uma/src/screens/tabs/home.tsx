@@ -1,53 +1,68 @@
-import React, { useContext } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useCallback, useContext, useState } from 'react';
+import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 
-import SearchBar from '@/components/home/SearchBar';
-import UnitTabView from '@/components/home/UnitTabView';
+import Header from '@/components/common/Header';
+import UnitSection from '@/components/home/UnitSection';
 import { IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { ThemeContext } from '@/contexts/theme';
 import { hp } from '@/helpers/dimensions';
+import KeyboardDismissWrapper from '@/ui/KeyboardDismissWrapper';
 
 const HomeScreen: React.FC = () => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const unitTabs = [
-    {
-      key: '1',
-      component: <View />,
-      title: 'Near Me',
-      icon: 'location-outline',
-    },
-    {
-      key: '2',
-      component: <View />,
-      title: 'Popular',
-      icon: 'star-outline',
-    },
-  ];
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      // Add your refresh logic here
+      await new Promise<void>((resolve) => setTimeout(() => resolve(), 1000));
+    } finally {
+      setRefreshing(false);
+    }
+  }, []);
 
   return (
-    <SafeAreaView style={styles.safeView}>
+    <KeyboardDismissWrapper style={styles.wrapper}>
       <View style={styles.container}>
-        <SearchBar />
-        <UnitTabView routes={unitTabs} />
+        <Header />
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={handleRefresh}
+              tintColor={theme.primary}
+            />
+          }
+          showsVerticalScrollIndicator={false}
+        >
+          <UnitSection title="Featured Units" />
+          <UnitSection title="Nearby Units" />
+        </ScrollView>
       </View>
-    </SafeAreaView>
+    </KeyboardDismissWrapper>
   );
 };
 
-const createStyles = (theme: IColorScheme) => {
-  return StyleSheet.create({
-    safeView: {
-      flex: 1,
+const createStyles = (theme: IColorScheme) =>
+  StyleSheet.create({
+    wrapper: {
+      height: '100%',
+      width: '100%',
+      backgroundColor: theme.backgroundLight,
     },
     container: {
       flex: 1,
-      backgroundColor: theme.backgroundDark,
-      gap: hp(2),
+    },
+    scrollView: {
+      flex: 1,
+    },
+    scrollContent: {
+      paddingBottom: hp(2),
     },
   });
-};
 
-export default HomeScreen;
+export default React.memo(HomeScreen);

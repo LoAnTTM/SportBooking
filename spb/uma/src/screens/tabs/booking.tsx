@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { ThemeContext } from '@/contexts/theme';
 
 const Booking: React.FC = () => {
   const { theme } = useContext(ThemeContext);
@@ -17,9 +17,6 @@ const Booking: React.FC = () => {
 
 const createStyles = (theme: IColorScheme) => {
   return StyleSheet.create({
-    safeView: {
-      flex: 1,
-    },
     container: {
       flex: 1,
       backgroundColor: theme.backgroundDark,

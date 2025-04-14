@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import ConfirmResetPasswordForm from '@/components/auth/ConfirmResetPasswordForm';
 import { IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import { ParamList } from '@/screens';
 import { useNavigation } from '@react-navigation/native';

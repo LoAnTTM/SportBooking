@@ -1,14 +1,5 @@
-import React from 'react';
-import VectorIcon from 'react-native-vector-icons/FontAwesome';
-
 export interface IIconProps {
-  name: string;
+  color: string;
   size?: number;
-  color?: string;
+  onPress?: () => void;
 }
-
-const Icon: React.FC<IIconProps> = ({ name, size, color }) => {
-  return <VectorIcon name={name} size={size} color={color} />;
-};
-
-export default Icon;

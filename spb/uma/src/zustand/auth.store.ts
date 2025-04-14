@@ -1,10 +1,8 @@
 import { create } from 'zustand';
 
 import { getData } from '@/helpers/storage';
-import authService, {
-  LoginRequest,
-  RegisterRequest,
-} from '@/services/auth.service';
+import authService from '@/services/auth.service';
+import { LoginRequest, RegisterRequest } from '@/services/types';
 import { createSelectors } from '@/zustand/selectors';
 
 interface AuthState {
@@ -12,7 +10,9 @@ interface AuthState {
   userId: string;
   email: string;
   fullName: string;
+}
 
+interface AuthActions {
   checkIsLoggedIn: () => Promise<void>;
   login: (data: LoginRequest) => Promise<void>;
   logout: () => Promise<void>;
@@ -35,7 +35,7 @@ interface AuthState {
   }) => Promise<void>;
 }
 
-const useAuthStoreBase = create<AuthState>((set) => ({
+const useAuthStoreBase = create<AuthState & AuthActions>((set) => ({
   isLoggedIn: false,
   userId: '',
   email: '',

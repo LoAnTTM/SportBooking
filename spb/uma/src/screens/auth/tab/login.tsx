@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 
 import LoginForm from '@/components/auth/LoginForm';
 import { IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import i18next from '@/helpers/i18n';
 import { logError } from '@/helpers/logger';

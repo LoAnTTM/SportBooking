@@ -6,9 +6,8 @@ export interface IGoogleIconProps {
 }
 
 const GoogleIcon: React.FC<IGoogleIconProps> = ({ size }) => {
-  const viewBox = `0 0 ${size} ${size}`;
   return (
-    <Svg width={size} height={size} viewBox={viewBox} fill="none">
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <Path
         d="M21.9995 11.2503C22.0005 10.5007 21.9358 9.75241 21.8062 9.01367H11.2222V13.2501H17.2842C17.1602 13.9267 16.8976 14.5717 16.5124 15.1461C16.1272 15.7206 15.6272 16.2127 15.0427 16.5927V19.3426H18.6606C20.779 17.4284 21.9995 14.5975 21.9995 11.2503Z"
         fill="#4285F4"

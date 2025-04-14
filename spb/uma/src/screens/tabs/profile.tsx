@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { ThemeContext } from '@/contexts/theme';
 import { ParamList } from '@/screens';
 import Button from '@/ui/button/BaseButton';
 import { useAuthStore } from '@/zustand';
@@ -34,9 +34,6 @@ const ProfileScreen: React.FC = () => {
 
 const createStyles = (theme: IColorScheme) => {
   return StyleSheet.create({
-    safeView: {
-      flex: 1,
-    },
     container: {
       flex: 1,
       backgroundColor: theme.backgroundDark,

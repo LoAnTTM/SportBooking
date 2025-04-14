@@ -1,14 +1,14 @@
 import React, { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import VectorIcon from 'react-native-vector-icons/Ionicons';
 
 import VerifyRegisterForm from '@/components/auth/VerifyRegisterForm';
 import { IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { ThemeContext } from '@/contexts/theme';
 import { hp } from '@/helpers/dimensions';
 import { ParamList } from '@/screens';
 import BackButton from '@/ui/button/Back';
+import LeftIcon from '@/ui/icon/Left';
 import { RouteProp } from '@react-navigation/native';
 
 type Props = {
@@ -25,9 +25,7 @@ const VerifyRegister: React.FC<Props> = ({ route }) => {
     <SafeAreaView style={styles.safeView}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <BackButton
-            icon={<VectorIcon name="close" color={theme.icon} size={20} />}
-          />
+          <BackButton icon={<LeftIcon color={theme.icon} />} />
         </View>
         <VerifyRegisterForm email={email} />
       </View>

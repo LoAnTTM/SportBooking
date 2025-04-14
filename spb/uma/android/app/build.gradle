@@ -16,7 +16,6 @@ react {
     // codegenDir = file("../../node_modules/@react-native/codegen")
     //   The cli.js file which is the React Native CLI entrypoint. Default is ../../node_modules/react-native/cli.js
     // cliFile = file("../../node_modules/react-native/cli.js")
-	apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
 
     /* Variants */
     //   The list of variants to that are debuggable. For those we're going to
@@ -113,7 +112,6 @@ dependencies {
     implementation("com.facebook.react:react-android")
 	implementation("com.google.android.gms:play-services-auth:21.3.0")
 	implementation("androidx.browser:browser:1.2.0")
-	implementation project(':react-native-vector-icons')
 	implementation project(':react-native-pager-view')
 
     if (hermesEnabled.toBoolean()) {
