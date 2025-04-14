@@ -37,5 +37,5 @@ func (h Handler) GetAll(ctx fiber.Ctx) error {
 	}
 
 	response := utility.MapEntitiesToResponse(clubs, count, reqBody)
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_GET_CLUB_SUCCESS, response)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS, response)
 }

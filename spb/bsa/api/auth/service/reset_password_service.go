@@ -20,7 +20,7 @@ import (
 // @return: error
 func (s *Service) ResetPassword(reqBody *model.ResetPasswordRequest) (err error) {
 	otpCodeStr := strconv.Itoa(reqBody.Token)
-	cacheToken := utils.ConcatStr(":", config.AUTH_OTP, reqBody.Email, otpCodeStr)
+	cacheToken := utils.Join(":", config.AUTH_OTP, reqBody.Email, otpCodeStr)
 	if ok := cache.OTP.CheckOTP(cacheToken); !ok {
 		return msg.ErrTokenExpired
 	}

@@ -1,6 +1,6 @@
 package entities
 
-var MediaTN = "media"
+const MediaTN = "media"
 
 type Media struct {
 	Base

@@ -29,5 +29,5 @@ func (h Handler) GetProvinces(ctx fiber.Ctx) error {
 
 	response := utility.MapProvinceEntitiesToResponse(provinces)
 	// Return the list of provinces as a JSON response
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_ALL_LOCATION_SUCCESS, response)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS, response)
 }

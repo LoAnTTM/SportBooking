@@ -28,14 +28,14 @@ func (h *Handler) ForgotPasswordHandler(ctx fiber.Ctx) error {
 
 	err := fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR)
 	if err != nil {
-		logger.Errorf("parse json to struct failed: %v", err)
-		return fctx.ErrResponse(msg.FORGOT_PASSWORD_INCORRECT)
+		logger.Errorf(msg.ErrParseStructFailed("ForgotPasswordRequest", err))
+		return fctx.ErrResponse(msg.REQUEST_BODY_INVALID)
 	}
 
 	if err := h.service.ForgotPassword(reqBody.Email); err != nil {
-		logger.Errorf("forgot password failed: %v", err)
-		return fctx.ErrResponse(msg.FORGOT_PASSWORD_INCORRECT)
+		logger.Errorf(msg.ErrForgotPasswordFailed(err))
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_FORGOT_PASSWORD_SUCCESS)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS)
 }

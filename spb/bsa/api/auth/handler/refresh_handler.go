@@ -2,6 +2,7 @@ package handler
 
 import (
 	"spb/bsa/api/auth/utility"
+	um "spb/bsa/api/user"
 	"spb/bsa/pkg/auth"
 	"spb/bsa/pkg/cache"
 	"spb/bsa/pkg/config"
@@ -32,39 +33,39 @@ func (h *Handler) AccountRefreshToken(ctx fiber.Ctx) error {
 
 	claims, err := auth.ParseJwt(refreshTokenFull)
 	if err != nil {
-		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.ErrResponse(msg.REFRESH_TOKEN_FAILED)
+		logger.Errorf(msg.ErrParseStructFailed("UserClaim", err))
+		return fctx.ErrResponse(msg.REQUEST_BODY_INVALID)
 	}
 
 	if cache.Jwt.IsBlackListed(blRefreshToken) {
-		logger.Errorf("refresh token is blacklisted: %v", prevRefreshToken)
-		return fctx.ErrResponse(msg.REFRESH_TOKEN_FAILED)
+		logger.Errorf(msg.ErrInBlackList("RefreshToken"))
+		return fctx.ErrResponse(msg.REFRESH_TOKEN_EXPIRED)
 	}
 
-	user, err := h.service.RefreshToken(refreshTokenFull, claims)
+	user, err := um.UserService.GetByEmail(claims.Email)
 	if err != nil {
-		logger.Errorf("get user failed: %v", err)
-		return fctx.ErrResponse(msg.REFRESH_TOKEN_FAILED)
+		logger.Errorf(msg.ErrGetFailed("User", err))
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
 	tokens := GenUserTokenResponse(user)
 	if tokens == nil {
-		logger.Errorf("gen user tokens failed: %v", err)
-		return fctx.ErrResponse(msg.SERVER_ERROR)
+		logger.Errorf(msg.ErrGenerateTokenFailed(err))
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
 	err = TokenNext(&fctx, ctx, user, tokens)
 	if err != nil {
-		logger.Errorf("set token to cookie failed: %v", err)
-		return fctx.ErrResponse(msg.SERVER_ERROR)
+		logger.Errorf(msg.ErrSetTokenToCookie(err))
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
 	err = cache.Jwt.SetToBlackList(blRefreshToken, global.SPB_CONFIG.JWT.RefreshTokenExp)
 	if err != nil {
-		logger.Errorf("set prev refresh token to black list failed: %v", err)
-		return fctx.ErrResponse(msg.SERVER_ERROR)
+		logger.Errorf(msg.ErrSetBlacklistFailed("RefreshToken", err))
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
 	refreshResponse := utility.MappingRefreshResponse(tokens)
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_REFRESH_TOKEN_SUCCESS, refreshResponse)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS, refreshResponse)
 }

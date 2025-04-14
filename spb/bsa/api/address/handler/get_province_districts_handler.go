@@ -26,8 +26,8 @@ func (h Handler) GetProvinceDistricts(ctx fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if provinceID, err = fctx.ParseUUID("id"); err != nil {
-		logger.Errorf("error parse province id: %v", err)
-		return fctx.ErrResponse(msg.BAD_REQUEST)
+		logger.Errorf(msg.ErrParseUUIDFailed("province", err))
+		return fctx.ErrResponse(msg.PARAM_INVALID)
 	}
 	// Call the service to get the districts for the specified province
 	districts, err := h.service.GetProvinceDistricts(provinceID)
@@ -37,5 +37,5 @@ func (h Handler) GetProvinceDistricts(ctx fiber.Ctx) error {
 
 	response := utility.MapDistrictEntitiesToResponse(districts)
 	// Return the list of districts as a JSON response
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_ALL_LOCATION_SUCCESS, response)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS, response)
 }

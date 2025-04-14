@@ -11,8 +11,8 @@ import (
 
 type IService interface {
 	Create(reqBody *model.CreateNotificationRequest, tx *gorm.DB) (*tb.Notification, error)
-	GetByReceiver(reqBody *model.GetNotificationsRequest) ([]*tb.Notification, error)
-	GetBySender(reqBody *model.GetNotificationsRequest) ([]*tb.Notification, error)
+	GetByReceiver(reqBody *model.GetNotificationsRequest) ([]*tb.Notification, int64, error)
+	GetBySender(reqBody *model.GetNotificationsRequest) ([]*tb.Notification, int64, error)
 	UpdateStatus(senderID string, status enum.Progress) error
 }
 

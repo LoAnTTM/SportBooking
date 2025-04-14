@@ -2,8 +2,8 @@ package handler
 
 import (
 	"spb/bsa/api/sport_type/model"
-	"spb/bsa/api/sport_type/utility"
 	"spb/bsa/pkg/global"
+	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
@@ -29,18 +29,18 @@ func (h *Handler) Update(ctx fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if sportTypeId, err = fctx.ParseUUID("id"); err != nil {
-		return fctx.ErrResponse(msg.UPDATE_SPORT_TYPE_FAILED)
+		logger.Errorf(msg.ErrParseUUIDFailed("sport type", err))
+		return fctx.ErrResponse(msg.PARAM_INVALID)
 	}
 
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		return fctx.ErrResponse(msg.UPDATE_SPORT_TYPE_FAILED)
+		logger.Errorf(msg.ErrParseStructFailed("UpdateSportTypeRequest", err))
+		return fctx.ErrResponse(msg.REQUEST_BODY_INVALID)
 	}
 
-	sportType, err := h.service.Update(reqBody, sportTypeId)
-	if err != nil {
-		return fctx.ErrResponse(msg.UPDATE_SPORT_TYPE_FAILED)
+	if err = h.service.Update(reqBody, sportTypeId); err != nil {
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
-	response := utility.MapSportTypeEntityToResponse(sportType)
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_UPDATE_SPORT_TYPE_SUCCESS, response)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS)
 }

@@ -30,7 +30,7 @@ func (s *Service) GetAll(reqBody *model.GetClubsRequest) ([]*tb.Club, int64, err
 	for i := 0; i < len(clubs); i++ {
 		addressRecord, err := address.AddressService.GetAddressByID(clubs[i].AddressID)
 		if err != nil {
-			return nil, count, msg.ErrAddressNotFound
+			return nil, count, msg.ErrNotFound("address")
 		}
 		clubs[i].Address = addressRecord
 	}

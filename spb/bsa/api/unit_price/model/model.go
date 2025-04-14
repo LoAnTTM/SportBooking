@@ -11,16 +11,16 @@ var ORDER_BY = []string{
 }
 
 type GetUnitPricesRequest struct {
-	Pagination utils.Pagination `json:"pagination"`
-	UnitID     string           `json:"unit_id"`
+	Pagination utils.Pagination
+	UnitID     string `json:"unit_id"`
 }
 
 type UnitPriceResponse struct {
-	ID        string  `json:"id"`
-	Price     float32 `json:"price"`
-	Currency  string  `json:"currency"`
-	StartTime string  `json:"start_time"`
-	EndTime   string  `json:"end_time"`
+	ID        string `json:"id"`
+	Price     int64  `json:"price"`
+	Currency  string `json:"currency"`
+	StartTime string `json:"start_time"`
+	EndTime   string `json:"end_time"`
 }
 
 type UnitPricesResponse struct {
@@ -30,15 +30,15 @@ type UnitPricesResponse struct {
 }
 
 type CreateUnitPriceRequest struct {
-	Price     float32 `json:"price" validate:"gt=0"`
-	Currency  string  `json:"currency" validate:"omitempty,max=3"`
-	StartTime string  `json:"start_time" validate:"yy:mm"`
-	EndTime   string  `json:"end_time" validate:"yy:mm"`
+	Price     int64  `json:"price" validate:"gt=0"`
+	Currency  string `json:"currency" validate:"omitempty,max=3"`
+	StartTime string `json:"start_time" validate:"yy:mm"`
+	EndTime   string `json:"end_time" validate:"yy:mm"`
 }
 
 type UpdateUnitPriceRequest struct {
-	Price     *float32 `json:"price,omitempty" validate:"omitempty,gt=0"`
-	Currency  string   `json:"currency,omitempty" validate:"omitempty,max=3"`
-	StartTime string   `json:"start_time,omitempty" validate:"omitempty,yy:mm"`
-	EndTime   string   `json:"end_time,omitempty" validate:"omitempty,yy:mm"`
+	Price     *int64 `json:"price,omitempty" validate:"omitempty,gt=0"`
+	Currency  string `json:"currency,omitempty" validate:"omitempty,max=3"`
+	StartTime string `json:"start_time,omitempty" validate:"omitempty,yy:mm"`
+	EndTime   string `json:"end_time,omitempty" validate:"omitempty,yy:mm"`
 }

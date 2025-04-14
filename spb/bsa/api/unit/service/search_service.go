@@ -31,7 +31,6 @@ func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, e
 		requestLocation := am.NewSearchLocationRequest(reqBody.Pagination.Province, reqBody.Pagination.District, reqBody.Pagination.Ward)
 		wards, err := address.AddressService.SearchByIDs(requestLocation)
 		if err != nil {
-			logger.Errorf("Error when searching location: %v", err)
 			return nil, 0, err
 		}
 
@@ -43,7 +42,6 @@ func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, e
 		// search by geography
 		addresses, err := address.AddressService.SearchByGeography(reqBody.Pagination.Longitude, reqBody.Pagination.Latitude, reqBody.Pagination.Radius)
 		if err != nil {
-			logger.Errorf("Error when searching geography: %v", err)
 			return nil, 0, err
 		}
 		addressIds := au.MapAddressEntitiesToIDs(addresses)
@@ -56,6 +54,7 @@ func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, e
 	}
 
 	// get by unit name or club name
+	// TODO: search by unit name and club name
 	if IsSearchByQuery(reqBody) {
 		query = query.Where("name LIKE ?", "%"+reqBody.Pagination.Query+"%")
 	}
@@ -64,7 +63,7 @@ func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, e
 		Scopes(utils.Paginate(&reqBody.Pagination.Pagination)).
 		Find(&units).Error
 	if err != nil {
-		logger.Errorf("Error when searching unit: %v", err)
+		logger.Errorf(msg.ErrGetFailed("Unit", err))
 		return nil, 0, err
 	}
 
@@ -72,7 +71,7 @@ func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, e
 	for i := 0; i < len(units); i++ {
 		units[i].Address, err = address.AddressService.GetAddressByID(units[i].AddressID)
 		if err != nil {
-			return nil, 0, msg.ErrAddressNotFound
+			return nil, 0, msg.ErrNotFound("Address")
 		}
 	}
 
@@ -80,7 +79,6 @@ func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, e
 	var count int64
 	err = s.db.Model(tb.Unit{}).Count(&count).Error
 	if err != nil {
-		logger.Errorf("Error when counting unit: %v", err)
 		return nil, 0, err
 	}
 

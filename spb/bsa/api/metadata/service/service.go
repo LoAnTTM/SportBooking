@@ -10,7 +10,7 @@ import (
 
 type IService interface {
 	GetByKey(key string) (*tb.Metadata, error)
-	Update(key string, reqBody *model.UpdateMetadataRequest) (*tb.Metadata, error)
+	Update(key string, reqBody *model.UpdateMetadataRequest) error
 }
 
 type Service struct {

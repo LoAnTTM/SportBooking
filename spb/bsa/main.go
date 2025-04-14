@@ -59,6 +59,6 @@ func main() {
 	}
 
 	if err := app.Run(os.Args); err != nil {
-		logger.Fatalf(err.Error())
+		logger.Errorf(err)
 	}
 }

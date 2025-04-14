@@ -22,5 +22,8 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	OrderService = service.NewService()
 	OrderHandler = handler.NewHandler(OrderService)
 
-	_ = router.Group("/api/v1/orders")
+	orderRoute := router.Group("/api/v1/orders")
+	orderRoute.Post("/pay", OrderHandler.Pay, customMiddleware.CheckAccess("order:pay"))
+	orderRoute.Post("/zalopay/callback", OrderHandler.ZaloPayCallback)
+	orderRoute.Get("/:id", OrderHandler.GetByUserID, customMiddleware.CheckAccess("order:read"))
 }

@@ -1,6 +1,6 @@
 package entities
 
-var MetadataTN = "metadata"
+const MetadataTN = "metadata"
 
 type Metadata struct {
 	Base

@@ -11,10 +11,9 @@ import (
 type IService interface {
 	Create(reqBody *model.CreateUserRequest) (*tb.User, error)
 	Delete(userId string) error
-	GetAll(reqBody *model.GetUsersRequest) ([]*tb.User, error)
 	GetByEmail(email string) (*tb.User, error)
 	GetByID(userId, currentUserRoleName string) (*tb.User, error)
-	Update(reqBody *model.UpdateUserRequest, userId string) (*tb.User, error)
+	Update(reqBody *model.UpdateUserRequest, userId string) error
 }
 
 type Service struct {

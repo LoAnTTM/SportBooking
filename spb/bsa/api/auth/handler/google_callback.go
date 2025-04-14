@@ -28,28 +28,28 @@ func (h *Handler) GoogleCallback(ctx fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.ErrResponse(msg.LOGIN_FAILURE)
+		logger.Errorf(msg.ErrParseStructFailed("GoogleCallbackRequest", err))
+		return fctx.ErrResponse(msg.REQUEST_BODY_INVALID)
 	}
 
 	user, err := h.service.GoogleLogin(*reqBody)
 	if err != nil {
-		logger.Errorf("google login failed: %v", err)
-		return fctx.ErrResponse(msg.LOGIN_FAILURE)
+		logger.Errorf(msg.ErrGoogleLoginFailed(err))
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
 	tokens := GenUserTokenResponse(user)
 	if tokens == nil {
-		logger.Errorf("gen user tokens failed: %v", err)
-		return fctx.ErrResponse(msg.SERVER_ERROR)
+		logger.Errorf(msg.ErrGenerateTokenFailed(err))
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
 	err = TokenNext(&fctx, ctx, user, tokens)
 	if err != nil {
-		logger.Errorf("set token to cookie failed: %v", err)
-		return fctx.ErrResponse(msg.SERVER_ERROR)
+		logger.Errorf(msg.ErrGenerateTokenFailed(err))
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
 	loginResponse := utility.MappingLoginResponse(user, tokens)
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_LOGIN_SUCCESS, loginResponse)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS, loginResponse)
 }

@@ -22,7 +22,7 @@ func (s *Service) VerifyRegisterToken(reqBody *model.VerifyRegisterTokenRequest)
 	user := tb.User{}
 
 	otpCodeStr := strconv.Itoa(reqBody.Token)
-	cacheToken := utils.ConcatStr(":", config.AUTH_OTP, reqBody.Email, otpCodeStr)
+	cacheToken := utils.Join(":", config.AUTH_OTP, reqBody.Email, otpCodeStr)
 	if ok := cache.OTP.CheckOTP(cacheToken); !ok {
 		err = msg.ErrTokenExpired
 		return
@@ -36,7 +36,7 @@ func (s *Service) VerifyRegisterToken(reqBody *model.VerifyRegisterTokenRequest)
 
 	err = s.db.Where("email = ?", reqBody.Email).First(&user).Error
 	if err != nil || user.IsEmailVerified {
-		return err
+		return
 	}
 
 	user.IsEmailVerified = true
@@ -49,5 +49,5 @@ func (s *Service) VerifyRegisterToken(reqBody *model.VerifyRegisterTokenRequest)
 	if err != nil {
 		return
 	}
-	return nil
+	return
 }

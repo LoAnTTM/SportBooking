@@ -5,6 +5,7 @@ import (
 
 	"spb/bsa/pkg/config"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 
 	"github.com/gofiber/storage/redis/v3"
 )
@@ -24,7 +25,7 @@ func NewClient(configVal *config.Config) (*redis.Storage, error) {
 	})
 	_, err := store.Get("PING")
 	if err != nil {
-		logger.Errorf("redis connect error: %v\n", err)
+		logger.Errorf(msg.ErrRedisConnectFailed(err))
 		return nil, err
 	}
 	return store, nil

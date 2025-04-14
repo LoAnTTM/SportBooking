@@ -16,7 +16,8 @@ func (s *Service) GetByEmail(email string) (*tb.User, error) {
 
 	err = s.db.Scopes(utility.EmailIsVerity).
 		Preload("Role").
-		Where("email = ?", email).First(user).Error
+		Where("email = ?", email).
+		First(user).Error
 	if err != nil {
 		return nil, err
 	}

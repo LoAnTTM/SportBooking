@@ -31,11 +31,11 @@ func (h *Handler) AccountLogout(ctx fiber.Ctx) error {
 
 	claims, err := auth.ParseJwt(refreshTokenFull)
 	if err != nil {
-		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.JsonResponse(fiber.StatusOK, msg.CODE_LOGOUT_SUCCESS)
+		logger.Errorf(msg.ErrParseStructFailed("UserClaim", err))
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 	cache.Jwt.DelJwt(config.AUTH_REFRESH_TOKEN + claims.Email)
 	cache.Jwt.SetToBlackList(blRefreshToken, global.SPB_CONFIG.JWT.RefreshTokenExp)
 
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_LOGOUT_SUCCESS)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS)
 }

@@ -29,19 +29,19 @@ func (h *Handler) AddMedia(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 
 	if clubId, err = fctx.ParseUUID("id"); err != nil {
-		logger.Errorf("error parse club id: %v", err)
-		return fctx.ErrResponse(msg.BAD_REQUEST)
+		logger.Errorf(msg.ErrParseUUIDFailed("club", err))
+		return fctx.ErrResponse(msg.PARAM_INVALID)
 	}
 
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.ErrResponse(msg.BAD_REQUEST)
+		logger.Errorf(msg.ErrParseStructFailed("CreateMediaRequest", err))
+		return fctx.ErrResponse(msg.REQUEST_BODY_INVALID)
 	}
 
 	if err = h.service.AddMedia(clubId, reqBody); err != nil {
-		logger.Errorf("error add media to club: %v", err)
+		logger.Errorf(msg.ErrAddPropertyFailed("media", "club", err))
 		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_ADD_MEDIA_SUCCESS)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS)
 }

@@ -27,14 +27,14 @@ func (h *Handler) ResetPassword(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 
 	if err := fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.Errorf("parse json to struct failed: %v", err)
-		return fctx.ErrResponse(msg.RESET_PASSWORD_INCORRECT)
+		logger.Errorf(msg.ErrParseStructFailed("ResetPasswordRequest", err))
+		return fctx.ErrResponse(msg.REQUEST_BODY_INVALID)
 	}
 
 	if err := h.service.ResetPassword(reqBody); err != nil {
-		logger.Errorf("reset password failed: %v", err)
-		return fctx.ErrResponse(msg.RESET_PASSWORD_INCORRECT)
+		logger.Errorf(msg.ErrResetPasswordFailed(err))
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_RESET_PASSWORD_SUCCESS)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS)
 }

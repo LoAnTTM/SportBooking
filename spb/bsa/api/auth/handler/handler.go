@@ -83,7 +83,7 @@ func GenUserTokenResponse(user *entities.User) map[string]string {
 	accessToken, accessErr := accessClaims.SignedString([]byte(global.SPB_CONFIG.JWT.Secret))
 	refreshToken, refreshErr := refreshClaims.SignedString([]byte(global.SPB_CONFIG.JWT.Secret))
 	if accessErr != nil || refreshErr != nil {
-		logger.Errorf(msg.ErrGenerateToken(errors.Join(accessErr, refreshErr).Error()).Error())
+		logger.Errorf(msg.ErrGenerateTokenFailed(errors.Join(accessErr, refreshErr)))
 		return nil
 	}
 
@@ -139,7 +139,7 @@ func TokenNext(fctx *utils.FiberCtx, ctx fiber.Ctx, user *entities.User, tokens 
 	// first time login
 	case err == nil && prevToken == "":
 		if err := cache.Jwt.SetJwt(cacheKey, tokens[config.REFRESH_TOKEN_NAME], jwtExpire); err != nil {
-			return logger.RErrorf("error set token to cache: %v", err)
+			return msg.ErrCacheSetFailed("REFRESH_TOKEN", err)
 		}
 		if err := SetRefreshTokenToCookie(tokens, ctx); err != nil {
 			return err
@@ -147,16 +147,16 @@ func TokenNext(fctx *utils.FiberCtx, ctx fiber.Ctx, user *entities.User, tokens 
 
 	// error get token from cache
 	case err != nil:
-		return logger.RErrorf("error get token to cache: %v", err)
+		return msg.ErrCacheGetFailed("REFRESH_TOKEN", err)
 
 	// refresh token
 	case prevToken != "":
 		blPrevToken := config.AUTH_REFRESH_TOKEN_BLACKLIST + prevToken
 		if err := cache.Jwt.SetToBlackList(blPrevToken, global.SPB_CONFIG.JWT.RefreshTokenExp); err != nil {
-			return logger.RErrorf("error set token to cache: %v", err)
+			return msg.ErrCacheSetFailed("REFRESH_TOKEN", err)
 		}
 		if err := cache.Jwt.SetJwt(cacheKey, tokens[config.REFRESH_TOKEN_NAME], jwtExpire); err != nil {
-			return logger.RErrorf("error set token to cache: %v", err)
+			return msg.ErrCacheSetFailed("REFRESH_TOKEN", err)
 		}
 		if err := SetRefreshTokenToCookie(tokens, ctx); err != nil {
 			return err

@@ -2,7 +2,6 @@ package handler
 
 import (
 	"spb/bsa/api/user/model"
-	"spb/bsa/api/user/utility"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/msg"
@@ -28,21 +27,20 @@ func (s *Handler) Update(ctx fiber.Ctx) error {
 	reqBody := new(model.UpdateUserRequest)
 
 	fctx := utils.FiberCtx{Fctx: ctx}
-	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.ErrResponse(msg.UPDATE_USER_FAILED)
-	}
 	if userId, err = fctx.ParseUUID("id"); err != nil {
-		logger.Errorf("error parse user id: %v", err)
-		return fctx.ErrResponse(msg.UPDATE_USER_FAILED)
+		logger.Errorf(msg.ErrParseUUIDFailed("User", err))
+		return fctx.ErrResponse(msg.PARAM_INVALID)
 	}
 
-	userUpdated, err := s.service.Update(reqBody, userId)
-	if err != nil {
-		logger.Errorf("error create user: %v", err)
-		return fctx.ErrResponse(msg.UPDATE_USER_FAILED)
+	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
+		logger.Errorf(msg.ErrParseStructFailed("UpdateUserRequest", err))
+		return fctx.ErrResponse(msg.REQUEST_BODY_INVALID)
 	}
 
-	userResponse := utility.MapUserEntityToResponse(userUpdated)
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_UPDATE_USER_SUCCESS, userResponse)
+	if err := s.service.Update(reqBody, userId); err != nil {
+		logger.Errorf(msg.ErrUpdateFailed("User", err))
+		return fctx.ErrResponse(msg.BAD_REQUEST)
+	}
+
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS)
 }

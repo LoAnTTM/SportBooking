@@ -31,10 +31,10 @@ func (s *Handler) GetByKey(ctx fiber.Ctx) error {
 	metadataKey = fctx.ParseParam("key")
 
 	if metadata, err = s.service.GetByKey(metadataKey); err != nil {
-		logger.Errorf("error get metadata by key: %v", err)
+		logger.Errorf(msg.ErrGetFailed("metadata", err))
 		return fctx.ErrResponse(msg.NOT_FOUND)
 	}
 
 	metadataResponse := utility.MapMetadataEntityToResponse(metadata)
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_GET_METADATA_SUCCESS, metadataResponse)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS, metadataResponse)
 }

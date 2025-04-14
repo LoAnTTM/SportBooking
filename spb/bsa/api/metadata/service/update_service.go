@@ -15,8 +15,8 @@ import (
 // @description: Service for metadata update
 // @param: metadata model.UpdateMetadataRequest
 // @param: string metadata id
-// @return: metadata entities.Metadata, error
-func (s *Service) Update(key string, reqBody *model.UpdateMetadataRequest) (*tb.Metadata, error) {
+// @return: error
+func (s *Service) Update(key string, reqBody *model.UpdateMetadataRequest) error {
 	var err error
 	var count int64
 	var metadatas []tb.Metadata
@@ -24,10 +24,11 @@ func (s *Service) Update(key string, reqBody *model.UpdateMetadataRequest) (*tb.
 	// check if metadata exists
 	if err = s.db.Model(tb.Metadata{}).
 		Where("key = ?", key).
-		Count(&count).Error; err == nil && count == 0 {
-		return nil, msg.ErrMetadataNotFound
-	} else if err != nil {
-		return nil, err
+		Count(&count).Error; err != nil {
+		return err
+	}
+	if count == 0 {
+		return msg.ErrNotFound("metadata")
 	}
 
 	metadataUpdate := utility.MapUpdateRequestToEntity(reqBody)
@@ -37,11 +38,11 @@ func (s *Service) Update(key string, reqBody *model.UpdateMetadataRequest) (*tb.
 		Where("key = ?", key).
 		Updates(metadataUpdate).Error
 	if err != nil {
-		return nil, err
+		return err
 	}
 	if len(metadatas) == 0 {
-		return nil, msg.ErrUpdateMetadataFailed
+		return msg.ErrUpdateFailed("metadata")
 	}
 
-	return &metadatas[0], nil
+	return nil
 }

@@ -15,7 +15,7 @@ import (
 // @param: user model.UpdateUserRequest
 // @param: string user id
 // @return: user entities.User, error
-func (s *Service) Update(reqBody *model.UpdateUserRequest, userId string) (*tb.User, error) {
+func (s *Service) Update(reqBody *model.UpdateUserRequest, userId string) error {
 	var err error
 	var count int64
 	var users []tb.User
@@ -24,10 +24,12 @@ func (s *Service) Update(reqBody *model.UpdateUserRequest, userId string) (*tb.U
 	if err = s.db.Model(tb.User{}).
 		Scopes(utility.EmailIsVerity).
 		Where("id = ?", userId).
-		Count(&count).Error; err == nil && count == 0 {
-		return nil, msg.ErrUserNotFound
-	} else if err != nil {
-		return nil, err
+		Count(&count).Error; err != nil {
+		return err
+	}
+
+	if count == 0 {
+		return msg.ErrNotFound("User")
 	}
 
 	userUpdate := mapUpdateFields(reqBody)
@@ -38,13 +40,13 @@ func (s *Service) Update(reqBody *model.UpdateUserRequest, userId string) (*tb.U
 		Preload("Role.Permissions").
 		Updates(userUpdate).Error
 	if err != nil {
-		return nil, err
+		return err
 	}
 	if len(users) == 0 {
-		return nil, msg.ErrUserNotFound
+		return msg.ErrNotFound("User")
 	}
 
-	return &users[0], nil
+	return nil
 }
 
 // @author: LoanTT

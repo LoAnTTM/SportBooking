@@ -39,12 +39,10 @@ type Logging struct {
 }
 
 type Server struct {
-	Env              string `mapstructure:"env"`
-	Host             string `mapstructure:"host"`
-	Port             string `mapstructure:"port"`
-	ClientAddr       string `mapstructure:"client_addr"`
-	VerifyEmailUri   string `mapstructure:"verify_email_uri"`
-	ResetPasswordUri string `mapstructure:"reset_password_uri"`
+	Env        string `mapstructure:"env"`
+	Host       string `mapstructure:"host"`
+	Port       string `mapstructure:"port"`
+	ClientAddr string `mapstructure:"client_addr"`
 }
 
 type CORS struct {
@@ -99,6 +97,29 @@ type OAuth struct {
 	Google Google `mapstructure:"google"`
 }
 
+type MoMoPayment struct {
+	PartnerCode string `mapstructure:"partner_code"`
+	AccessKey   string `mapstructure:"access_key"`
+	SecretKey   string `mapstructure:"secret_key"`
+	Endpoint    string `mapstructure:"endpoint"`
+	NotifyURL   string `mapstructure:"notify_url"`
+	ReturnURL   string `mapstructure:"return_url"`
+}
+
+type ZaloPayPayment struct {
+	AppID       int    `mapstructure:"app_id"`
+	Key1        string `mapstructure:"key1"`
+	Key2        string `mapstructure:"key2"`
+	Endpoint    string `mapstructure:"endpoint"`
+	CallbackURL string `mapstructure:"callback_url"`
+	RedirectURL string `mapstructure:"redirect_url"`
+}
+
+type Payment struct {
+	MoMo    MoMoPayment    `mapstructure:"momo"`
+	ZaloPay ZaloPayPayment `mapstructure:"zalopay"`
+}
+
 type Config struct {
 	ProjectName  string        `mapstructure:"project_name"`
 	Server       *Server       `mapstructure:"server"`
@@ -109,8 +130,9 @@ type Config struct {
 	Logging      *Logging      `mapstructure:"logging"`
 	Notification *Notification `mapstructure:"notification"`
 	AWS          *AWS          `mapstructure:"aws"`
-	OTP          *OTP          `mapstructure:"otp"`
 	OAuth        *OAuth        `mapstructure:"oauth"`
+	Payment      *Payment      `mapstructure:"payment"`
+	OTP          *OTP          `mapstructure:"otp"`
 	Vpr          *viper.Viper
 }
 

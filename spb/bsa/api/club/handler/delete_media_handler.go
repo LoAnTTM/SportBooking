@@ -25,14 +25,14 @@ func (h *Handler) DeleteMedia(ctx fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if mediaId, err = fctx.ParseUUID("id"); err != nil {
-		logger.Errorf("error parse media id: %v", err)
-		return fctx.ErrResponse(msg.BAD_REQUEST)
+		logger.Errorf(msg.ErrParseUUIDFailed("media", err))
+		return fctx.ErrResponse(msg.PARAM_INVALID)
 	}
 
 	if err = h.service.DeleteMedia(mediaId); err != nil {
-		logger.Errorf("error delete media: %v", err)
+		logger.Errorf(msg.ErrDeleteFailed("media", err))
 		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_DELETE_MEDIA_SUCCESS)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS)
 }

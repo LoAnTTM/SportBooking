@@ -10,6 +10,7 @@ import (
 	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/entities/enum"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"gorm.io/gorm"
@@ -22,13 +23,11 @@ func (s *Service) GoogleLogin(reqBody model.GoogleCallbackRequest) (*tb.User, er
 	c := context.Background()
 	rawPayload, err := auth.VerifyToken(c, reqBody.Code)
 	if err != nil {
-		logger.Errorf("verify google idtoken error: %v", err)
+		logger.Errorf(msg.ErrVerifyFailed("Google token", err))
 		return nil, err
 	}
 
-	logger.Infof("google idtoken payload: %v", rawPayload)
 	payload := utility.MapRawGooglePayload(rawPayload)
-
 	err = s.db.
 		Preload("AuthenticationProviders", "provider = ? AND provider_key = ?", enum.GOOGLE, payload.Sub).
 		Preload("Role").
@@ -42,12 +41,6 @@ func (s *Service) GoogleLogin(reqBody model.GoogleCallbackRequest) (*tb.User, er
 				Provider:    enum.GOOGLE,
 				ProviderKey: payload.Sub,
 			})
-
-			if err = s.db.Save(&user).Error; err != nil {
-				logger.Errorf("save google provider error: %v", err)
-				return nil, err
-			}
-
 			hasUpdate = true
 		}
 
@@ -60,14 +53,13 @@ func (s *Service) GoogleLogin(reqBody model.GoogleCallbackRequest) (*tb.User, er
 		if hasUpdate {
 			err = s.db.Save(&user).Error
 			if err != nil {
-				logger.Errorf("save user error: %v", err)
+				logger.Errorf(msg.ErrUpdateFailed("user.provider or user.password", err))
 				return nil, err
 			}
 		}
 
 		// if user has google provider, return user
 		var permissions []tb.Permission
-
 		permissions, err = permissionModule.PermissionService.GetByRole(user.Role.ID)
 		if err != nil {
 			return nil, err
@@ -101,7 +93,7 @@ func (s *Service) GoogleLogin(reqBody model.GoogleCallbackRequest) (*tb.User, er
 		}
 		err = s.db.Create(&user).Error
 		if err != nil {
-			logger.Errorf("create user error: %v", err)
+			logger.Errorf(msg.ErrCreateFailed("user", err))
 			return nil, err
 		}
 
@@ -113,7 +105,7 @@ func (s *Service) GoogleLogin(reqBody model.GoogleCallbackRequest) (*tb.User, er
 
 		user.Role.Permissions = permissions
 	default:
-		logger.Errorf("get user error: %v", err)
+		logger.Errorf(msg.ErrGetFailed("user", err))
 		return nil, err
 	}
 

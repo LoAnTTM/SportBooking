@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
@@ -22,12 +23,14 @@ func (h *Handler) Delete(ctx fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if sportTypeId, err = fctx.ParseUUID("id"); err != nil {
-		return fctx.ErrResponse(msg.DELETE_SPORT_TYPE_FAILED)
+		logger.Errorf(msg.ErrParseUUIDFailed("sport type", err))
+		return fctx.ErrResponse(msg.PARAM_INVALID)
 	}
 
 	if err = h.service.Delete(sportTypeId); err != nil {
-		return fctx.ErrResponse(msg.DELETE_SPORT_TYPE_FAILED)
+		logger.Errorf(msg.ErrDeleteFailed("sport type", err))
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_DELETE_SPORT_TYPE_SUCCESS)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS)
 }

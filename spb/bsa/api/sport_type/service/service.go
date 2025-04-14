@@ -14,7 +14,7 @@ type IService interface {
 	Delete(sportTypeId string) error
 	GetAll() ([]*tb.SportType, error)
 	GetByID(sportTypeId string) (*tb.SportType, error)
-	Update(reqBody *model.UpdateSportTypeRequest, sportTypeId string) (*tb.SportType, error)
+	Update(reqBody *model.UpdateSportTypeRequest, sportTypeId string) error
 }
 
 type Service struct {

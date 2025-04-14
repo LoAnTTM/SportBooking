@@ -26,13 +26,13 @@ func (h *Handler) VerifyRegisterToken(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 
 	if err := fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.ErrResponse(msg.VERIFY_TOKEN_FAILED)
+		logger.Errorf(msg.ErrParseStructFailed("VerifyRegisterTokenRequest", err))
+		return fctx.ErrResponse(msg.REQUEST_BODY_INVALID)
 	}
 
 	if err := h.service.VerifyRegisterToken(reqBody); err != nil {
-		logger.Errorf("error verify email: %v", err)
-		return fctx.ErrResponse(msg.VERIFY_TOKEN_FAILED)
+		logger.Errorf(msg.ErrInvalid("OTP", err))
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_VERIFY_TOKEN_SUCCESS)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS)
 }

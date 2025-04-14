@@ -3,6 +3,7 @@ package handler
 import (
 	_ "spb/bsa/api/sport_type/model"
 	"spb/bsa/api/sport_type/utility"
+	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
@@ -24,14 +25,16 @@ func (h *Handler) GetByID(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 
 	if sportTypeId, err = fctx.ParseUUID("id"); err != nil {
-		return fctx.ErrResponse(msg.GET_SPORT_TYPE_FAILED)
+		logger.Errorf(msg.ErrParseUUIDFailed("SportType", err))
+		return fctx.ErrResponse(msg.PARAM_INVALID)
 	}
 
 	sportType, err := h.service.GetByID(sportTypeId)
 	if err != nil {
-		return fctx.ErrResponse(msg.GET_ALL_SPORT_TYPE_FAILED)
+		logger.Errorf(msg.ErrGetFailed("SportType", err))
+		return fctx.ErrResponse(msg.NOT_FOUND)
 	}
 
 	response := utility.MapSportTypeEntityToResponse(sportType)
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_GET_SPORT_TYPE_SUCCESS, response)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS, response)
 }

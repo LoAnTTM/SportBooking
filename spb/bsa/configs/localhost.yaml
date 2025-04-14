@@ -5,8 +5,6 @@ server:
     host: "127.0.0.1"
     port: 3000
     client_addr: "http://127.0.0.1"
-    verify_email_uri: "/auth/verify-email"
-    reset_password_uri: "/auth/reset-password"
 
 cors:
     allow_origin:
@@ -60,7 +58,7 @@ logging:
     filename: "requests.log"
 
 aws:
-    region: "ap-southeast-1"
+    region: "us-east-1"
     max_retries: 3
 
 notification:
@@ -72,6 +70,22 @@ notification:
         channel_name: "notification"
         channel_size: 10
         worker_num: 4
+
+payment:
+    momo:
+        partner_code: "MOMO_PARTNER_CODE"
+        access_key: "MOMO_ACCESS_KEY"
+        secret_key: "MOMO_SECRET_KEY"
+        endpoint: "https://test-payment.momo.vn/v2/gateway/api/create"
+        return_url: "https://your-return-url.com"
+        notify_url: "https://your-notify-url.com"
+    zalopay:
+        app_id: 2554
+        key1: "sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn"
+        key2: "trMrHtvjo6myautxDUiAcYsVtaeQ8nhf"
+        endpoint: "https://sb-openapi.zalopay.vn"
+        callback_url: "https://products-controlling-civilian-garbage.trycloudflare.com/api/v1/orders/zalopay/callback"
+        redirect_url: ""
 
 otp:
     length: 4

@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-var AddressTN = "address"
+const AddressTN = "address"
 
 type Address struct {
 	Base

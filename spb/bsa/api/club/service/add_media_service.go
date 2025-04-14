@@ -1,8 +1,6 @@
 package service
 
 import (
-	"fmt"
-
 	mediaModel "spb/bsa/api/media/model"
 	mediaUtil "spb/bsa/api/media/utility"
 	tb "spb/bsa/pkg/entities"
@@ -17,7 +15,7 @@ func (s *Service) AddMedia(clubId string, reqBody *mediaModel.CreateMediaRequest
 		return err
 	}
 	if count == 0 {
-		return msg.ErrClubNotFound
+		return msg.ErrNotFound("club")
 	}
 
 	// Create media record
@@ -26,7 +24,7 @@ func (s *Service) AddMedia(clubId string, reqBody *mediaModel.CreateMediaRequest
 	media.OwnerType = string(mediaModel.OwnerTypeClub)
 
 	if err := s.db.Create(media).Error; err != nil {
-		return fmt.Errorf("failed to create media: %w", err)
+		return msg.ErrCreateFailed("media", err)
 	}
 
 	return nil

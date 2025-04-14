@@ -28,20 +28,20 @@ func (h *Handler) AccountRegister(ctx fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err := fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.Errorf("parse json to struct failed: %v", err)
-		return fctx.ErrResponse(msg.REGISTER_FAILURE)
+		logger.Errorf(msg.ErrParseStructFailed("RegisterRequest", err))
+		return fctx.ErrResponse(msg.REQUEST_BODY_INVALID)
 	}
 
 	status, err := h.service.AccountRegister(reqBody)
 	if err != nil {
-		logger.Errorf("register failed: %v", err)
-		return fctx.ErrResponse(msg.REGISTER_FAILURE)
+		logger.Errorf(msg.ErrRegisterFailed(err))
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
 	switch status {
 	case service.AccountExisted:
-		return fctx.ErrResponse(msg.REGISTER_FAILURE)
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_REGISTER_SUCCESS)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS)
 }

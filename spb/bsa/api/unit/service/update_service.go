@@ -33,7 +33,7 @@ func (s *Service) Update(reqBody *model.UpdateUnitRequest, unitId string) error 
 		return err
 	}
 	if count == 0 {
-		return msg.ErrUnitNotFound
+		return msg.ErrNotFound("Unit")
 	}
 
 	tx := s.db.Begin()
@@ -130,7 +130,7 @@ func UpdateUnitPrice(tx *gorm.DB, unitId string, reqBody []upModel.UpdateUnitPri
 	// Delete existing unit prices
 	if err := tx.Where("unit_id = ?", unitId).Delete(&tb.UnitPrice{}).Error; err != nil {
 		tx.Rollback()
-		return fmt.Errorf("failed to delete existing unit prices: %w", err)
+		return msg.ErrDeleteFailed("UnitPrice", err)
 	}
 
 	// Create new unit prices
@@ -141,7 +141,7 @@ func UpdateUnitPrice(tx *gorm.DB, unitId string, reqBody []upModel.UpdateUnitPri
 
 	if err := tx.Create(&newUnitPrices).Error; err != nil {
 		tx.Rollback()
-		return fmt.Errorf("failed to create new unit prices: %w", err)
+		return msg.ErrCreateFailed("UnitPrice", err)
 	}
 
 	return nil
@@ -151,7 +151,7 @@ func UpdateUnitServices(tx *gorm.DB, unitId string, reqBody []usModel.UpdateUnit
 	// Delete existing unit services
 	if err := tx.Where("unit_id = ?", unitId).Delete(&tb.UnitService{}).Error; err != nil {
 		tx.Rollback()
-		return fmt.Errorf("failed to delete existing unit services: %w", err)
+		return msg.ErrDeleteFailed("UnitService", err)
 	}
 
 	// Create new unit services
@@ -162,7 +162,7 @@ func UpdateUnitServices(tx *gorm.DB, unitId string, reqBody []usModel.UpdateUnit
 
 	if err := tx.Create(&newUnitServices).Error; err != nil {
 		tx.Rollback()
-		return fmt.Errorf("failed to create new unit services: %w", err)
+		return msg.ErrCreateFailed("UnitService", err)
 	}
 
 	return nil

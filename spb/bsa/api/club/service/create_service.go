@@ -1,8 +1,6 @@
 package service
 
 import (
-	"fmt"
-
 	"spb/bsa/api/club/model"
 	"spb/bsa/api/club/utility"
 	mediaModel "spb/bsa/api/media/model"
@@ -25,7 +23,7 @@ func (s *Service) Create(reqBody *model.CreateClubRequest) (*tb.Club, error) {
 		return nil, err
 	}
 	if count > 0 {
-		return nil, msg.ErrClubNameExists
+		return nil, msg.ErrUniqueExists("club.name")
 	}
 
 	// Begin transaction
@@ -50,13 +48,14 @@ func (s *Service) Create(reqBody *model.CreateClubRequest) (*tb.Club, error) {
 
 	if len(reqBody.Media) > 0 {
 		if _, err := mediaServ.CreateMedia(tx, reqBody.Media, club.ID, mediaModel.OwnerTypeClub); err != nil {
-			return nil, fmt.Errorf("failed to create media: %w", err)
+			return nil, msg.ErrCreateFailed("media", err)
 		}
 	}
 
 	// Commit transaction
 	if err := tx.Commit().Error; err != nil {
-		return nil, fmt.Errorf("failed to commit transaction: %w", err)
+		tx.Rollback()
+		return nil, msg.ErrCommitFailed(err)
 	}
 
 	// get club by id

@@ -27,16 +27,16 @@ func (s *Handler) Create(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 
 	if err := fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.ErrResponse(msg.BAD_REQUEST)
+		logger.Errorf(msg.ErrParseStructFailed("CreateClubRequest", err))
+		return fctx.ErrResponse(msg.REQUEST_BODY_INVALID)
 	}
 
 	clubCreated, err := s.service.Create(reqBody)
 	if err != nil {
-		logger.Errorf("error create club: %v", err)
+		logger.Errorf(msg.ErrCreateFailed("club", err))
 		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
 	clubResponse := utility.MapEntityToResponse(clubCreated)
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_CREATE_CLUB_SUCCESS, clubResponse)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS, clubResponse)
 }

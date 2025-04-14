@@ -1,8 +1,6 @@
 package service
 
 import (
-	"fmt"
-
 	mediaModel "spb/bsa/api/media/model"
 	mediaServ "spb/bsa/api/media/service"
 	spt "spb/bsa/api/sport_type"
@@ -25,7 +23,7 @@ func (s *Service) Create(reqBody *model.CreateUnitRequest) (*tb.Unit, error) {
 		return nil, err
 	}
 	if count > 0 {
-		return nil, msg.ErrUnitNameExists
+		return nil, msg.ErrUniqueExists("Unit.name")
 	}
 
 	tx := s.db.Begin()
@@ -50,13 +48,14 @@ func (s *Service) Create(reqBody *model.CreateUnitRequest) (*tb.Unit, error) {
 
 	if len(reqBody.Media) > 0 {
 		if _, err := mediaServ.CreateMedia(tx, reqBody.Media, unit.ID, mediaModel.OwnerTypeUnit); err != nil {
-			return nil, fmt.Errorf("failed to create media: %w", err)
+			return nil, msg.ErrCreateFailed("Media", err)
 		}
 	}
 
 	// Commit transaction
 	if err := tx.Commit().Error; err != nil {
-		return nil, fmt.Errorf("failed to commit transaction: %w", err)
+		tx.Rollback()
+		return nil, msg.ErrCommitFailed(err)
 	}
 
 	// get unit by id

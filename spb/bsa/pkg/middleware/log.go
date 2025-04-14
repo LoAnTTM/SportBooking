@@ -8,6 +8,7 @@ import (
 
 	"spb/bsa/pkg/auth"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
@@ -26,22 +27,10 @@ func LogMiddleware() fiber.Handler {
 			}
 		}
 
-		bodyBytes := ctx.BodyRaw()
+		reqBodyBytes := ctx.BodyRaw()
 		var reqBodyJson, resBodyJson *string
-		if len(bodyBytes) > 0 {
-			if string(ctx.Request().Header.ContentType()) == "application/json" {
-				reqBodyJson = utils.ToPtr(string(bodyBytes))
-			} else {
-				nonJsonMap := map[string]any{}
-				b64Str := base64.StdEncoding.EncodeToString(bodyBytes)
-				nonJsonMap["requestType"] = string(ctx.Request().Header.ContentType())
-				nonJsonMap["base64"] = b64Str
-				if jsonBytes, err := json.Marshal(nonJsonMap); err != nil {
-					logger.Errorf("failed to marshal nonJsonMap, err: %s", err.Error())
-				} else {
-					reqBodyJson = utils.ToPtr(string(jsonBytes))
-				}
-			}
+		if len(reqBodyBytes) > 0 {
+			reqBodyJson = ExtractBodyJson(ctx.Request().Header.ContentType(), reqBodyBytes)
 		}
 
 		userId := ""
@@ -54,20 +43,9 @@ func LogMiddleware() fiber.Handler {
 		start := time.Now()
 		defer func() {
 			ip := ctx.IP()
-			if len(ctx.Response().Body()) > 0 {
-				if string(ctx.Response().Header.ContentType()) == "application/json" {
-					resBodyJson = utils.ToPtr(string(ctx.Response().Body()))
-				} else {
-					nonJsonMap := map[string]any{}
-					b64Str := base64.StdEncoding.EncodeToString(ctx.Response().Body())
-					nonJsonMap["responseType"] = string(ctx.Response().Header.ContentType())
-					nonJsonMap["base64"] = b64Str
-					if jsonBytes, err := json.Marshal(nonJsonMap); err != nil {
-						logger.Errorf("failed to marshal nonJsonMap, err: %s", err.Error())
-					} else {
-						resBodyJson = utils.ToPtr(string(jsonBytes))
-					}
-				}
+			resBodyBytes := ctx.Response().Body()
+			if len(resBodyBytes) > 0 {
+				resBodyJson = ExtractBodyJson(ctx.Response().Header.ContentType(), resBodyBytes)
 			}
 
 			// create log to files
@@ -86,4 +64,24 @@ func LogMiddleware() fiber.Handler {
 		}()
 		return ctx.Next()
 	}
+}
+
+func ExtractBodyJson(contentType []byte, bodyByte []byte) *string {
+	var bodyJson *string
+	if len(bodyByte) > 0 {
+		if string(contentType) == "application/json" {
+			bodyJson = utils.ToPtr(string(bodyByte))
+		} else {
+			nonJsonMap := map[string]any{}
+			b64Str := base64.StdEncoding.EncodeToString(bodyByte)
+			nonJsonMap["requestType"] = string(bodyByte)
+			nonJsonMap["base64"] = b64Str
+			if jsonBytes, err := json.Marshal(nonJsonMap); err != nil {
+				logger.Errorf(msg.ErrMarshalFailed(err))
+			} else {
+				bodyJson = utils.ToPtr(string(jsonBytes))
+			}
+		}
+	}
+	return bodyJson
 }

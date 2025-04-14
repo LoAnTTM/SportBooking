@@ -26,8 +26,8 @@ func (h Handler) GetWardByID(ctx fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if wardId, err = fctx.ParseUUID("id"); err != nil {
-		logger.Errorf("error parse district id: %v", err)
-		return fctx.ErrResponse(msg.BAD_REQUEST)
+		logger.Errorf(msg.ErrParseUUIDFailed("ward", err))
+		return fctx.ErrResponse(msg.PARAM_INVALID)
 	}
 	// Call the service to get the province by ID
 	ward, err := h.service.GetWardByID(wardId)
@@ -37,5 +37,5 @@ func (h Handler) GetWardByID(ctx fiber.Ctx) error {
 
 	response := utility.MapWardEntityToResponse(ward)
 	// Return the province as a JSON response
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_ALL_LOCATION_SUCCESS, response)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS, response)
 }

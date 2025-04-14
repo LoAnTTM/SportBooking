@@ -16,17 +16,12 @@ import (
 // @param: reqBody *model.VerifyForgotPasswordTokenRequest
 // @return: error
 func (s *Service) VerifyForgotPasswordToken(reqBody *model.VerifyForgotPasswordTokenRequest) (err error) {
-	cacheToken := utils.ConcatStr(":", config.AUTH_OTP, reqBody.Email, strconv.Itoa(reqBody.Token))
+	cacheToken := utils.Join(":", config.AUTH_OTP, reqBody.Email, strconv.Itoa(reqBody.Token))
 	if ok := cache.OTP.CheckOTP(cacheToken); !ok {
 		err = msg.ErrTokenExpired
 		return
 	}
 
-	defer func() {
-		if err == nil {
-			cache.OTP.DelOTP(cacheToken)
-		}
-	}()
-
+	cache.OTP.DelOTP(cacheToken)
 	return nil
 }

@@ -27,16 +27,16 @@ func (h *Handler) Create(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 
 	if err := fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.ErrResponse(msg.CREATE_SPORT_TYPE_FAILED)
+		logger.Errorf(msg.ErrParseStructFailed("CreateSportType", err))
+		return fctx.ErrResponse(msg.REQUEST_BODY_INVALID)
 	}
 
 	sportTypeCreated, err := h.service.Create(reqBody)
 	if err != nil {
-		logger.Errorf("error create sport type: %v", err)
-		return fctx.ErrResponse(msg.CREATE_SPORT_TYPE_FAILED)
+		logger.Errorf(msg.ErrCreateFailed("sport type", err))
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
-	sportTypeResponse := utility.MapSportTypeEntityToResponse(sportTypeCreated)
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_CREATE_SPORT_TYPE_SUCCESS, sportTypeResponse)
+	response := utility.MapSportTypeEntityToResponse(sportTypeCreated)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS, response)
 }

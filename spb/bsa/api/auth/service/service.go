@@ -14,7 +14,6 @@ type IService interface {
 	GoogleLogin(reqBody model.GoogleCallbackRequest) (*tb.User, error)
 	AccountLogin(u *model.LoginRequest) (*tb.User, error)
 	AccountRegister(u *model.RegisterRequest) (status AccountStatus, err error)
-	RefreshToken(refreshToken string, claims *model.UserClaims) (*tb.User, error)
 	ResendVerifyRegisterToken(reqBody *model.ResendVerifyRegisterTokenRequest) (err error)
 	ResetPassword(reqBody *model.ResetPasswordRequest) (err error)
 	SendVerifyEmail(token, email, notifyType string, tx *gorm.DB) (*notification.PushNotification, error)

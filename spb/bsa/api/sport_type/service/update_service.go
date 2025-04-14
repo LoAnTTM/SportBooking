@@ -14,8 +14,8 @@ import (
 // @description: Service for sportType update
 // @param: sportType model.UpdateSportTypeRequest
 // @param: string sportType id
-// @return: sportType entities.SportType, error
-func (s *Service) Update(reqBody *model.UpdateSportTypeRequest, sportTypeId string) (*tb.SportType, error) {
+// @return: error
+func (s *Service) Update(reqBody *model.UpdateSportTypeRequest, sportTypeId string) error {
 	var count int64
 	var sportTypes []tb.SportType
 
@@ -23,9 +23,9 @@ func (s *Service) Update(reqBody *model.UpdateSportTypeRequest, sportTypeId stri
 	if err := s.db.Model(tb.SportType{}).
 		Where("id = ?", sportTypeId).
 		Count(&count).Error; err == nil && count == 0 {
-		return nil, msg.ErrSportTypeNotFound
+		return msg.ErrNotFound("SportType")
 	} else if err != nil {
-		return nil, err
+		return err
 	}
 
 	// update sportType
@@ -35,11 +35,11 @@ func (s *Service) Update(reqBody *model.UpdateSportTypeRequest, sportTypeId stri
 		Where("id = ?", sportTypeId).
 		Updates(sportTypeUpdate).Error
 	if err != nil {
-		return nil, err
+		return err
 	}
 	if len(sportTypes) == 0 {
-		return nil, msg.ErrSportTypeNotFound
+		return msg.ErrNotFound("SportType")
 	}
 
-	return &sportTypes[0], nil
+	return nil
 }

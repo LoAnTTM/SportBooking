@@ -68,10 +68,10 @@ func (q *Queue) Shutdown() {
 
 	q.stopOnce.Do(func() {
 		if q.metric.BusyWorkers() > 0 {
-			logger.Infof("shutdown all tasks: %d workers", q.metric.BusyWorkers())
+			logger.Infof(msg.InfoAllTaskShutdown(q.metric.BusyWorkers()))
 		}
 		if err := q.worker.Shutdown(); err != nil {
-			logger.Errorf("failed to shutdown worker: %v", err)
+			logger.Errorf(msg.ErrQueueShutdownFailed(err))
 		}
 		close(q.quit)
 	})
@@ -131,7 +131,7 @@ func (q *Queue) work(task QueuedMessage) {
 		q.metric.DecBusyWorker()
 		e := recover()
 		if e != nil {
-			logger.Errorf("panic error: %v", e)
+			logger.Errorf(msg.ErrRunTaskFailed(err))
 		}
 		q.schedule()
 
@@ -146,7 +146,7 @@ func (q *Queue) work(task QueuedMessage) {
 	}()
 
 	if err = q.run(task); err != nil {
-		logger.Errorf("failed to run task: %v", err)
+		logger.Errorf(msg.ErrRunTaskFailed(err))
 	}
 }
 
@@ -200,7 +200,7 @@ func (q *Queue) handle(m *Message) error {
 
 			select {
 			case <-time.After(delay):
-				logger.Infof("retry remaining times: %d, delay time: %s", m.RetryCount, delay)
+				logger.Infof(msg.InfoRemainingRetry(m.RetryCount, delay))
 			case <-ctx.Done():
 				err = ctx.Err()
 				break loop

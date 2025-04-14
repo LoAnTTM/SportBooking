@@ -1,6 +1,6 @@
 package entities
 
-var DistrictTN = "district"
+const DistrictTN = "district"
 
 type District struct {
 	Base

@@ -1,8 +1,6 @@
 package service
 
 import (
-	"fmt"
-
 	addressModel "spb/bsa/api/address/model"
 	addressUtil "spb/bsa/api/address/utility"
 	"spb/bsa/api/club/model"
@@ -28,7 +26,7 @@ func (s *Service) Update(reqBody *model.UpdateClubRequest, clubId string) error 
 		return err
 	}
 	if count == 0 {
-		return msg.ErrClubNotFound
+		return msg.ErrNotFound("club")
 	}
 
 	tx := s.db.Begin()
@@ -53,7 +51,7 @@ func (s *Service) Update(reqBody *model.UpdateClubRequest, clubId string) error 
 	var clubEntity tb.Club
 	if err := tx.Select("address_id").Where("id = ?", clubId).First(&clubEntity).Error; err != nil {
 		tx.Rollback()
-		return fmt.Errorf("failed to get club's address: %w", err)
+		return msg.ErrGetFailed("club.address_id", err)
 	}
 	if reqBody.Address != nil {
 		if err := UpdateClubAddress(tx, clubEntity.AddressID, reqBody.Address); err != nil {

@@ -6,7 +6,6 @@ import (
 	"spb/bsa/pkg/config"
 	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/global"
-	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
@@ -96,8 +95,6 @@ func createAccount(db *gorm.DB, u *model.RegisterRequest, s *Service) (*tb.User,
 		return nil, err
 	}
 
-	logger.Debugf("======== create account")
-
 	otpToken := utils.GenerateOTPCode(global.SPB_CONFIG.OTP.OTPLength)
 	user := tb.User{
 		Email:           u.Email,
@@ -113,7 +110,7 @@ func createAccount(db *gorm.DB, u *model.RegisterRequest, s *Service) (*tb.User,
 		return nil, err
 	}
 
-	cacheToken := utils.ConcatStr(":", config.AUTH_OTP, user.Email, otpToken)
+	cacheToken := utils.Join(":", config.AUTH_OTP, user.Email, otpToken)
 	if err := cache.OTP.SetOTP(cacheToken, global.SPB_CONFIG.OTP.OTPExp); err != nil {
 		tx.Rollback()
 		return nil, err
@@ -140,7 +137,6 @@ func createAccount(db *gorm.DB, u *model.RegisterRequest, s *Service) (*tb.User,
 func addPasswordToUser(db *gorm.DB, user *tb.User, password string, s *Service) (err error) {
 	user.Password = utils.BcryptHash(password)
 
-	logger.Debugf("======== add password to user")
 	tx := db.Begin()
 	if err = tx.Save(&user).Error; err != nil {
 		tx.Rollback()

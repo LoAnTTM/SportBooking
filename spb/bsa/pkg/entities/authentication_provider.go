@@ -2,7 +2,7 @@ package entities
 
 import "spb/bsa/pkg/entities/enum"
 
-var AuthenticationProviderTN = "authentication_provider"
+const AuthenticationProviderTN = "authentication_provider"
 
 type AuthenticationProvider struct {
 	Base

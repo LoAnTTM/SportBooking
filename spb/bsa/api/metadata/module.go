@@ -4,10 +4,9 @@ import (
 	handler "spb/bsa/api/metadata/handler"
 	"spb/bsa/api/metadata/service"
 	"spb/bsa/pkg/middleware"
+	_ "spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
-
-	_ "spb/bsa/pkg/utils"
 )
 
 var (
@@ -25,6 +24,6 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	MetadataHandler = handler.NewHandler(MetadataService)
 
 	metadataRoute := router.Group("/api/v1/metadatas")
-	metadataRoute.Get("/:key", customMiddleware.CheckAccess("metadata:read"), MetadataHandler.GetByKey)
-	metadataRoute.Put("/:key", customMiddleware.CheckAccess("metadata:update"), MetadataHandler.Update)
+	metadataRoute.Get("/:key", MetadataHandler.GetByKey, customMiddleware.CheckAccess("metadata:read"))
+	metadataRoute.Put("/:key", MetadataHandler.Update, customMiddleware.CheckAccess("metadata:update"))
 }

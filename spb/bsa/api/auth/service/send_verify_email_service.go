@@ -10,6 +10,7 @@ import (
 	"spb/bsa/pkg/entities/enum"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/notification"
 
 	"gorm.io/gorm"
@@ -27,13 +28,13 @@ func (s *Service) SendVerifyEmail(token, email, notifyType string, tx *gorm.DB) 
 	oEmailMeta, err := metadata.MetadataService.GetByKey(config.OPERATOR_EMAIL_KEY)
 	if err != nil || oEmailMeta.Value == "" {
 		tx.Rollback()
-		return nil, logger.RErrorf("Can't get operator email: %v", err)
+		return nil, msg.ErrGetFailed("operator email", err)
 	}
 
 	oEmailTemplate, err := notifyTypeServ.NotificationTypeService.GetByType(notifyType)
 	if err != nil || oEmailTemplate.Template == "" {
 		tx.Rollback()
-		return nil, logger.RErrorf("Can't get notification template: %v", err)
+		return nil, msg.ErrGetFailed("notification template", err)
 	}
 
 	var message string
@@ -43,12 +44,11 @@ func (s *Service) SendVerifyEmail(token, email, notifyType string, tx *gorm.DB) 
 	case config.AUTH_VERIFY_EMAIL:
 		message, err = RegisterMessage(token, email, oEmailTemplate)
 	default:
-		panic("Invalid notify type")
+		panic(msg.ErrInvalid("notification type"))
 	}
 
 	if err != nil {
 		tx.Rollback()
-		logger.Errorf("Can't make message: %v", err)
 		return nil, err
 	}
 
@@ -66,7 +66,7 @@ func (s *Service) SendVerifyEmail(token, email, notifyType string, tx *gorm.DB) 
 	// Send notification
 	if err := global.SPB_NOTIFY.Notify(notify); err != nil {
 		tx.Rollback()
-		logger.Errorf("Can't send notification: %v", err)
+		logger.Errorf(msg.ErrSendNotificationFailed(err))
 		return nil, err
 	}
 	return notify, nil

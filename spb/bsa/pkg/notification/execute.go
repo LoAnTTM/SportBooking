@@ -4,6 +4,7 @@ import (
 	"spb/bsa/pkg/aws/ses"
 	"spb/bsa/pkg/config"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/queue"
 	redisw "spb/bsa/pkg/queue/worker"
 
@@ -41,16 +42,16 @@ func NewNotification(
 
 func Shutdown(n *Notification) {
 	n.queue.Release()
-	logger.Infof("Notification service shutdown")
+	logger.Infof(msg.InfoShutdownNotification)
 }
 
 func (n *Notification) Notify(data *PushNotification) error {
-	logger.Infof("Send notification [%s] to: %+v", data.Title, data.To)
+	logger.Infof(msg.InfoSendNotification(data.Title, data.To))
 
 	data.Data = data.Bytes()
 	err := n.queue.Queue(data)
 	if err != nil {
-		logger.Errorf("Can't send notification: %v", err)
+		logger.Errorf(msg.ErrSendNotificationFailed(err))
 		return err
 	}
 	return nil

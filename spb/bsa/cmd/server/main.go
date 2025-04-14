@@ -10,12 +10,11 @@ import (
 	"spb/bsa/api/metadata"
 	"spb/bsa/api/notification"
 	"spb/bsa/api/notification_type"
+	"spb/bsa/api/order"
 	"spb/bsa/api/permission"
 	"spb/bsa/api/role"
 	"spb/bsa/api/sport_type"
 	"spb/bsa/api/unit"
-	"spb/bsa/api/unit_price"
-	"spb/bsa/api/unit_service"
 	"spb/bsa/api/user"
 	_ "spb/bsa/docs"
 	"spb/bsa/pkg/aws"
@@ -24,6 +23,7 @@ import (
 	"spb/bsa/pkg/global"
 	zaplog "spb/bsa/pkg/logger"
 	"spb/bsa/pkg/middleware"
+	"spb/bsa/pkg/msg"
 	notify "spb/bsa/pkg/notification"
 	database "spb/bsa/pkg/postgres"
 	"spb/bsa/pkg/redis"
@@ -62,29 +62,29 @@ func (f *Fiber) GetApp() {
 
 	err = global.SPB_CONFIG.LoadEnvVariables()
 	if err != nil {
-		panic(fmt.Sprintf("failed to load env variables: %v\n", err))
+		panic(msg.ErrLoadEnvFailed(err))
 	}
 
 	zaplog.NewZlog(global.SPB_CONFIG)
 
 	global.SPB_DB, err = database.ConnectDB(global.SPB_CONFIG)
 	if err != nil {
-		panic(fmt.Sprintf("failed to connect database: %v\n", err))
+		panic(msg.ErrConnectionFailed(err))
 	}
 
 	global.SPB_REDIS, err = redis.NewClient(global.SPB_CONFIG)
 	if err != nil {
-		panic(fmt.Sprintf("failed to connect redis: %v\n", err))
+		panic(msg.ErrRedisConnectFailed(err))
 	}
 
 	global.SPB_VALIDATOR, err = utils.NewValidator()
 	if err != nil {
-		panic(fmt.Sprintf("failed to create validator: %v\n", err))
+		panic(msg.ErrLoadValidatorFailed(err))
 	}
 
 	awsSession, err := aws.NewAWSSession(global.SPB_CONFIG)
 	if err != nil {
-		panic(fmt.Sprintf("failed to connect aws: %v\n", err))
+		panic(msg.ErrAWSConnectFailed(err))
 	}
 
 	global.SPB_NOTIFY = notify.NewNotification(
@@ -137,7 +137,13 @@ func (f *Fiber) LoadRoutes() {
 		"/api/v1/auth/forgot-password",
 		"/api/v1/auth/verify-forgot-password-token",
 		"/api/v1/auth/reset-password",
+
+		// Google OAuth callback
 		global.SPB_CONFIG.OAuth.Google.Callback,
+
+		// ZaloPay callback
+		"/api/v1/orders/zalopay/callback",
+
 		// testing
 		"/api/v1/auth/ses-verify",
 	}
@@ -150,8 +156,6 @@ func (f *Fiber) LoadRoutes() {
 	role.LoadModule(router, custMiddlewares)
 	permission.LoadModule(router, custMiddlewares)
 	user.LoadModule(router, custMiddlewares)
-	unit_service.LoadModule(router, custMiddlewares)
-	unit_price.LoadModule(router, custMiddlewares)
 	unit.LoadModule(router, custMiddlewares)
 	sport_type.LoadModule(router, custMiddlewares)
 	metadata.LoadModule(router, custMiddlewares)
@@ -159,6 +163,7 @@ func (f *Fiber) LoadRoutes() {
 	notification.LoadModule(router, custMiddlewares)
 	club.LoadModule(router, custMiddlewares)
 	address.LoadModule(router, custMiddlewares)
+	order.LoadModule(router, custMiddlewares)
 
 	permissions, err := permission.GetPermissions()
 	if err != nil {
@@ -188,7 +193,7 @@ func (f *Fiber) Start() {
 
 	err := f.App.Listen(fmt.Sprintf(":%s", global.SPB_CONFIG.Server.Port))
 	if err != nil {
-		zaplog.Fatalf("failed to start server: %v", err)
+		zaplog.Errorf(msg.ErrServerStartFailed(err))
 	}
 }
 

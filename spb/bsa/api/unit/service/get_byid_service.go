@@ -26,7 +26,7 @@ func (s *Service) GetByID(unitId string) (*tb.Unit, error) {
 
 	unit.Address, err = address.AddressService.GetAddressByID(unit.AddressID)
 	if err != nil {
-		return nil, msg.ErrAddressNotFound
+		return nil, msg.ErrNotFound("Address")
 	}
 
 	return unit, nil

@@ -12,13 +12,14 @@ import (
 // @return: error
 func (s *Service) Delete(unitId string) error {
 	unit := new(tb.Unit)
-	// Check if club exists
-	if err := s.db.First(&unit, "id = ?", unitId).Error; err != nil {
-		return msg.ErrClubNotFound
+	// Check if unit exists
+	if err := s.db.
+		Preload("SportTypes").
+		First(&unit, "id = ?", unitId).Error; err != nil {
+		return msg.ErrNotFound("Unit")
 	}
 
-	err := s.db.Delete(&unit).Error
-	if err != nil {
+	if err := s.db.Delete(&unit).Error; err != nil {
 		return err
 	}
 	return nil

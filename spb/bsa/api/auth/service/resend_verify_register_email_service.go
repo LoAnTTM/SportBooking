@@ -1,13 +1,12 @@
 package service
 
 import (
-	"fmt"
-
 	"spb/bsa/api/auth/model"
 	"spb/bsa/pkg/cache"
 	"spb/bsa/pkg/config"
 	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/global"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 )
 
@@ -16,17 +15,16 @@ import (
 // @description: Resend verify email OTP
 // @param: reqBody *model.ResendVerifyRegisterTokenRequest
 // @return: error
-func (s *Service) ResendVerifyRegisterToken(reqBody *model.ResendVerifyRegisterTokenRequest) (err error) {
+func (s *Service) ResendVerifyRegisterToken(reqBody *model.ResendVerifyRegisterTokenRequest) error {
+	var err error
 	user := new(tb.User)
 
-	err = s.db.Where("email = ?", reqBody.Email).First(user).Error
-	if err != nil {
-		return
+	if err = s.db.Where("email = ?", reqBody.Email).First(user).Error; err != nil {
+		return err
 	}
 
 	if user.IsEmailVerified {
-		err = fmt.Errorf("email already verified")
-		return
+		return msg.ErrEmailAlreadyVerified
 	}
 
 	tx := s.db.Begin()
@@ -40,28 +38,34 @@ func (s *Service) ResendVerifyRegisterToken(reqBody *model.ResendVerifyRegisterT
 
 	if err = s.VerifyEmailNotification(otpToken, user, tx); err != nil {
 		tx.Rollback()
-		return
+		return err
 	}
 
 	if err = tx.Commit().Error; err != nil {
 		tx.Rollback()
-		return
+		return err
 	}
 
 	return nil
 }
 
 func RefreshOTPCache(otpToken, email string) error {
-	previousOTPPattern := utils.ConcatStr(":", config.AUTH_OTP, email) + "*"
+	var err error
+
+	previousOTPPattern := utils.Join(":", config.AUTH_OTP, email) + "*"
 	previousOTP, err := cache.OTP.SearchOTP(previousOTPPattern)
 	if err != nil {
 		return err
 	}
 
-	cache.OTP.DelOTP(previousOTP)
+	defer func() {
+		if err != nil {
+			cache.OTP.DelOTP(previousOTP)
+		}
+	}()
 
-	cacheToken := utils.ConcatStr(":", config.AUTH_OTP, email, otpToken)
-	if err := cache.OTP.SetOTP(cacheToken, global.SPB_CONFIG.OTP.OTPExp); err != nil {
+	cacheToken := utils.Join(":", config.AUTH_OTP, email, otpToken)
+	if err = cache.OTP.SetOTP(cacheToken, global.SPB_CONFIG.OTP.OTPExp); err != nil {
 		return err
 	}
 	return nil

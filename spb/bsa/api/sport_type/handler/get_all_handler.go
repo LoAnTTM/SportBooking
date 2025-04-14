@@ -25,9 +25,9 @@ func (h *Handler) GetAll(ctx fiber.Ctx) error {
 
 	sportTypes, err := h.service.GetAll()
 	if err != nil {
-		return fctx.ErrResponse(msg.GET_ALL_SPORT_TYPE_FAILED)
+		return fctx.ErrResponse(msg.NOT_FOUND)
 	}
 
 	response := utility.MapSportTypeEntitiesToResponse(sportTypes)
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_GET_SPORT_TYPE_SUCCESS, response)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS, response)
 }

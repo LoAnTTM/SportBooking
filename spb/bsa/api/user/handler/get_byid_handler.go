@@ -30,17 +30,17 @@ func (s *Handler) GetByID(ctx fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if userId, err = fctx.ParseUUID("id"); err != nil {
-		logger.Errorf("error parse user id: %v", err)
-		return fctx.ErrResponse(msg.GET_USER_FAILED)
+		logger.Errorf(msg.ErrParseUUIDFailed("User", err))
+		return fctx.ErrResponse(msg.PARAM_INVALID)
 	}
 
 	claims := ctx.Locals("claims").(authModel.UserClaims)
 	role := claims.Role
 	if user, err = s.service.GetByID(userId, role); err != nil {
-		logger.Errorf("error get user by id: %v", err)
+		logger.Errorf(msg.ErrGetFailed("User", err))
 		return fctx.ErrResponse(msg.NOT_FOUND)
 	}
 
 	userResponse := utility.MapUserEntityToResponse(user)
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_GET_USER_SUCCESS, userResponse)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS, userResponse)
 }

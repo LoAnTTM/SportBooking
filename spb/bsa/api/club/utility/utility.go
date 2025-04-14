@@ -70,11 +70,11 @@ func MapUpdateRequestToEntity(reqBody *model.UpdateClubRequest) map[string]inter
 
 func MapEntitiesToResponse(clubs []*tb.Club, total int64, reqBody *model.GetClubsRequest) *model.ClubsResponse {
 	clubsResponse := &model.ClubsResponse{
-		Clubs: make([]*model.ClubResponse, 0),
+		Clubs: make([]*model.ClubResponse, len(clubs)),
 	}
 
-	for _, club := range clubs {
-		clubsResponse.Clubs = append(clubsResponse.Clubs, MapEntityToResponse(club))
+	for i, club := range clubs {
+		clubsResponse.Clubs[i] = MapEntityToResponse(club)
 	}
 	// Set pagination
 	clubsResponse.Total = uint(len(clubsResponse.Clubs))

@@ -5,7 +5,7 @@ import (
 	"text/template"
 )
 
-var NotificationTypeTN = "notification_type"
+const NotificationTypeTN = "notification_type"
 
 type NotificationType struct {
 	Base

@@ -10,7 +10,7 @@ import (
 const DEFAULT_SORT_KEY = "created_at"
 
 // @queries: i=?&p=?&b=?&t=?
-// &i = items
+// &i = page items
 // &p = page
 // &b = order by
 // &t = order type

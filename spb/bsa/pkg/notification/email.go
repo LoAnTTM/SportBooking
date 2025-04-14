@@ -28,7 +28,6 @@ type emailService struct {
 
 func (e *emailService) SendNotification(ctx context.Context, data *PushNotification, cfg *config.Config) (*ResponsePush, error) {
 	email := EmailInfoFromPushNotification(data)
-	logger.Infof("Send email to %v", email.To)
 
 	resp := new(ResponsePush)
 	output, err := e.sesService.SendEmail(email)

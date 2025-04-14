@@ -6,51 +6,109 @@ import (
 )
 
 var (
+	// request
+	ErrPermission        = NewError("permission denied")
+	ErrUnauthorized      = NewError("unauthorized")
+	ErrNotFound          = NewErrorArgs("[%s] not found")
+	ErrUpdateFailed      = NewErrorArgs("update [%s] failed: %+v")
+	ErrDeleteFailed      = NewErrorArgs("delete [%s] failed: %+v")
+	ErrCreateFailed      = NewErrorArgs("create [%s] failed: %+v")
+	ErrGetFailed         = NewErrorArgs("get [%s] failed: %+v")
+	ErrUniqueExists      = NewErrorArgs("unique field [%s] already exists")
+	ErrVerifyFailed      = NewErrorArgs("verify [%s] failed: %+v")
+	ErrInvalid           = NewErrorArgs("[%s] invalid: %+v")
+	ErrAddPropertyFailed = NewErrorArgs("add property [%s] to [%s] failed: %+v")
+	ErrCommitFailed      = NewErrorArgs("commit transaction failed: %+v")
+
+	// auth
 	ErrIncorrectPassword       = NewError("incorrect password")
-	ErrLocationNotFound        = NewError("location not found")
 	ErrEmailExists             = NewError("email already exists")
 	ErrEmailVerifying          = NewError("email already verifying")
-	ErrSportTypeExists         = NewError("sport type already exists")
-	ErrSportTypeNotFound       = NewError("sport type not found")
-	ErrPermission              = NewError("unit price does not have permission")
-	ErrUnitPriceNotFound       = NewError("unit price not found")
-	ErrUnitServiceNotFound     = NewError("unit service not found")
-	ErrInvalidToken            = NewError("malformed token")
-	ErrTokenExpired            = NewError("token expired")
+	ErrEmailAlreadyVerified    = NewError("email already verified")
 	ErrVerifyEmailNotification = NewError("verify email notification failed")
-	ErrUnauthorized            = NewError("unauthorized")
 	ErrAccessKeyNotFound       = NewError("['accessToken'] isn't present")
-	ErrInvalidRequest          = NewError("invalid request")
-	ErrMissingWorker           = NewError("missing worker module")
-	ErrQueueShutdown           = NewError("queue is shutdown")
-	ErrNoTaskInQueue           = NewError("no task in queue")
-	ErrQueueHasBeenClosed      = NewError("queue has been closed")
-	ErrRequestJsonNotValid     = NewError("request json is not valid")
-	ErrUserNotFound            = NewError("user not found")
-	ErrUnitNotFound            = NewError("unit not found")
-	ErrUpdateUnitFailed        = NewError("update unit failed")
-	ErrUnitNameExists          = NewError("unit name already exists")
-	ErrMetadataNotFound        = NewError("metadata not found")
-	ErrUpdateMetadataFailed    = NewError("update metadata failed")
-	ErrClubNameExists          = NewError("club name already exists")
-	ErrClubNotFound            = NewError("club not found")
-	ErrAddressNotFound         = NewError("address not found")
-)
+	ErrForgotPasswordFailed    = NewErrorArgs("forgot password failed: %+v")
+	ErrGoogleLoginFailed       = NewErrorArgs("google login failed: %+v")
+	ErrLoginFailed             = NewErrorArgs("login failed: %+v")
+	ErrRegisterFailed          = NewErrorArgs("register failed: %+v")
+	ErrSendOTPFailed           = NewErrorArgs("Send OTP failed: %+v")
+	ErrResendOTPFailed         = NewErrorArgs("resend OTP failed: %+v")
+	ErrResetPasswordFailed     = NewErrorArgs("reset password failed: %+v")
 
-var (
+	// payment
+	ErrPaymentFailed             = NewErrorArgs("payment failed: %+v")
+	ErrMoMoCallbackFailed        = NewErrorArgs("momo callback failed: %+v")
+	ErrZaloPayCallbackInvalidMac = NewErrorArgs("invalid MAC: expected %s, got %s")
+
+	// cache
+	ErrCacheSetFailed     = NewErrorArgs("failed to set [%s] cache: %+v")
+	ErrCacheGetFailed     = NewErrorArgs("failed to get [%s] cache: %+v")
+	ErrInBlackList        = NewErrorArgs("[%s] is blacklisted")
+	ErrSetBlacklistFailed = NewErrorArgs("failed to set [%s] to blacklist: %+v")
+
+	// notification
+	ErrSendNotificationFailed = NewErrorArgs("failed to send notification: %+v")
+
+	// queue
+	ErrMissingWorker       = NewError("missing worker module")
+	ErrQueueShutdownFailed = NewErrorArgs("queue shutdown failed: %+v")
+	ErrQueueShutdown       = NewError("queue is shutdown")
+	ErrNoTaskInQueue       = NewError("no task in queue")
+	ErrQueueHasBeenClosed  = NewError("queue has been closed")
+	ErrRunTaskFailed       = NewErrorArgs("run task failed: %+v")
+
+	// redis
+	ErrRedisPingFailed      = NewErrorArgs("failed to ping redis: %+v")
 	ErrUnexpectedSignMethod = NewErrorArgs("unexpected signing method: %+v")
+
+	// jwt
 	ErrParseTokenFromCookie = NewErrorArgs("failed to parse token from cookie: %+v")
 	ErrParseTokenFromHeader = NewErrorArgs("failed to parse token from header: %+v")
+	ErrSetTokenToCookie     = NewErrorArgs("failed to set token to cookie: %+v")
+	ErrSetTokenToHeader     = NewErrorArgs("failed to set token to header: %+v")
 	ErrEmailSendFailed      = NewErrorArgs("email send failed: %v")
-	ErrConnectionFailed     = NewErrorArgs("failed to connect database: %+v")
-	ErrMigrationFailed      = NewErrorArgs("failed to migrate database: %+v")
-	ErrJoinTableFailed      = NewErrorArgs("failed to join table: %+v")
-	ErrMissingToken         = NewError("missing access token or refresh token")
-	ErrGenerateToken        = NewErrorArgs("failed to make jwt: %+v")
+	ErrJwtMiddlewareFailed  = NewErrorArgs("jwt middleware failed: %v")
+	ErrGenerateTokenFailed  = NewErrorArgs("generate token failed: %+v")
+	ErrTokenExpired         = NewError("token expired")
+
+	// parser
+	ErrMarshalFailed       = NewErrorArgs("failed to marshal json: %+v")
+	ErrUnmarshalFailed     = NewErrorArgs("failed to unmarshal json: %+v")
+	ErrRequestJsonNotValid = NewError("request json is not valid")
+	ErrParseUUIDFailed     = NewErrorArgs("failed to parse [%s] uuid: %+v")
+	ErrParseStructFailed   = NewErrorArgs("failed to parse [%s] struct: %+v")
+
+	// server
+	ErrLoadEnvFailed       = NewErrorArgs("failed to load env: %+v")
+	ErrConnectionFailed    = NewErrorArgs("failed to connect database: %+v")
+	ErrRedisConnectFailed  = NewErrorArgs("failed to connect redis: %+v")
+	ErrLoadValidatorFailed = NewErrorArgs("failed to load validator: %+v")
+	ErrAWSConnectFailed    = NewErrorArgs("failed to connect AWS: %+v")
+	ErrMigrationFailed     = NewErrorArgs("failed to migrate database: %+v")
+	ErrJoinTableFailed     = NewErrorArgs("failed to join table: %+v")
+	ErrMissingToken        = NewError("missing access token or refresh token")
+	ErrServerStartFailed   = NewErrorArgs("failed to start server: %+v")
+)
+
+const AWSInternalServerError = "InternalServerError"
+
+var (
+	// queue
+	InfoAllTaskShutdown = NewMessageArgs("shutdown all tasks: %d workers")
+	InfoRemainingRetry  = NewMessageArgs("retry remaining times: %d, delay time: %s")
+
+	// payment
+	InfoCreatePayment = NewMessageArgs("creating payment with MoMo: %+v")
+	InfoMoMoCallback  = NewMessageArgs("momo callback: %+v")
+	InfoPaySuccess    = NewMessageArgs("payment success: %+v")
+	InfoPayFailed     = NewMessageArgs("payment failed: %+v")
+
+	// notification
+	InfoSendNotification = NewMessageArgs("Send notification [%s] to: %+v")
 )
 
 const (
-	AWSInternalServerError = "InternalServerError"
+	InfoShutdownNotification = "shutdown notification service"
 )
 
 func NewError(msg string) error {
@@ -59,7 +117,13 @@ func NewError(msg string) error {
 
 func NewErrorArgs(msg string) func(...any) error {
 	return func(args ...any) error {
-		return fmt.Errorf(msg, args)
+		return fmt.Errorf(msg, args...)
+	}
+}
+
+func NewMessageArgs(msg string) func(...any) string {
+	return func(args ...any) string {
+		return fmt.Sprintf(msg, args...)
 	}
 }
 

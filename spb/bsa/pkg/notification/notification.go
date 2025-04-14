@@ -75,7 +75,7 @@ func SendNotification(
 	case enum.IOS:
 		fmt.Printf("implement me\n")
 	default:
-		err = msg.ErrInvalidRequest
+		err = msg.ErrInvalid("notification.platform")
 	}
 	return
 }

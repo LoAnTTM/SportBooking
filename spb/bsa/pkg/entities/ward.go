@@ -1,6 +1,6 @@
 package entities
 
-var WardTN = "ward"
+const WardTN = "ward"
 
 type Ward struct {
 	Base

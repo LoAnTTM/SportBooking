@@ -26,14 +26,14 @@ func (h *Handler) ResendVerifyRegisterToken(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 
 	if err := fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.ErrResponse(msg.VERIFY_TOKEN_FAILED)
+		logger.Errorf(msg.ErrParseStructFailed("ResendVerifyRegisterTokenRequest", err))
+		return fctx.ErrResponse(msg.REQUEST_BODY_INVALID)
 	}
 
 	if err := h.service.ResendVerifyRegisterToken(reqBody); err != nil {
-		logger.Errorf("error resend verify email otp: %v", err)
-		return fctx.ErrResponse(msg.VERIFY_TOKEN_FAILED)
+		logger.Errorf(msg.ErrResendOTPFailed(err))
+		return fctx.ErrResponse(msg.VERIFY_TOKEN_EXPIRED)
 	}
 
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_VERIFY_TOKEN_SUCCESS)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS)
 }

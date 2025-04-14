@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"fmt"
-
 	"spb/bsa/api/auth/model"
 	"spb/bsa/pkg/aws"
 	"spb/bsa/pkg/aws/ses"
@@ -30,21 +28,21 @@ func (h *Handler) SendVerification(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 
 	if err := fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.Errorf("parse json to struct failed: %v", err)
-		return fctx.ErrResponse(msg.SERVER_ERROR)
+		logger.Errorf(msg.ErrParseStructFailed("SendVerificationRequest", err))
+		return fctx.ErrResponse(msg.REQUEST_BODY_INVALID)
 	}
 
 	awsSession, err := aws.NewAWSSession(global.SPB_CONFIG)
 	if err != nil {
-		panic(fmt.Sprintf("failed to connect aws: %v\n", err))
+		panic(msg.ErrAWSConnectFailed(err))
 	}
 
 	sesService := ses.NewSESService(awsSession)
 	_, err = sesService.SendVerification(reqBody.Email)
 	if err != nil {
-		logger.Errorf("send verification failed: %v", err)
-		return fctx.ErrResponse(msg.SERVER_ERROR)
+		logger.Errorf(msg.ErrSendOTPFailed(err))
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SES_VERIFY_SUCCESS)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS)
 }

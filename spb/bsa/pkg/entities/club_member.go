@@ -1,6 +1,6 @@
 package entities
 
-var ClubMemberTN = "club_member"
+const ClubMemberTN = "club_member"
 
 type ClubMember struct {
 	Base

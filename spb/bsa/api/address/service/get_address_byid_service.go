@@ -1,6 +1,8 @@
 package service
 
-import tb "spb/bsa/pkg/entities"
+import (
+	tb "spb/bsa/pkg/entities"
+)
 
 func (s Service) GetAddressByID(addressID string) (*tb.Address, error) {
 	var err error

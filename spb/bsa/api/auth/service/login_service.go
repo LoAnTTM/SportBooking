@@ -3,7 +3,7 @@ package service
 import (
 	"spb/bsa/api/auth/model"
 	"spb/bsa/api/auth/utility"
-	permissionModule "spb/bsa/api/permission"
+	pModule "spb/bsa/api/permission"
 	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
@@ -31,8 +31,7 @@ func (s *Service) AccountLogin(u *model.LoginRequest) (*tb.User, error) {
 	}
 
 	var permissions []tb.Permission
-
-	permissions, err = permissionModule.PermissionService.GetByRole(user.Role.ID)
+	permissions, err = pModule.PermissionService.GetByRole(user.Role.ID)
 	if err != nil {
 		return nil, err
 	}

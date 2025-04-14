@@ -1,8 +1,16 @@
 package handler
 
-import "spb/bsa/api/order/service"
+import (
+	"spb/bsa/api/order/service"
 
-type IHandler interface{}
+	"github.com/gofiber/fiber/v3"
+)
+
+type IHandler interface {
+	Pay(ctx fiber.Ctx) error
+	ZaloPayCallback(ctx fiber.Ctx) error
+	GetByUserID(ctx fiber.Ctx) error
+}
 
 type Handler struct {
 	service service.IService

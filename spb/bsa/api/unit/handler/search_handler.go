@@ -44,5 +44,5 @@ func (h *Handler) Search(ctx fiber.Ctx) error {
 	}
 
 	response := utility.MapUnitEntitiesToResponse(units, reqBody, total)
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SEARCH_SUCCESS, response)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS, response)
 }

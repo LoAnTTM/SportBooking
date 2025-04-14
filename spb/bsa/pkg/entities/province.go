@@ -1,6 +1,6 @@
 package entities
 
-var ProvinceTN = "province"
+const ProvinceTN = "province"
 
 type Province struct {
 	Base

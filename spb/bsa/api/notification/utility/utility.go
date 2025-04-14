@@ -4,16 +4,24 @@ import (
 	"spb/bsa/api/notification/model"
 	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/entities/enum"
+	"spb/bsa/pkg/utils"
 )
 
 // @author: LoanTT
-// @function: MapNotificationEntityToResponse
+// @function: MapEntityToResponse
 // @description: Mapping notification entity to response
 // @param: notification tb.Notification
 // @return: model.NotificationResponse
-func MapNotificationEntityToResponse(notification *tb.Notification) model.NotificationResponse {
+func MapEntityToResponse(notification *tb.Notification) model.NotificationResponse {
 	return model.NotificationResponse{
-		NotificationID: notification.ID,
+		NotificationID:     notification.ID,
+		Status:             string(enum.Progress(notification.Status)),
+		Platform:           string(enum.Platform(notification.Platform)),
+		Title:              notification.Title,
+		Message:            notification.Message,
+		Sender:             *notification.SenderID,
+		Receiver:           *notification.ReceiverID,
+		NotificationTypeID: notification.NotificationTypeID,
 	}
 }
 
@@ -35,6 +43,21 @@ func MapCreateRequestToEntity(
 		Message:            reqBody.Message,
 		SenderID:           reqBody.SenderID,
 		ReceiverID:         reqBody.ReceiverID,
-		ReadAt:             reqBody.ReadAt,
 	}
+}
+
+func MapEntitiesToResponse(notifications []*tb.Notification, total int64, reqBody *model.GetNotificationsRequest) *model.NotificationsResponse {
+	res := new(model.NotificationsResponse)
+	res.Notifications = make([]model.NotificationResponse, len(notifications))
+
+	for i, notification := range notifications {
+		res.Notifications[i] = MapEntityToResponse(notification)
+	}
+
+	// Set pagination
+	res.Total = uint(len(res.Notifications))
+	res.Pagination = reqBody.Pagination
+	res.Pagination.SetNewPagination(utils.SafeInt64ToInt(total))
+
+	return res
 }

@@ -28,28 +28,28 @@ func (h *Handler) AccountLogin(ctx fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.ErrResponse(msg.LOGIN_FAILURE)
+		logger.Errorf(msg.ErrParseStructFailed("LoginRequest", err))
+		return fctx.ErrResponse(msg.REQUEST_BODY_INVALID)
 	}
 
 	user, err := h.service.AccountLogin(reqBody)
 	if err != nil {
-		logger.Errorf("error login: %v", err)
-		return fctx.ErrResponse(msg.LOGIN_FAILURE)
+		logger.Errorf(msg.ErrLoginFailed(err))
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
 	tokens := GenUserTokenResponse(user)
 	if tokens == nil {
-		logger.Errorf("gen user tokens failed: %v", err)
+		logger.Errorf(msg.ErrGenerateTokenFailed(err))
 		return fctx.ErrResponse(msg.SERVER_ERROR)
 	}
 
 	err = TokenNext(&fctx, ctx, user, tokens)
 	if err != nil {
-		logger.Errorf("set token to cookie failed: %v", err)
+		logger.Errorf(msg.ErrSetTokenToCookie(err))
 		return fctx.ErrResponse(msg.SERVER_ERROR)
 	}
 
 	loginResponse := utility.MappingLoginResponse(user, tokens)
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_LOGIN_SUCCESS, loginResponse)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS, loginResponse)
 }

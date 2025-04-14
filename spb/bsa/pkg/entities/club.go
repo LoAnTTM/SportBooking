@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var ClubTN = "club"
+const ClubTN = "club"
 
 type Club struct {
 	Base
@@ -19,7 +19,7 @@ type Club struct {
 	Owner       *User        `gorm:"foreignKey:OwnerID" json:"owner"`
 	Phone       string       `gorm:"size:20;not null" json:"phone"`
 	AddressID   string       `gorm:"type:uuid;not null" json:"address_id"`
-	Address     *Address     `gorm:"foreignKey:AddressID;constraint:OnDelete:RESTRICT;not null" json:"address"`
+	Address     *Address     `gorm:"foreignKey:AddressID;constraint:OnDelete:RESTRICT" json:"address"`
 	Description string       `gorm:"size:3000" json:"description"`
 	Media       []*Media     `gorm:"polymorphic:Owner;polymorphicValue:club" json:"media"`
 	Units       []*Unit      `gorm:"foreignKey:ClubID;constraint:OnDelete:CASCADE" json:"units"`
@@ -31,7 +31,7 @@ func (Club) TableName() string {
 }
 
 func (c *Club) AfterDelete(tx *gorm.DB) error {
-	// Delete the associated address
+	// Delete associated addresses
 	if err := tx.Delete(&Address{}, "id = ?", c.AddressID).Error; err != nil {
 		return err
 	}

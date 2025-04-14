@@ -35,39 +35,42 @@ notification_type:
 #### Permissions
 
 ```
-user:list
-user:read
-user:create
-user:update
-user:delete
+address:read
 
-unit_service:create
-unit_service:update
-unit_service:delete
+auth:aws
 
+club:read
 club:create
 club:update
 club:delete
+club:member
 
+metadata:read
+metadata:update
+
+notification:read
+
+order:pay
+order:read
+order:create
+order:delete
+
+sport_type:read
+sport_type:create
+sport_type:update
+sport_type:delete
+
+unit:read
 unit:create
 unit:update
 unit:delete
 
-location:create
-location:update
-location:delete
+user:read
+user:update
+user:list
+user:create
 
-metadata:read
-metadata:create
-metadata:update
-
-order:club
-order:club
-order:create
-order:approve_request
-order:approve_payment
-
-sport_type:create
-sport_type:update
-sport_type:delete
+payment_method:read
+payment_method:update
+payment_method:create
 ```

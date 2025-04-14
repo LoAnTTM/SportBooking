@@ -3,6 +3,7 @@ package handler
 import (
 	"spb/bsa/api/auth/model"
 	"spb/bsa/pkg/global"
+	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
@@ -25,12 +26,14 @@ func (h *Handler) VerifyForgotPasswordToken(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 
 	if err := fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		return fctx.ErrResponse(msg.VERIFY_TOKEN_FAILED)
+		logger.Errorf(msg.ErrParseStructFailed("VerifyForgotPasswordTokenRequest", err))
+		return fctx.ErrResponse(msg.REQUEST_BODY_INVALID)
 	}
 
 	if err := h.service.VerifyForgotPasswordToken(reqBody); err != nil {
-		return fctx.ErrResponse(msg.VERIFY_TOKEN_FAILED)
+		logger.Errorf(msg.ErrInvalid("OTP", err))
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_VERIFY_TOKEN_SUCCESS)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS)
 }

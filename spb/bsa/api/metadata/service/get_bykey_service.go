@@ -18,10 +18,12 @@ func (s *Service) GetByKey(key string) (*tb.Metadata, error) {
 	// check if metadata exists
 	if err = s.db.Model(tb.Metadata{}).
 		Where("key = ?", key).
-		Count(&count).Error; err == nil && count == 0 {
-		return nil, msg.ErrMetadataNotFound
-	} else if err != nil {
+		Count(&count).Error; err != nil {
 		return nil, err
+	}
+
+	if count == 0 {
+		return nil, msg.ErrNotFound("metadata")
 	}
 
 	err = s.db.Where("key = ?", key).First(metadata).Error

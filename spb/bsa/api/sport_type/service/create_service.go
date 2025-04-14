@@ -17,7 +17,7 @@ func (s *Service) Create(reqBody *model.CreateSportTypeRequest) (*tb.SportType, 
 
 	err := s.db.Model(&tb.SportType{}).Where("name = ?", reqBody.Name).Count(&count).Error
 	if count > 0 || err != nil {
-		return nil, msg.ErrSportTypeExists
+		return nil, msg.ErrUniqueExists("SportType.name")
 	}
 
 	sportType := utility.MapCreateRequestToEntity(reqBody)

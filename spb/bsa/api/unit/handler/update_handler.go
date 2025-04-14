@@ -30,29 +30,29 @@ func (s *Handler) Update(ctx fiber.Ctx) error {
 	reqBody := new(model.UpdateUnitRequest)
 	fctx := utils.FiberCtx{Fctx: ctx}
 
-	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.ErrResponse(msg.UPDATE_UNIT_FAILED)
+	if unitId, err = fctx.ParseUUID("id"); err != nil {
+		logger.Errorf(msg.ErrParseUUIDFailed("unit", err))
+		return fctx.ErrResponse(msg.PARAM_INVALID)
 	}
 
-	if unitId, err = fctx.ParseUUID("id"); err != nil {
-		logger.Errorf("error parse unit id: %v", err)
-		return fctx.ErrResponse(msg.UPDATE_UNIT_FAILED)
+	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
+		logger.Errorf(msg.ErrParseStructFailed("UpdateUnitRequest", err))
+		return fctx.ErrResponse(msg.REQUEST_BODY_INVALID)
 	}
 
 	// validate unit price time
 	unitPriceJSON := unitPriceUtil.MapUpdateRequestToJSON(reqBody.UnitPrices)
 	if len(reqBody.UnitPrices) > 0 {
 		if err = utility.ValidateUnitPriceTime(unitPriceJSON, reqBody.OpenTime, reqBody.CloseTime); err != nil {
-			logger.Errorf("error validate unit price time: %v", err)
+			logger.Errorf(msg.ErrInvalid("unit price time", err))
 			return fctx.ErrResponse(msg.BAD_REQUEST)
 		}
 	}
 
 	if err = s.service.Update(reqBody, unitId); err != nil {
-		logger.Errorf("error update unit: %v", err)
-		return fctx.ErrResponse(msg.UPDATE_UNIT_FAILED)
+		logger.Errorf(msg.ErrUpdateFailed("unit", err))
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_UPDATE_UNIT_SUCCESS)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS)
 }

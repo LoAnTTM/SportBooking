@@ -22,7 +22,7 @@ func ParseJwt(token string) (*model.UserClaims, error) {
 	tokenPaths := strings.Split(token, config.JWT_PREFIX)
 
 	if len(tokenPaths) != 2 {
-		return nil, msg.ErrInvalidToken
+		return nil, msg.ErrInvalid("token")
 	}
 
 	tokenValue := tokenPaths[1]

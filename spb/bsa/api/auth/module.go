@@ -35,7 +35,7 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	authRoute.Post("/reset-password", AuthHandler.ResetPassword)
 
 	// aws ses verify
-	authRoute.Get(("/ses-verify"), AuthHandler.SendVerification)
+	authRoute.Get(("/ses-verify"), AuthHandler.SendVerification, customMiddleware.CheckAccess("auth:aws"))
 
 	// google oauth callback
 	router.Post(global.SPB_CONFIG.OAuth.Google.Callback, AuthHandler.GoogleCallback)

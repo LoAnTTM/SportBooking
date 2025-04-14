@@ -12,7 +12,7 @@ func (s *Service) CheckManyExist(ids []string) (bool, error) {
 		return false, err
 	}
 	if count != int64(len(ids)) {
-		return false, msg.ErrSportTypeNotFound
+		return false, msg.ErrNotFound("SportType")
 	}
 	return true, nil
 }

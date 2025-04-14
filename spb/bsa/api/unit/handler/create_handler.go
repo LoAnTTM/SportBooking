@@ -28,23 +28,24 @@ func (s *Handler) Create(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 
 	if err := fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.ErrResponse(msg.BAD_REQUEST)
+		logger.Errorf(msg.ErrParseStructFailed("CreateUnitRequest", err))
+		return fctx.ErrResponse(msg.PARAM_INVALID)
 	}
 
 	// validate unit price time
 	unitPriceJSON := unitPriceUtil.MapCreateRequestToJSON(reqBody.UnitPrices)
 	if err := utility.ValidateUnitPriceTime(unitPriceJSON, reqBody.OpenTime, reqBody.CloseTime); err != nil {
-		logger.Errorf("error validate unit price time: %v", err)
-		return fctx.ErrResponse(msg.BAD_REQUEST)
+		logger.Errorf(msg.ErrInvalid("unit price time", err))
+		return fctx.ErrResponse(msg.REQUEST_BODY_INVALID)
 	}
 
 	unitCreated, err := s.service.Create(reqBody)
 	if err != nil {
-		logger.Errorf("error create unit: %v", err)
+		a := msg.ErrCreateFailed("unit", err)
+		logger.Errorf(a)
 		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
 	unitResponse := utility.MapUnitEntityToResponse(unitCreated)
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_CREATE_UNIT_SUCCESS, unitResponse)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS, unitResponse)
 }

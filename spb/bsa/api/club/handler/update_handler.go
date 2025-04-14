@@ -29,19 +29,19 @@ func (s *Handler) Update(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.ErrResponse(msg.UPDATE_UNIT_FAILED)
+		logger.Errorf(msg.ErrParseStructFailed("UpdateClubRequest", err))
+		return fctx.ErrResponse(msg.REQUEST_BODY_INVALID)
 	}
 
 	if clubId, err = fctx.ParseUUID("id"); err != nil {
-		logger.Errorf("error parse club id: %v", err)
-		return fctx.ErrResponse(msg.UPDATE_UNIT_FAILED)
+		logger.Errorf(msg.ErrParseUUIDFailed("club", err))
+		return fctx.ErrResponse(msg.PARAM_INVALID)
 	}
 
 	if err = s.service.Update(reqBody, clubId); err != nil {
-		logger.Errorf("error update club: %v", err)
-		return fctx.ErrResponse(msg.UPDATE_UNIT_FAILED)
+		logger.Errorf(msg.ErrUpdateFailed("club", err))
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_UPDATE_CLUB_SUCCESS)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS)
 }

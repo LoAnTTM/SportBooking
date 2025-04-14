@@ -8,7 +8,7 @@ import (
 	"spb/bsa/pkg/config"
 	"spb/bsa/pkg/entities/enum"
 	"spb/bsa/pkg/global"
-	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 )
 
@@ -22,7 +22,7 @@ func (s *Service) ForgotPassword(email string) error {
 
 	// generate token
 	otpToken := utils.GenerateOTPCode(global.SPB_CONFIG.OTP.OTPLength)
-	cacheToken := utils.ConcatStr(":", config.AUTH_OTP, user.Email, otpToken)
+	cacheToken := utils.Join(":", config.AUTH_OTP, user.Email, otpToken)
 	if err := cache.OTP.SetOTP(cacheToken, global.SPB_CONFIG.OTP.OTPExp); err != nil {
 		tx.Rollback()
 		return err
@@ -48,7 +48,7 @@ func (s *Service) ForgotPassword(email string) error {
 	// Create notification
 	if _, err := notifyServ.NotificationService.Create(notifyRequest, tx); err != nil {
 		tx.Rollback()
-		return logger.RErrorf("Can't create notification: %v", err)
+		return msg.ErrCreateFailed("notification", err)
 	}
 
 	if err := tx.Commit().Error; err != nil {

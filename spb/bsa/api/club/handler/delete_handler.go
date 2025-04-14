@@ -25,14 +25,13 @@ func (s *Handler) Delete(ctx fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if clubId, err = fctx.ParseUUID("id"); err != nil {
-		logger.Errorf("error parse club id: %v", err)
-		return fctx.ErrResponse(msg.DELETE_UNIT_FAILED)
+		logger.Errorf(msg.ErrParseUUIDFailed("club", err))
+		return fctx.ErrResponse(msg.PARAM_INVALID)
 	}
 
-	err = s.service.Delete(clubId)
-	if err != nil {
-		logger.Errorf("error delete club: %v", err)
-		return fctx.ErrResponse(msg.DELETE_UNIT_FAILED)
+	if err = s.service.Delete(clubId); err != nil {
+		logger.Errorf(msg.ErrDeleteFailed("club", err))
+		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_DELETE_CLUB_SUCCESS)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS)
 }
