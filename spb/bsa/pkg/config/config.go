@@ -43,6 +43,7 @@ type Server struct {
 	Host       string `mapstructure:"host"`
 	Port       string `mapstructure:"port"`
 	ClientAddr string `mapstructure:"client_addr"`
+	Debug      bool   `mapstructure:"debug"`
 }
 
 type CORS struct {
@@ -120,6 +121,10 @@ type Payment struct {
 	ZaloPay ZaloPayPayment `mapstructure:"zalopay"`
 }
 
+type Order struct {
+	MultipleTime int `mapstructure:"multiple_time"`
+}
+
 type Config struct {
 	ProjectName  string        `mapstructure:"project_name"`
 	Server       *Server       `mapstructure:"server"`
@@ -133,6 +138,7 @@ type Config struct {
 	OAuth        *OAuth        `mapstructure:"oauth"`
 	Payment      *Payment      `mapstructure:"payment"`
 	OTP          *OTP          `mapstructure:"otp"`
+	Order        *Order        `mapstructure:"order"`
 	Vpr          *viper.Viper
 }
 

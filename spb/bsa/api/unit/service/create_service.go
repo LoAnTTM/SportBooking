@@ -15,15 +15,22 @@ import (
 // @description: Service for unit creation
 // @param: unit model.CreateUnitRequest
 // @return: unit entities.Unit, error
-func (s *Service) Create(reqBody *model.CreateUnitRequest) (*tb.Unit, error) {
-	var count int64
-	if err := s.db.Model(&tb.Unit{}).
-		Where("name = ?", reqBody.Name).
-		Count(&count).Error; err != nil {
+func (s *Service) Create(reqBody *model.CreateUnitRequest, ownerId string) (*tb.Unit, error) {
+	var club tb.Club
+	if err := s.db.Model(&tb.Club{}).
+		Preload("Units").
+		Where("id = ?", reqBody.ClubID).
+		First(&club).Error; err != nil {
 		return nil, err
 	}
-	if count > 0 {
-		return nil, msg.ErrUniqueExists("Unit.name")
+
+	if club.OwnerID != ownerId {
+		return nil, msg.ErrClubWrongOwner
+	}
+	for _, unit := range club.Units {
+		if unit.Name == reqBody.Name {
+			return nil, msg.ErrUnitNameAlreadyExists
+		}
 	}
 
 	tx := s.db.Begin()

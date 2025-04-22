@@ -17,16 +17,16 @@ import (
 // @param: club model.UpdateClubRequest
 // @param: string club id
 // @return: error
-func (s *Service) Update(reqBody *model.UpdateClubRequest, clubId string) error {
+func (s *Service) Update(reqBody *model.UpdateClubRequest, clubId, ownerId string) error {
 	// Check if club exists
-	var count int64
-	if err := s.db.Model(&tb.Club{}).
-		Where("id = ?", clubId).
-		Count(&count).Error; err != nil {
-		return err
+	var clubOb tb.Club
+	err := s.db.Model(&tb.Club{}).Where("id = ?", clubId).First(&clubOb).Error
+	if err != nil {
+		return msg.ErrClubNotFound
 	}
-	if count == 0 {
-		return msg.ErrNotFound("club")
+
+	if clubOb.OwnerID != ownerId {
+		return msg.ErrClubWrongOwner
 	}
 
 	tx := s.db.Begin()
@@ -63,7 +63,6 @@ func (s *Service) Update(reqBody *model.UpdateClubRequest, clubId string) error 
 		tx.Rollback()
 		return err
 	}
-
 	return nil
 }
 

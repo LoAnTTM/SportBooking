@@ -39,6 +39,9 @@ var (
 	ErrPaymentFailed             = NewErrorArgs("payment failed: %+v")
 	ErrMoMoCallbackFailed        = NewErrorArgs("momo callback failed: %+v")
 	ErrZaloPayCallbackInvalidMac = NewErrorArgs("invalid MAC: expected %s, got %s")
+	ErrPaymentAmountInvalid      = NewError("payment amount invalid")
+	ErrInvalidTimeRange          = NewError("[order]: invalid time range")
+	ErrInvalidPrice              = NewError("[order]: invalid price")
 
 	// cache
 	ErrCacheSetFailed     = NewErrorArgs("failed to set [%s] cache: %+v")
@@ -48,6 +51,19 @@ var (
 
 	// notification
 	ErrSendNotificationFailed = NewErrorArgs("failed to send notification: %+v")
+
+	// club
+	ErrClubNotFound          = NewError("club not found")
+	ErrClubWrongOwner        = NewError("club owner is not correct")
+	ErrClubNameAlreadyExists = NewError("club name already exists")
+
+	// unit
+	ErrUnitNotFound          = NewError("unit not found")
+	ErrUnitWrongOwner        = NewError("unit owner is not correct")
+	ErrUnitNameAlreadyExists = NewError("unit name already exists")
+
+	// media
+	ErrMediaCreateFailed = NewError("failed to create media")
 
 	// queue
 	ErrMissingWorker       = NewError("missing worker module")

@@ -13,11 +13,11 @@ type CustomDatetime struct {
 }
 
 // @author: LoanTT
-// @function: ParseInputDatetime
+// @function: StringToTime
 // @description: Parse datetime
 // @param: datetime string
 // @return: time.Time, error
-func ParseInputDatetime(datetime string) (*time.Time, error) {
+func StringToTime(datetime string) (*time.Time, error) {
 	var err error
 	newTime := time.Time{}
 
@@ -44,7 +44,7 @@ func ParseInputDatetime(datetime string) (*time.Time, error) {
 // @return: error
 func (t *CustomDatetime) UnmarshalJSON(input []byte) error {
 	strInput := strings.Trim(string(input), `"`)
-	parsedTime, err := ParseInputDatetime(strInput)
+	parsedTime, err := StringToTime(strInput)
 	if err == nil {
 		t.Time = parsedTime
 	}

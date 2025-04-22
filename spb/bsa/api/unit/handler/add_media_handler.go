@@ -1,6 +1,7 @@
 package handler
 
 import (
+	authModel "spb/bsa/api/auth/model"
 	"spb/bsa/api/media/model"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
@@ -38,9 +39,19 @@ func (h *Handler) AddMedia(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(msg.REQUEST_BODY_INVALID)
 	}
 
-	if err = h.service.AddMedia(unitId, reqBody); err != nil {
+	claims := ctx.Locals("claims").(authModel.UserClaims)
+	userId := claims.UserID
+
+	if err = h.service.AddMedia(reqBody, unitId, userId); err != nil {
 		logger.Errorf(msg.ErrAddPropertyFailed("unit", "media", err))
-		return fctx.ErrResponse(msg.BAD_REQUEST)
+		switch err {
+		case msg.ErrUnitNotFound:
+			return fctx.ErrResponse(msg.UNIT_NOT_FOUND)
+		case msg.ErrUnitWrongOwner:
+			return fctx.ErrResponse(msg.UNIT_WRONG_OWNER)
+		default:
+			return fctx.ErrResponse(msg.BAD_REQUEST)
+		}
 	}
 
 	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS)

@@ -13,3 +13,5 @@ aws.cert
 
 data/
 migrates/
+
+scripts/

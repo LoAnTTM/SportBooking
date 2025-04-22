@@ -10,13 +10,13 @@ import (
 )
 
 type IService interface {
-	Update(reqBody *model.UpdateClubRequest, clubId string) error
+	Update(reqBody *model.UpdateClubRequest, clubId, ownerId string) error
 	GetByID(clubId string) (*tb.Club, error)
 	Delete(clubId string) error
 	Create(reqBody *model.CreateClubRequest) (*tb.Club, error)
 	GetAll(reqBody *model.GetClubsRequest) ([]*tb.Club, int64, error)
-	AddMedia(clubId string, reqBody *mediaModel.CreateMediaRequest) error
-	DeleteMedia(mediaId string) error
+	AddMedia(reqBody *mediaModel.CreateMediaRequest, clubId, ownerId string) error
+	DeleteMedia(mediaId, ownerId string) error
 }
 
 type Service struct {

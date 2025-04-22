@@ -1,6 +1,7 @@
 package handler
 
 import (
+	authModel "spb/bsa/api/auth/model"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
@@ -29,9 +30,19 @@ func (h *Handler) DeleteMedia(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(msg.PARAM_INVALID)
 	}
 
-	if err = h.service.DeleteMedia(mediaId); err != nil {
+	claims := ctx.Locals("claims").(authModel.UserClaims)
+	userId := claims.UserID
+
+	if err = h.service.DeleteMedia(mediaId, userId); err != nil {
 		logger.Errorf(msg.ErrDeleteFailed("media", err))
-		return fctx.ErrResponse(msg.BAD_REQUEST)
+		switch err {
+		case msg.ErrClubNotFound:
+			return fctx.ErrResponse(msg.CLUB_NOT_FOUND)
+		case msg.ErrClubWrongOwner:
+			return fctx.ErrResponse(msg.CLUB_WRONG_OWNER)
+		default:
+			return fctx.ErrResponse(msg.BAD_REQUEST)
+		}
 	}
 
 	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS)

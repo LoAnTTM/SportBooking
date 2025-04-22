@@ -1,6 +1,7 @@
 package handler
 
 import (
+	authModel "spb/bsa/api/auth/model"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
@@ -29,9 +30,17 @@ func (s *Handler) Delete(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(msg.PARAM_INVALID)
 	}
 
-	if err = s.service.Delete(unitId); err != nil {
+	claims := ctx.Locals("claims").(authModel.UserClaims)
+	userId := claims.UserID
+
+	if err = s.service.Delete(unitId, userId); err != nil {
 		logger.Errorf(msg.ErrDeleteFailed("unit", err))
-		return fctx.ErrResponse(msg.BAD_REQUEST)
+		switch err {
+		case msg.ErrUnitWrongOwner:
+			return fctx.ErrResponse(msg.UNIT_WRONG_OWNER)
+		default:
+			return fctx.ErrResponse(msg.BAD_REQUEST)
+		}
 	}
 	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS)
 }

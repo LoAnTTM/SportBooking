@@ -10,13 +10,15 @@ import (
 )
 
 type IService interface {
-	Update(reqBody *model.UpdateUnitRequest, unitId string) error
+	Update(reqBody *model.UpdateUnitRequest, unitId, ownerId string) error
 	GetByID(unitId string) (*tb.Unit, error)
-	Delete(unitId string) error
-	Create(reqBody *model.CreateUnitRequest) (*tb.Unit, error)
+	Delete(unitId, ownerId string) error
+	Create(reqBody *model.CreateUnitRequest, ownerId string) (*tb.Unit, error)
 	Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, error)
-	AddMedia(clubId string, reqBody *mediaModel.CreateMediaRequest) error
-	DeleteMedia(mediaId string) error
+	AddMedia(reqBody *mediaModel.CreateMediaRequest, clubId, ownerId string) error
+	DeleteMedia(mediaId, ownerId string) error
+	BookedTimeOnDay(reqBody *model.BookedTimeRequest, unitId string) ([]model.BookedTime, error)
+	GetPopularity(reqBody *model.PopularityRequest) ([]*tb.Unit, error)
 }
 
 type Service struct {

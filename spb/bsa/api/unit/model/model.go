@@ -11,7 +11,7 @@ import (
 var ORDER_BY = []string{
 	"name",
 	"open_time",
-	"updated_at",
+	"created_at",
 }
 
 type CreateUnitRequest struct {
@@ -44,7 +44,7 @@ type UpdateUnitRequest struct {
 }
 
 type UnitResponse struct {
-	UnitID       string                    `json:"unit_id"`
+	ID           string                    `json:"id"`
 	Name         string                    `json:"name"`
 	OpenTime     string                    `json:"open_time"`
 	CloseTime    string                    `json:"close_time"`
@@ -67,4 +67,30 @@ type UnitsResponse struct {
 
 type SearchUnitRequest struct {
 	Pagination *UnitPagination
+}
+
+type BookedTimeRequest struct {
+	BookedDay string `json:"booked_day" validate:"required,datetime=2006-01-02"`
+}
+
+type BookedTime struct {
+	StartTime string `json:"start_time"`
+	EndTime   string `json:"end_time"`
+}
+
+type BookedTimeResponse struct {
+	BookedTime []BookedTime `json:"booked_times"`
+	Total      int          `json:"total"`
+}
+
+type PopularityRequest struct {
+	Longitude float64 `json:"longitude" validate:"required"`
+	Latitude  float64 `json:"latitude" validate:"required"`
+	Radius    int     `json:"radius" validate:"required"`
+	Limit     int     `json:"limit" validate:"required"`
+	TopN      int     `json:"top_n" validate:"required"`
+}
+
+type UnitIDOnly struct {
+	ID string
 }

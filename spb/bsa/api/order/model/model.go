@@ -3,13 +3,15 @@ package model
 import "time"
 
 type PayRequest struct {
-	Amount    int64  `json:"amount" validate:"required"`
-	OrderInfo string `json:"order_info" validate:"required"`
-	UserID    string `json:"user_id" validate:"required"`
-	StartTime string `json:"start_time" validate:"yy:mm,required"`
-	EndTime   string `json:"end_time" validate:"yy:mm,required"`
-	UnitID    string `json:"unit_id" validate:"required"`
-	UnitName  string `json:"unit_name" validate:"required"`
+	Amount     int64     `json:"amount" validate:"required"`
+	OrderInfo  string    `json:"order_info" validate:"required"`
+	UserID     string    `json:"user_id" validate:"required"`
+	StartTime  string    `json:"start_time" validate:"yy:mm,required"`
+	EndTime    string    `json:"end_time" validate:"yy:mm,required"`
+	BookingDay string    `json:"booking_day" validate:"required,datetime=2006-01-02"`
+	UnitID     string    `json:"unit_id" validate:"required"`
+	UnitName   string    `json:"unit_name" validate:"required"`
+	Timestamp  time.Time `json:"timestamp" validate:"required"`
 }
 
 type CallBackResponse struct {
@@ -27,6 +29,7 @@ type OrderItemResponse struct {
 	Price     int64   `json:"price"`
 	StartTime *string `json:"start_time"`
 	EndTime   *string `json:"end_time"`
+	BookedDay *string `json:"booked_day"`
 	ItemID    string  `json:"item_id"`
 	ItemName  string  `json:"item_name"`
 	Quantity  int     `json:"quantity"`

@@ -115,8 +115,10 @@ func (p *Pagination) PrevPageUrl() {
 func GetPagination(queries map[string]string, orderByOptions []string) Pagination {
 	pagination := getDefaultPagination()
 
-	if queries["p"] != "" && queries["i"] != "" {
+	if queries["p"] != "" {
 		pagination.Page, _ = strconv.Atoi(queries["p"])
+	}
+	if queries["i"] != "" {
 		pagination.PageItems, _ = strconv.Atoi(queries["i"])
 	}
 	if pagination.Page < 1 {
@@ -153,8 +155,11 @@ func Paginate(p *Pagination) func(*gorm.DB) *gorm.DB {
 // @param: string value
 // @return: string query
 func ConcatenateQueries(prevQuery, alias, value string) string {
-	if value != "" {
-		return fmt.Sprintf("%s&%s=%s", prevQuery, alias, value)
+	if value == "" {
+		return prevQuery
 	}
-	return prevQuery
+	if prevQuery == "" {
+		return fmt.Sprintf("%s=%s", alias, value)
+	}
+	return fmt.Sprintf("%s&%s=%s", prevQuery, alias, value)
 }

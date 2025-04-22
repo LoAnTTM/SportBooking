@@ -1,6 +1,7 @@
 package service
 
 import (
+	"spb/bsa/api/order/domain"
 	"spb/bsa/api/order/model"
 	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/global"
@@ -13,11 +14,13 @@ type IService interface {
 	Pay(reqBody *model.PayRequest) (*payment.PaymentResponse, error)
 	ZaloPayCallback(reqBody map[string]interface{}) (*model.CallBackResponse, error)
 	GetByUserID(userID string) ([]*tb.Order, error)
+	ValidateStartTimeEndTime(reqBody *model.PayRequest, booking *domain.Booking) error
 }
 
 type Service struct {
-	db      *gorm.DB
-	gateway payment.PaymentGateway
+	db              *gorm.DB
+	gateway         payment.PaymentGateway
+	priceCalculator *domain.PriceCalculator
 }
 
 // @author: LoanTT
@@ -34,5 +37,10 @@ func NewService() IService {
 		global.SPB_CONFIG.Payment.ZaloPay.CallbackURL,
 		global.SPB_CONFIG.Payment.ZaloPay.RedirectURL,
 	)
-	return &Service{db: global.SPB_DB, gateway: zaloGateway}
+	priceCalculator := domain.NewPriceCalculator()
+	return &Service{
+		db:              global.SPB_DB,
+		gateway:         zaloGateway,
+		priceCalculator: priceCalculator,
+	}
 }

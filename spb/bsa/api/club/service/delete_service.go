@@ -17,7 +17,7 @@ func (s *Service) Delete(clubId string) error {
 		Preload("Units").
 		Preload("SportTypes").
 		First(&club, "id = ?", clubId).Error; err != nil {
-		return msg.ErrNotFound("club")
+		return msg.ErrClubNotFound
 	}
 
 	// Delete club record

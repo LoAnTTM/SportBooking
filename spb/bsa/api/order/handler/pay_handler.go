@@ -35,8 +35,12 @@ func (h *Handler) Pay(ctx fiber.Ctx) error {
 
 	if response, err = h.service.Pay(reqBody); err != nil {
 		logger.Errorf(msg.ErrPaymentFailed(err))
-		return fctx.ErrResponse(msg.BAD_REQUEST)
+		switch err {
+		case msg.ErrPaymentAmountInvalid:
+			return fctx.ErrResponse(msg.PAYMENT_AMOUNT_INVALID)
+		default:
+			return fctx.ErrResponse(msg.BAD_REQUEST)
+		}
 	}
-
 	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS, response)
 }

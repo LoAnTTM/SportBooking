@@ -23,17 +23,17 @@ import (
 // @param: unit model.UpdateUnitRequest
 // @param: string unit id
 // @return: unit entities.Unit, error
-func (s *Service) Update(reqBody *model.UpdateUnitRequest, unitId string) error {
-	var count int64
-
-	// check if unit exists
-	if err := s.db.Model(tb.Unit{}).
-		Where("id = ?", unitId).
-		Count(&count).Error; err != nil {
-		return err
+func (s *Service) Update(reqBody *model.UpdateUnitRequest, unitId, ownerId string) error {
+	// Check if club exists
+	var club tb.Club
+	err := s.db.Model(&tb.Club{}).
+		Joins("JOIN unit ON unit.club_id = club.id").
+		Where("unit.id = ?", unitId).First(&club).Error
+	if err != nil {
+		return msg.ErrUnitNotFound
 	}
-	if count == 0 {
-		return msg.ErrNotFound("Unit")
+	if club.OwnerID != ownerId {
+		return msg.ErrUnitWrongOwner
 	}
 
 	tx := s.db.Begin()
@@ -43,25 +43,29 @@ func (s *Service) Update(reqBody *model.UpdateUnitRequest, unitId string) error 
 		}
 	}()
 
-	// update unit
-	unitUpdate := utility.MapUpdateRequestToEntity(reqBody)
-	if len(unitUpdate) > 0 {
-		if err := s.db.Model(tb.Unit{}).
-			Where("id = ?", unitId).
-			Updates(unitUpdate).Error; err != nil {
-			return err
-		}
-	}
-
-	// Update unit's address
 	unitEntity := new(tb.Unit)
 	if err := tx.Preload("SportTypes").
 		Where("id = ?", unitId).
 		First(unitEntity).Error; err != nil {
 		tx.Rollback()
-		return fmt.Errorf("failed to get unit's address: %w", err)
+		return fmt.Errorf("failed to get unit: %w", err)
 	}
+	unitUpdate := utility.MapUpdateRequestToEntity(reqBody)
+	// Make new keywords
+	unitName := unitEntity.Name
+	if val, ok := unitUpdate["name"]; !ok {
+		unitName = val.(string)
+	}
+	unitDescription := unitEntity.Description
+	if val, ok := unitUpdate["description"]; !ok {
+		unitDescription = val.(string)
+	}
+	keywords := utility.MakeKeyword(unitName, unitDescription)
+	unitUpdate["keywords"] = keywords
+
+	// Update unit's address
 	if reqBody.Address != nil {
+		// Update address
 		if err := UpdateUnitAddress(tx, unitEntity.AddressID, reqBody.Address); err != nil {
 			return err
 		}
@@ -84,6 +88,15 @@ func (s *Service) Update(reqBody *model.UpdateUnitRequest, unitId string) error 
 	// Update unit's services
 	if reqBody.UnitServices != nil {
 		if err := UpdateUnitServices(tx, unitId, reqBody.UnitServices); err != nil {
+			return err
+		}
+	}
+
+	// update unit
+	if len(unitUpdate) > 0 {
+		if err := s.db.Model(tb.Unit{}).
+			Where("id = ?", unitId).
+			Updates(unitUpdate).Error; err != nil {
 			return err
 		}
 	}

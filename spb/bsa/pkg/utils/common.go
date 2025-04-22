@@ -224,11 +224,20 @@ func GenerateOTPCode(length int) string {
 
 func Join(joinCharacter string, values ...string) string {
 	var builder strings.Builder
-	for index := range len(values) - 1 {
-		builder.WriteString(values[index])
+
+	if len(values) == 0 {
+		return ""
 	}
 
-	builder.WriteString(values[len(values)-1])
+	// Add the first element without a preceding joinCharacter
+	builder.WriteString(values[0])
+
+	// Add remaining elements with the joinCharacter
+	for i := 1; i < len(values); i++ {
+		builder.WriteString(joinCharacter)
+		builder.WriteString(values[i])
+	}
+
 	return builder.String()
 }
 

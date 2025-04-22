@@ -1,6 +1,7 @@
 package handler
 
 import (
+	authModel "spb/bsa/api/auth/model"
 	"spb/bsa/api/unit/model"
 	"spb/bsa/api/unit/utility"
 	unitPriceUtil "spb/bsa/api/unit_price/utility"
@@ -39,11 +40,20 @@ func (s *Handler) Create(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(msg.REQUEST_BODY_INVALID)
 	}
 
-	unitCreated, err := s.service.Create(reqBody)
+	claims := ctx.Locals("claims").(authModel.UserClaims)
+	userId := claims.UserID
+
+	unitCreated, err := s.service.Create(reqBody, userId)
 	if err != nil {
-		a := msg.ErrCreateFailed("unit", err)
-		logger.Errorf(a)
-		return fctx.ErrResponse(msg.BAD_REQUEST)
+		logger.Errorf(msg.ErrCreateFailed("unit", err))
+		switch err {
+		case msg.ErrClubWrongOwner:
+			return fctx.ErrResponse(msg.CLUB_WRONG_OWNER)
+		case msg.ErrUnitNameAlreadyExists:
+			return fctx.ErrResponse(msg.UNIT_NAME_ALREADY_EXISTS)
+		default:
+			return fctx.ErrResponse(msg.BAD_REQUEST)
+		}
 	}
 
 	unitResponse := utility.MapUnitEntityToResponse(unitCreated)

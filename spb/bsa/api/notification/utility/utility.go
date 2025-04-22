@@ -14,13 +14,13 @@ import (
 // @return: model.NotificationResponse
 func MapEntityToResponse(notification *tb.Notification) model.NotificationResponse {
 	return model.NotificationResponse{
-		NotificationID:     notification.ID,
+		ID:                 notification.ID,
 		Status:             string(enum.Progress(notification.Status)),
 		Platform:           string(enum.Platform(notification.Platform)),
 		Title:              notification.Title,
 		Message:            notification.Message,
-		Sender:             *notification.SenderID,
-		Receiver:           *notification.ReceiverID,
+		Sender:             notification.SenderID,
+		Receiver:           notification.ReceiverID,
 		NotificationTypeID: notification.NotificationTypeID,
 	}
 }

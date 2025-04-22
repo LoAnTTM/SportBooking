@@ -17,14 +17,16 @@ func (s *Service) GetBySender(reqBody *model.GetNotificationsRequest) ([]*tb.Not
 
 	if err := s.db.
 		Scopes(utils.Paginate(&reqBody.Pagination)).
-		Where("sender_id = ?", reqBody.UserID).
+		Joins("JOIN notification_type nt ON notification.notification_type_id = nt.id").
+		Where("sender_id = ? AND nt.type = ?", reqBody.UserID, "A:VE:").
 		Find(&notifications).Error; err != nil {
 		return nil, 0, err
 	}
 
 	// Get total count of notifications
 	if err := s.db.Model(&tb.Notification{}).
-		Where("sender_id = ?", reqBody.UserID).
+		Joins("JOIN notification_type nt ON notification.notification_type_id = nt.id").
+		Where("sender_id = ? AND nt.type = ?", reqBody.UserID, "A:VE:").
 		Count(&count).Error; err != nil {
 		return nil, 0, err
 	}

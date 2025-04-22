@@ -5,6 +5,7 @@ server:
     host: "127.0.0.1"
     port: 3000
     client_addr: "http://127.0.0.1"
+    debug: true
 
 cors:
     allow_origin:
@@ -22,7 +23,7 @@ cors:
 
 jwt:
     secret: "1234balhblahblah"
-    access_token_exp: 10 # minutes
+    access_token_exp: 1 # minutes
     refresh_token_exp: 43200 # minutes
     expire_cache: 43200 # minutes
 
@@ -84,8 +85,11 @@ payment:
         key1: "sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn"
         key2: "trMrHtvjo6myautxDUiAcYsVtaeQ8nhf"
         endpoint: "https://sb-openapi.zalopay.vn"
-        callback_url: "https://products-controlling-civilian-garbage.trycloudflare.com/api/v1/orders/zalopay/callback"
+        callback_url: "https://duties-rug-detected-merchant.trycloudflare.com/api/v1/orders/zalopay/callback"
         redirect_url: ""
+
+order:
+    multiple_time: 30 # minutes
 
 otp:
     length: 4

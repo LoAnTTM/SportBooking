@@ -24,7 +24,7 @@ func (s *Service) VerifyEmailNotification(otpToken string, user *tb.User, tx *go
 
 	// Save notification with status inprogress
 	notifyRequest := &notifyModel.CreateNotificationRequest{
-		SenderID:         &user.ID,
+		ReceiverID:       &user.ID,
 		Status:           enum.Progress(enum.INPROGRESS),
 		Platform:         enum.Platform(enum.EMAIL),
 		Title:            notify.Title,

@@ -14,6 +14,8 @@ type IHandler interface {
 	Search(ctx fiber.Ctx) error
 	AddMedia(ctx fiber.Ctx) error
 	DeleteMedia(ctx fiber.Ctx) error
+	BookedTimeOnDay(ctx fiber.Ctx) error
+	GetPopularity(ctx fiber.Ctx) error
 }
 
 type Handler struct {

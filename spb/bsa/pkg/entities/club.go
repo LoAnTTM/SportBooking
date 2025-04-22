@@ -13,8 +13,6 @@ type Club struct {
 	Name        string       `gorm:"size:255;not null;uniqueIndex" json:"name"`
 	NameEn      string       `gorm:"size:255;not null" json:"name_en"`
 	Slug        string       `gorm:"size:255;not null" json:"slug"`
-	OpenTime    string       `gorm:"size:5;not null" json:"open_time"`
-	CloseTime   string       `gorm:"size:5;not null" json:"close_time"`
 	OwnerID     string       `gorm:"type:uuid;not null" json:"owner_id"`
 	Owner       *User        `gorm:"foreignKey:OwnerID" json:"owner"`
 	Phone       string       `gorm:"size:20;not null" json:"phone"`

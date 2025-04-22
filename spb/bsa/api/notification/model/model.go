@@ -17,14 +17,14 @@ type GetNotificationsRequest struct {
 }
 
 type NotificationResponse struct {
-	NotificationID     string `json:"notification_id"`
-	Status             string `json:"status"`
-	Platform           string `json:"platform"`
-	Title              string `json:"title"`
-	Message            string `json:"message"`
-	NotificationTypeID string `json:"notification_type_id"`
-	Sender             string `json:"sender"`
-	Receiver           string `json:"receiver"`
+	ID                 string  `json:"id"`
+	Status             string  `json:"status"`
+	Platform           string  `json:"platform"`
+	Title              string  `json:"title"`
+	Message            string  `json:"message"`
+	NotificationTypeID string  `json:"notification_type_id"`
+	Sender             *string `json:"sender"`
+	Receiver           *string `json:"receiver"`
 }
 
 type NotificationsResponse struct {

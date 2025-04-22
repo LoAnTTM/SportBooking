@@ -1,6 +1,7 @@
 package handler
 
 import (
+	authModel "spb/bsa/api/auth/model"
 	"spb/bsa/api/unit/model"
 	"spb/bsa/api/unit/utility"
 	unitPriceUtil "spb/bsa/api/unit_price/utility"
@@ -49,9 +50,19 @@ func (s *Handler) Update(ctx fiber.Ctx) error {
 		}
 	}
 
-	if err = s.service.Update(reqBody, unitId); err != nil {
+	claims := ctx.Locals("claims").(authModel.UserClaims)
+	userId := claims.UserID
+
+	if err = s.service.Update(reqBody, unitId, userId); err != nil {
 		logger.Errorf(msg.ErrUpdateFailed("unit", err))
-		return fctx.ErrResponse(msg.BAD_REQUEST)
+		switch err {
+		case msg.ErrUnitNotFound:
+			return fctx.ErrResponse(msg.UNIT_NOT_FOUND)
+		case msg.ErrUnitWrongOwner:
+			return fctx.ErrResponse(msg.UNIT_WRONG_OWNER)
+		default:
+			return fctx.ErrResponse(msg.BAD_REQUEST)
+		}
 	}
 
 	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS)

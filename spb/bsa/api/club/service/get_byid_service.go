@@ -20,7 +20,7 @@ func (s *Service) GetByID(clubId string) (*tb.Club, error) {
 		Preload("SportTypes").
 		Where("club.id = ?", clubId).First(club).Error
 	if err != nil {
-		return nil, msg.ErrNotFound("club")
+		return nil, msg.ErrClubNotFound
 	}
 
 	club.Address, err = address.AddressService.GetAddressByID(club.AddressID)

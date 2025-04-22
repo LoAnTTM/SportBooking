@@ -15,8 +15,6 @@ var ORDER_BY = []string{
 
 type CreateClubRequest struct {
 	Name        string                             `json:"name" validate:"required"`
-	OpenTime    string                             `json:"open_time" validate:"yy:mm,required"`
-	CloseTime   string                             `json:"close_time" validate:"yy:mm,required"`
 	Phone       string                             `json:"phone" validate:"required,e164"`
 	OwnerID     string                             `json:"owner_id" validate:"required"`
 	Address     *addressModel.CreateAddressRequest `json:"address" validate:"required"`
@@ -27,8 +25,6 @@ type CreateClubRequest struct {
 
 type UpdateClubRequest struct {
 	Name        string                             `json:"name"`
-	OpenTime    string                             `json:"open_time"`
-	CloseTime   string                             `json:"close_time"`
 	Phone       string                             `json:"phone"`
 	Address     *addressModel.UpdateAddressRequest `json:"address"`
 	Description string                             `json:"description"`
@@ -50,8 +46,6 @@ type GetClubRequest struct {
 type ClubResponse struct {
 	ClubID      string                         `json:"id"`
 	Name        string                         `json:"name"`
-	OpenTime    string                         `json:"open_time"`
-	CloseTime   string                         `json:"close_time"`
 	Phone       string                         `json:"phone"`
 	OwnerID     string                         `json:"owner_id"`
 	Address     *addressModel.AddressResponse  `json:"address"`

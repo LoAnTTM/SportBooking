@@ -16,6 +16,7 @@ type Unit struct {
 	CloseTime   string         `gorm:"size:5;not null" json:"close_time"`
 	Phone       string         `gorm:"size:25;not null" json:"phone"`
 	Description string         `gorm:"type:text" json:"description"`
+	Keywords    string         `gorm:"type:text" json:"keywords"`
 	Status      int8           `gorm:"not null" json:"status"`
 	ClubID      string         `gorm:"type:uuid;not null" json:"club_id"`
 	AddressID   string         `gorm:"type:uuid;not null" json:"address_id"`

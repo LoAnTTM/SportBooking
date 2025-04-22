@@ -18,8 +18,6 @@ func MapEntityToResponse(club *tb.Club) *model.ClubResponse {
 	return &model.ClubResponse{
 		ClubID:      club.ID,
 		Name:        club.Name,
-		OpenTime:    club.OpenTime,
-		CloseTime:   club.CloseTime,
 		Address:     addr.MapAddressEntityToResponse(club.Address),
 		Phone:       club.Phone,
 		OwnerID:     club.OwnerID,
@@ -34,8 +32,6 @@ func MapCreateRequestToEntity(reqBody *model.CreateClubRequest) *tb.Club {
 		Name:        reqBody.Name,
 		NameEn:      utils.VietNameseCharacterToASCII(reqBody.Name),
 		Slug:        utils.CreateSlug(reqBody.Name),
-		OpenTime:    reqBody.OpenTime,
-		CloseTime:   reqBody.CloseTime,
 		Phone:       reqBody.Phone,
 		OwnerID:     reqBody.OwnerID,
 		Description: reqBody.Description,
@@ -51,12 +47,6 @@ func MapUpdateRequestToEntity(reqBody *model.UpdateClubRequest) map[string]inter
 		clubUpdate["name"] = reqBody.Name
 		clubUpdate["name_en"] = utils.VietNameseCharacterToASCII(reqBody.Name)
 		clubUpdate["slug"] = utils.CreateSlug(reqBody.Name)
-	}
-	if reqBody.OpenTime != "" {
-		clubUpdate["open_time"] = reqBody.OpenTime
-	}
-	if reqBody.CloseTime != "" {
-		clubUpdate["close_time"] = reqBody.CloseTime
 	}
 	if reqBody.Phone != "" {
 		clubUpdate["phone"] = reqBody.Phone

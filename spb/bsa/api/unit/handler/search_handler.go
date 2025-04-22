@@ -3,6 +3,7 @@ package handler
 import (
 	"spb/bsa/api/unit/model"
 	"spb/bsa/api/unit/utility"
+	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
@@ -40,6 +41,7 @@ func (h *Handler) Search(ctx fiber.Ctx) error {
 
 	units, total, err := h.service.Search(reqBody)
 	if err != nil {
+		logger.Errorf(msg.ErrGetFailed("search.unit", err))
 		return fctx.ErrResponse(msg.NOT_FOUND)
 	}
 
