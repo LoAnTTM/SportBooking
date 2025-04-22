@@ -3,21 +3,21 @@ import { PermissionsAndroid, Platform } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 
 import { DEFAULT_REVERSE_GEOCODE } from '@/constants';
-import { logDebug } from '@/helpers/logger';
+import { logError } from '@/helpers/logger';
 import { useLocationStore } from '@/zustand';
 import { OPENCAGE_API_KEY } from '@env';
 
 export const useLocationTracking = () => {
-  const setLocation = useLocationStore.use.setLocation();
-  const setAddress = useLocationStore.use.setAddress();
+  const setLocation = useLocationStore((state) => state.setLocation);
+  const setAddress = useLocationStore((state) => state.setAddress);
   const latestCoords = useRef<{ latitude: number; longitude: number } | null>(
     null
   );
 
   useEffect(() => {
     let watchId: number | null = null;
+    let hasInitialLocation = false;
     let intervalId: ReturnType<typeof setInterval> | null;
-    logDebug(OPENCAGE_API_KEY);
 
     const reverseGeocode = async (lat: number, lon: number) => {
       try {
@@ -30,7 +30,9 @@ export const useLocationTracking = () => {
 
         setAddress(address, city);
       } catch (err) {
-        console.error('Reverse geocoding error:', err);
+        if (err instanceof Error) {
+          logError(err, 'Reverse geocoding error');
+        }
       }
     };
 
@@ -44,9 +46,16 @@ export const useLocationTracking = () => {
           const { latitude, longitude } = position.coords;
           latestCoords.current = { latitude, longitude };
           setLocation(latitude, longitude);
+
+          if (!hasInitialLocation) {
+            hasInitialLocation = true;
+            reverseGeocode(latitude, longitude);
+          }
         },
         (error) => {
-          console.error('Error watching position:', error);
+          if (error instanceof Error) {
+            logError(error, 'Error watching position');
+          }
         },
         {
           enableHighAccuracy: true,
@@ -65,16 +74,6 @@ export const useLocationTracking = () => {
           );
         }
       }, DEFAULT_REVERSE_GEOCODE); // 15 minutes
-
-      // Call once immediately
-      setTimeout(() => {
-        if (latestCoords.current) {
-          reverseGeocode(
-            latestCoords.current.latitude,
-            latestCoords.current.longitude
-          );
-        }
-      }, 2000);
     };
 
     start();

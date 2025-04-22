@@ -6,13 +6,13 @@ import VerifyRegisterForm from '@/components/auth/VerifyRegisterForm';
 import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp } from '@/helpers/dimensions';
-import { ParamList } from '@/screens';
+import { AuthStackParamList } from '@/screens/auth';
 import BackButton from '@/ui/button/Back';
 import LeftIcon from '@/ui/icon/Left';
 import { RouteProp } from '@react-navigation/native';
 
 type Props = {
-  route?: RouteProp<ParamList, 'VerifyRegister'>;
+  route?: RouteProp<AuthStackParamList, 'VerifyRegister'>;
 };
 
 const VerifyRegister: React.FC<Props> = ({ route }) => {

@@ -1,10 +1,5 @@
 import React, { FC, PropsWithChildren, useContext, useEffect } from 'react';
-import {
-  Modal,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import { Modal, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 
 import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';

@@ -6,17 +6,17 @@ import ConfirmResetPasswordForm from '@/components/auth/ConfirmResetPasswordForm
 import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
-import { ParamList } from '@/screens';
+import { AuthStackParamList } from '@/screens/auth';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const ConfirmResetPassword: FC = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<ParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 
   const handleSubmit = () => {
-    navigation.navigate('Auth');
+    navigation.navigate('Login');
   };
 
   return (

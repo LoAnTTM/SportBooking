@@ -9,7 +9,7 @@ import i18next from '@/helpers/i18n';
 import { logError } from '@/helpers/logger';
 import { toastError, toastSuccess } from '@/helpers/toast';
 import { useGoogleSignIn } from '@/hooks/useGoogleSignIn';
-import { ParamList } from '@/screens';
+import { RootParamList } from '@/screens';
 import { useAuthStore } from '@/zustand';
 import { WEB_CLIENT_ID } from '@env';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
@@ -22,9 +22,9 @@ export interface ILoginFormValues {
 }
 
 const Login: React.FC = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<ParamList>>();
-  const googleCallback = useAuthStore.use.googleCallback();
-  const login = useAuthStore.use.login();
+  const navigation = useNavigation<NativeStackNavigationProp<RootParamList>>();
+  const googleCallback = useAuthStore((state) => state.googleCallback);
+  const login = useAuthStore((state) => state.login);
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 
@@ -33,12 +33,12 @@ const Login: React.FC = () => {
       webClientId: WEB_CLIENT_ID,
       scopes: ['email', 'profile'],
     });
-  }, [navigation]);
+  }, []);
 
   const handleLogin = async (data: { email: string; password: string }) => {
     try {
       await login(data);
-      navigation.navigate('Tabs');
+      navigation.navigate('Main');
       toastSuccess(i18next.t('notification.login_success'));
     } catch (error) {
       logError(error as Error);
@@ -47,7 +47,7 @@ const Login: React.FC = () => {
   };
 
   const { handleGoogleSignIn } = useGoogleSignIn(googleCallback, () =>
-    navigation.navigate('Tabs')
+    navigation.navigate('Main')
   );
 
   return (

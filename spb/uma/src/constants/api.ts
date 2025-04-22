@@ -22,6 +22,27 @@ export const VERIFY_FORGOT_PASSWORD_TOKEN_PATH = `${V1_PREFIX}/auth/verify-forgo
 export const RESET_PASSWORD_PATH = `${V1_PREFIX}/auth/reset-password`;
 
 // Unit API paths
-export const POPULAR_UNITS_PATH = `${V1_PREFIX}/units/popular`;
+export const POPULAR_UNITS_PATH = `${V1_PREFIX}/units/popularity`;
 
 export const SEARCH_UNITS_PATH = `${V1_PREFIX}/units`;
+
+export const GET_UNIT_PATH = `${V1_PREFIX}/units/:id`;
+
+export const GET_BOOKED_TIME_PATH = `${V1_PREFIX}/units/:id/booked-time`;
+
+// Order API paths
+export const GET_ORDERS_BY_USER_ID_PATH = `${V1_PREFIX}/orders/:userId`;
+
+export const PROCESS_PAYMENT_PATH = `${V1_PREFIX}/orders/pay`;
+
+// Notification API paths
+export const RECEIVER_NOTIFICATIONS_PATH = `${V1_PREFIX}/notifications/receiver/:id`;
+
+export const SENDER_NOTIFICATIONS_PATH = `${V1_PREFIX}/notifications/sender/:id`;
+
+// Location API paths
+export const PROVINCE_PATH = `${V1_PREFIX}/addresses/provinces`;
+
+export const DISTRICT_PATH = `${V1_PREFIX}/addresses/provinces/:id/districts`;
+
+export const WARD_PATH = `${V1_PREFIX}/addresses/districts/:id/wards`;

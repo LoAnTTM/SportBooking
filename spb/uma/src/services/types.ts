@@ -1,4 +1,6 @@
-import { UnitModel, UnitPagination } from '@/types/model';
+import {
+  GeographyModel, NotificationModel, OrderModel, SportTypeModel, UnitModel, UnitPagination
+} from '@/types/model';
 
 export type LoginRequest = {
   email: string;
@@ -6,11 +8,11 @@ export type LoginRequest = {
 };
 
 export type LoginResponse = {
-  access_token: string;
+  accessToken: string;
   user: {
-    user_id: string;
+    userId: string;
     email: string;
-    full_name: string;
+    fullName: string;
   };
 };
 
@@ -20,7 +22,7 @@ export type RegisterRequest = {
 };
 
 export type RefreshTokenResponse = {
-  access_token: string;
+  accessToken: string;
 };
 
 export type GoogleCallbackRequest = {
@@ -45,10 +47,93 @@ export type SearchUnitQuery = PaginationQuery & {
   radius: number | null;
 };
 
+export type PopularUnitRequest = {
+  longitude: number;
+  latitude: number;
+  radius: number;
+  topN: number;
+  limit: number;
+};
+
 export type GetUnitResponse = UnitModel;
 
 export type GetUnitsResponse = {
   units: UnitModel[];
   total: number;
-  pagination: UnitPagination;
+  pagination: UnitPagination | null;
 };
+
+export type PaymentRequest = {
+  orderId: string;
+  amount: number;
+  paymentMethod: string;
+};
+
+export type PaymentResponse = {
+  payUrl: string;
+  appTranId: string;
+};
+
+export type ListOrderResponse = {
+  orders: OrderModel[];
+  total: number;
+};
+
+export type GetSportTypesResponse = {
+  sportTypes: SportTypeModel[];
+  total: number;
+};
+
+export type GetNotificationResponse = {
+  notifications: NotificationModel[];
+  total: number;
+};
+
+export type UnitPrice = {
+  price: number;
+  startTime: string;
+  endTime: string;
+  currency: string;
+};
+
+export type UnitCard = {
+  id: string;
+  title: string;
+  address: string;
+  price: UnitPrice[];
+  image: string[];
+  distance: string;
+  coords: GeographyModel;
+};
+
+export type Location = {
+  id: string;
+  name: string;
+  nameEn: string;
+  code: string;
+};
+
+export type Province = Location;
+
+export type District = Location & {
+  provinceId: string;
+};
+
+export type Ward = Location & {
+  districtId: string;
+};
+
+export interface LocationFilter {
+  province: string;
+  district: string;
+  ward: string;
+}
+
+export interface FilterOptions {
+  location: LocationFilter;
+  sportType: string;
+  isNearby: boolean;
+  orderBy: string;
+  orderType: string;
+  query?: string;
+}

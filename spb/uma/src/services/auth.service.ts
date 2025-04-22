@@ -1,13 +1,14 @@
 import {
-    FORGOT_PASSWORD_PATH, GOOGLE_SIGNIN_CALLBACK_PATH, LOGIN_PATH, LOGOUT_PATH, REFRESH_TOKEN_PATH,
-    REGISTER_PATH, RESEND_VERIFY_REGISTER_TOKEN_PATH, RESET_PASSWORD_PATH,
-    VERIFY_FORGOT_PASSWORD_TOKEN_PATH, VERIFY_REGISTER_TOKEN_PATH
+  FORGOT_PASSWORD_PATH, GOOGLE_SIGNIN_CALLBACK_PATH, LOGIN_PATH, LOGOUT_PATH, REFRESH_TOKEN_PATH,
+  REGISTER_PATH, RESEND_VERIFY_REGISTER_TOKEN_PATH, RESET_PASSWORD_PATH,
+  VERIFY_FORGOT_PASSWORD_TOKEN_PATH, VERIFY_REGISTER_TOKEN_PATH
 } from '@/constants';
 import { ResponseError } from '@/helpers/error';
+import { logError } from '@/helpers/logger';
 import { removeData, storeData } from '@/helpers/storage';
 import { apiFactory, ApiResponse } from '@/services/http';
 import {
-    GoogleCallbackRequest, LoginRequest, LoginResponse, RefreshTokenResponse, RegisterRequest
+  GoogleCallbackRequest, LoginRequest, LoginResponse, RefreshTokenResponse, RegisterRequest
 } from '@/services/types';
 
 export interface IAuthService {
@@ -38,13 +39,19 @@ class AuthService {
     );
 
     if ('data' in response) {
-      await storeData('accessToken', response.data.access_token);
+      await storeData('accessToken', response.data.accessToken);
     }
     return response;
   }
 
   public async logout(): Promise<void> {
-    await apiFactory(LOGOUT_PATH, false).post();
+    try {
+      await apiFactory(LOGOUT_PATH, false).post();
+    } catch (error) {
+      if (error instanceof Error) {
+        logError(error, 'Logout error');
+      }
+    }
     removeData('accessToken');
   }
 
@@ -60,8 +67,12 @@ class AuthService {
     const response =
       await apiFactory(REFRESH_TOKEN_PATH).post<RefreshTokenResponse>();
 
+    if (response instanceof ResponseError) {
+      return response;
+    }
+
     if ('data' in response) {
-      await storeData('accessToken', response.data.access_token);
+      await storeData('accessToken', response.data.accessToken);
     }
     return response;
   }
@@ -75,7 +86,7 @@ class AuthService {
     ).post<LoginResponse>(data);
 
     if ('data' in response) {
-      await storeData('accessToken', response.data.access_token);
+      await storeData('accessToken', response.data.accessToken);
     }
     return response;
   }

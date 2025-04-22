@@ -4,13 +4,13 @@ import { StyleSheet, Text, View } from 'react-native';
 import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 
-const ExploreScreen: React.FC = () => {
+const Booking: React.FC = () => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 
   return (
     <View style={styles.container}>
-      <Text>explore</Text>
+      <Text>booking</Text>
     </View>
   );
 };
@@ -19,9 +19,9 @@ const createStyles = (theme: IColorScheme) => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: theme.backgroundDark,
+      backgroundColor: theme.backgroundLight,
     },
   });
 };
 
-export default ExploreScreen;
+export default Booking;

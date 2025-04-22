@@ -6,13 +6,13 @@ import { Color, fontFamily, fontSize, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import i18next from '@/helpers/i18n';
-import { ParamList } from '@/screens';
+import { RootParamList } from '@/screens';
 import Button from '@/ui/button/BaseButton';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const OnBoarding: React.FC = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<ParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootParamList>>();
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 

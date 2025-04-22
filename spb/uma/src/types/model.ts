@@ -4,9 +4,9 @@ export type GeographyModel = {
 };
 
 export type AddressModel = {
-  addressId: string;
+  id: string;
   address: string;
-  geography: GeographyModel;
+  locationGeography: GeographyModel;
   ward: string;
   wardCode: string;
   district: string;
@@ -16,7 +16,7 @@ export type AddressModel = {
 };
 
 export type UnitPriceModel = {
-  unitPriceId: string;
+  id: string;
   price: number;
   currency: string;
   startTime: string;
@@ -24,7 +24,7 @@ export type UnitPriceModel = {
 };
 
 export type UnitServiceModel = {
-  unitServiceId: string;
+  id: string;
   name: string;
   icon: string;
   price: number;
@@ -34,29 +34,29 @@ export type UnitServiceModel = {
 };
 
 export type MediaModel = {
-  mediaId: string;
+  id: string;
   filePath: string;
   fileType: string;
   hash: string;
 };
 
 export type SportTypeModel = {
-  sportTypeId: string;
+  id: string;
   name: string;
 };
 
 export type UnitModel = {
-  unitId: string;
+  id: string;
   name: string;
   openTime: string;
   closeTime: string;
   phone: string;
   description: string;
   address: AddressModel;
-  unitPrices: UnitPriceModel[];
-  unitServices: UnitServiceModel[];
-  media: MediaModel[];
-  sportTypes: SportTypeModel[];
+  unitPrices: UnitPriceModel[] | null;
+  unitServices: UnitServiceModel[] | null;
+  media: MediaModel[] | null;
+  sportTypes: SportTypeModel[] | null;
 };
 
 export type Pagination = {
@@ -79,4 +79,35 @@ export type UnitPagination = Pagination & {
   longitude: number;
   latitude: number;
   radius: number;
+};
+
+export type OrderItemModel = {
+  id: string;
+  price: number;
+  startTime: string;
+  endTime: string;
+  itemId: string;
+  itemName: string;
+  quantity: number;
+  itemType: string;
+};
+
+export type OrderModel = {
+  id: string;
+  totalAmount: number;
+  currency: string;
+  status: string;
+  orderItems: OrderItemModel[];
+  createdAt: string;
+};
+
+export type NotificationModel = {
+  id: string;
+  status: string;
+  platform: string;
+  title: string;
+  message: string;
+  notificationTypeId: string;
+  sender: string | null;
+  receiver: string | null;
 };

@@ -64,7 +64,26 @@
         "placeholder": "Search here",
         "placeholder_description": "Choose the best Football Field"
     },
+    "home": {
+        "popularity": "Popular Units",
+        "nearby": "Nearby Units",
+        "see_all": "See All"
+    },
+    "filter": {
+        "title": "Filter",
+        "reset": "Reset",
+        "apply": "Apply",
+        "dropdown": {
+            "province": "Select Province",
+            "district": "Select District",
+            "ward": "Select Ward",
+            "sport_type": "Select Sport",
+            "order_by": "Order By",
+            "order_type": "Order Type"
+        }
+    },
     "error": {
+        "ERS000": "Network error, please try again later.",
         "ERS001": "ERS001",
         "ERS002": "ERS002",
         "ERA001": "ERA001",

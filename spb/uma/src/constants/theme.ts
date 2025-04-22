@@ -9,12 +9,15 @@ export interface IColorScheme {
   icon: string;
   textLight: string;
   textDark: string;
-  white: string;
   success: string;
   error: string;
   warning: string;
   borderLight: string;
   borderDark: string;
+  white: string;
+  blue: string;
+  red: string;
+  overlay: string;
 }
 export interface IColor {
   light: IColorScheme;
@@ -28,17 +31,20 @@ export const Color: IColor = {
     backgroundContent: '#F7F7F9',
     primary: '#E86F00',
     secondary: '#F7F7F9',
-    disable: '#f1a866',
+    disable: '#DDDDDD',
     shadow: '#6A6A6A',
     icon: '#6A6A6A',
     textLight: '#707B81',
     textDark: '#000000',
-    white: '#FFFFFF',
     success: '#4CAF50',
     error: '#F44336',
     warning: '#FFFF00',
     borderLight: '#DDDDDD',
     borderDark: '#6A6A6A',
+    white: '#FFFFFF',
+	blue: '#007AFF',
+	red: '#F44336',
+	overlay: 'rgba(0, 0, 0, 0.5)',
   },
   dark: {
     backgroundLight: '#FFFFFF',
@@ -51,12 +57,15 @@ export const Color: IColor = {
     icon: '#6A6A6A',
     textLight: '#707B81',
     textDark: '#000000',
-    white: '#FFFFFF',
     success: '#008000',
     error: '#FF0000',
     warning: '#FFFF00',
     borderLight: '#E0E0E0',
     borderDark: '#DDDDDD',
+    white: '#FFFFFF',
+	blue: '#007AFF',
+	red: '#F44336',
+	overlay: 'rgba(0, 0, 0, 0.5)',
   },
 };
 

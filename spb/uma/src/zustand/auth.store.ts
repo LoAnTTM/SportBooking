@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 
+import { logDebug } from '@/helpers/logger';
 import { getData } from '@/helpers/storage';
 import authService from '@/services/auth.service';
 import { LoginRequest, RegisterRequest } from '@/services/types';
@@ -33,13 +34,18 @@ interface AuthActions {
     email: string;
     password: string;
   }) => Promise<void>;
+  reset: () => void;
 }
 
-const useAuthStoreBase = create<AuthState & AuthActions>((set) => ({
+const initialState: AuthState = {
   isLoggedIn: false,
   userId: '',
   email: '',
   fullName: '',
+};
+
+const useAuthStoreBase = create<AuthState & AuthActions>((set) => ({
+  ...initialState,
 
   checkIsLoggedIn: async () => {
     const accessToken = await getData('accessToken');
@@ -56,13 +62,14 @@ const useAuthStoreBase = create<AuthState & AuthActions>((set) => ({
 
     set(() => ({
       isLoggedIn: true,
-      userId: res.data.user.user_id,
+      userId: res.data.user.userId,
       email: res.data.user.email,
-      fullName: res.data.user.full_name,
+      fullName: res.data.user.fullName,
     }));
   },
 
   logout: async () => {
+	logDebug('logout');
     await authService.logout();
 
     set(() => ({
@@ -90,9 +97,9 @@ const useAuthStoreBase = create<AuthState & AuthActions>((set) => ({
 
     set(() => ({
       isLoggedIn: true,
-      userId: res.data.user.user_id,
+      userId: res.data.user.userId,
       email: res.data.user.email,
-      fullName: res.data.user.full_name,
+      fullName: res.data.user.fullName,
     }));
   },
 
@@ -137,6 +144,8 @@ const useAuthStoreBase = create<AuthState & AuthActions>((set) => ({
       throw res;
     }
   },
+
+  reset: () => set(() => ({ ...initialState })),
 }));
 
 export const useAuthStore = createSelectors(useAuthStoreBase);

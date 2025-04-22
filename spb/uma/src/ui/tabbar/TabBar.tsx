@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Animated, Keyboard, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import { ShadowedView } from 'react-native-fast-shadow';
 
 import { DEFAULT_ICON_SIZE, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
@@ -34,7 +35,6 @@ const TabBar: React.FC<BottomTabBarProps> = ({
     state.routes.map(() => ({
       iconOpacity: new Animated.Value(1),
       translateY: new Animated.Value(0),
-      scale: new Animated.Value(1),
     }))
   ).current;
 
@@ -48,11 +48,6 @@ const TabBar: React.FC<BottomTabBarProps> = ({
           duration: 250,
           useNativeDriver: true,
         }),
-        Animated.timing(anim.scale, {
-          toValue: isFocused ? 1.2 : 1,
-          duration: 250,
-          useNativeDriver: true,
-        }),
       ]).start();
     });
   }, [state.index, animations]);
@@ -62,7 +57,7 @@ const TabBar: React.FC<BottomTabBarProps> = ({
   }
 
   return (
-    <View style={styles.wrapper}>
+    <ShadowedView style={styles.wrapper}>
       <View style={styles.container}>
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key];
@@ -99,12 +94,11 @@ const TabBar: React.FC<BottomTabBarProps> = ({
                   style={{
                     transform: [
                       { translateY: anim.translateY },
-                      { scale: anim.scale },
                     ],
                     shadowColor: isFocused ? theme.primary : 'transparent',
                     elevation: isFocused ? 18 : 0,
                     backgroundColor: isFocused ? theme.primary : 'transparent',
-                    padding: isFocused ? 16 : 0,
+                    padding: isFocused ? 18 : 0,
                     shadowOffset: { width: 0, height: 4 },
                     shadowOpacity: 0.3,
                     shadowRadius: 6,
@@ -120,7 +114,7 @@ const TabBar: React.FC<BottomTabBarProps> = ({
           );
         })}
       </View>
-    </View>
+    </ShadowedView>
   );
 };
 
@@ -129,19 +123,17 @@ const createStyles = (theme: IColorScheme) =>
     wrapper: {
       backgroundColor: theme.backgroundLight,
       height: hp(8),
-      // Improved shadow definition
       shadowColor: theme.shadow,
       shadowOffset: {
         width: 0,
-        height: -2, // Reduced shadow offset
+        height: -2,
       },
-      shadowOpacity: 0.15, // Increased opacity
-      shadowRadius: 4, // Reduced blur radius
-      elevation: 8, // Reduced elevation for Android
+      shadowOpacity: 0.15,
+      shadowRadius: 4,
       zIndex: 1000,
       position: 'relative',
-      borderTopWidth: 0.5, // Added subtle border
-      borderTopColor: `${theme.shadow}10`, // Very light border
+      borderTopWidth: 0.5,
+      borderTopColor: `${theme.shadow}10`,
     },
     container: {
       flexDirection: 'row',

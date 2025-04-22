@@ -9,4 +9,6 @@ declare module '@env' {
   export const CLOUD_REGION: string;
   export const OTP_LENGTH: number;
   export const OPENCAGE_API_KEY: string;
+  export const MAPBOX_ACCESS_TOKEN: string;
+  export const PLACEHOLDER_IMAGE: string;
 }

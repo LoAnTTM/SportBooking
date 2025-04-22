@@ -9,7 +9,7 @@ import { hp, wp } from '@/helpers/dimensions';
 import { ResponseError } from '@/helpers/error';
 import { logError } from '@/helpers/logger';
 import { toastError } from '@/helpers/toast';
-import { ParamList } from '@/screens';
+import { AuthStackParamList } from '@/screens/auth';
 import BackButton from '@/ui/button/Back';
 import LeftIcon from '@/ui/icon/Left';
 import { useAuthStore } from '@/zustand';
@@ -17,12 +17,13 @@ import { RouteProp, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type Props = {
-  route?: RouteProp<ParamList, 'ConfirmForgotPassword'>;
+  route?: RouteProp<AuthStackParamList, 'ConfirmForgotPassword'>;
 };
 
 const ResetPassword: FC<Props> = ({ route }) => {
-  const navigation = useNavigation<NativeStackNavigationProp<ParamList>>();
-  const resetPassword = useAuthStore.use.resetPassword();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
+  const resetPassword = useAuthStore((state) => state.resetPassword);
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
   const email = route?.params.email || '';

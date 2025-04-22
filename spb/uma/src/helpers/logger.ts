@@ -26,15 +26,15 @@ export const logWarn = (message: string) => {
   log('WARN', message);
 };
 
-export const logError = (errorOrMessage: Error | string) => {
+export const logError = (errorOrMessage: Error | string, ...args: string[]) => {
   const message =
     errorOrMessage instanceof Error
       ? `${errorOrMessage.message}\n${errorOrMessage.stack}`
-      : errorOrMessage;
+      : `${args.join(', ')}: ${errorOrMessage}`;
   log('ERROR', message);
 };
 
-export const logDebug = (debugInfo: object | string | Error) => {
+export const logDebug = (debugInfo: object | string | Error, msg?: string) => {
   let message: string;
   if (debugInfo instanceof Error) {
     message = `${debugInfo.message}\n${debugInfo.stack}`;
@@ -42,6 +42,10 @@ export const logDebug = (debugInfo: object | string | Error) => {
     message = JSON.stringify(debugInfo, null, 2);
   } else {
     message = debugInfo;
+  }
+
+  if (msg) {
+    message = `${msg}\n${message}`;
   }
   log('DEBUG', message);
 };

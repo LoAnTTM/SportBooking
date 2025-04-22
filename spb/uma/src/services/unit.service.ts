@@ -1,28 +1,55 @@
-import { POPULAR_UNITS_PATH, SEARCH_UNITS_PATH } from '@/constants';
+import { GET_UNIT_PATH, POPULAR_UNITS_PATH, SEARCH_UNITS_PATH } from '@/constants';
 import { ResponseError } from '@/helpers/error';
+import { PARAMS } from '@/helpers/pagination';
 import { apiFactory, ApiResponse } from '@/services/http';
-import { GetUnitsResponse, SearchUnitQuery } from '@/services/types';
+import {
+  GetUnitResponse, GetUnitsResponse, PopularUnitRequest, SearchUnitQuery
+} from '@/services/types';
 
 export interface IUnitService {
-  getPopularUnits: () => Promise<ApiResponse<GetUnitsResponse> | ResponseError>;
+  getPopularUnits: (
+    reqBody: PopularUnitRequest
+  ) => Promise<ApiResponse<GetUnitsResponse> | ResponseError>;
+
   search: (
     query: SearchUnitQuery
   ) => Promise<ApiResponse<GetUnitsResponse> | ResponseError>;
+
+  getDetail: (
+    id: string
+  ) => Promise<ApiResponse<GetUnitResponse> | ResponseError>;
 }
 
 class UnitService implements IUnitService {
-  async getPopularUnits(): Promise<
-    ApiResponse<GetUnitsResponse> | ResponseError
-  > {
-    return await apiFactory(POPULAR_UNITS_PATH).get<GetUnitsResponse>();
+  getPopularUnits(
+    reqBody: PopularUnitRequest
+  ): Promise<ApiResponse<GetUnitsResponse> | ResponseError> {
+    return apiFactory(POPULAR_UNITS_PATH).post<GetUnitsResponse>(reqBody);
   }
 
-  async search(
-    _: SearchUnitQuery
+  search(
+    params: SearchUnitQuery
   ): Promise<ApiResponse<GetUnitsResponse> | ResponseError> {
     return apiFactory(SEARCH_UNITS_PATH)
-      .addQuery('', '')
+      .addQueryParam(PARAMS.pageItems, params.pageItems)
+      .addQueryParam(PARAMS.page, params.page)
+      .addQueryParam(PARAMS.orderBy, params.orderBy)
+      .addQueryParam(PARAMS.orderType, params.orderType)
+      .addQueryParam(PARAMS.query, params.query)
+      .addQueryParam(PARAMS.sportType, params.sportType)
+      .addQueryParam(PARAMS.province, params.province)
+      .addQueryParam(PARAMS.ward, params.ward)
+      .addQueryParam(PARAMS.district, params.district)
+      .addQueryParam(PARAMS.longitude, params.longitude)
+      .addQueryParam(PARAMS.latitude, params.latitude)
+      .addQueryParam(PARAMS.radius, params.radius)
       .get<GetUnitsResponse>();
+  }
+
+  getDetail(id: string): Promise<ApiResponse<GetUnitResponse> | ResponseError> {
+    return apiFactory(GET_UNIT_PATH)
+      .addPathParam(':id', id)
+      .get<GetUnitResponse>();
   }
 }
 

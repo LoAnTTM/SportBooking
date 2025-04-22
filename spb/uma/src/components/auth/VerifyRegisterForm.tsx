@@ -6,9 +6,9 @@ import { fontFamily, fontSize, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import i18next from '@/helpers/i18n';
-import { logDebug, logError } from '@/helpers/logger';
+import { logError } from '@/helpers/logger';
 import { toastError, toastSuccess } from '@/helpers/toast';
-import { ParamList } from '@/screens';
+import { RootParamList } from '@/screens';
 import Button from '@/ui/button/BaseButton';
 import { useAuthStore } from '@/zustand';
 import { OTP_LENGTH } from '@env';
@@ -20,8 +20,8 @@ interface IVerifyRegisterFormProps {
 }
 
 const VerifyRegisterForm: FC<IVerifyRegisterFormProps> = ({ email }) => {
-  const verifyRegisterEmail = useAuthStore.use.verifyRegisterToken();
-  const navigation = useNavigation<NativeStackNavigationProp<ParamList>>();
+  const verifyRegisterEmail = useAuthStore(state => state.verifyRegisterToken);
+  const navigation = useNavigation<NativeStackNavigationProp<RootParamList>>();
   const [otp, setOtp] = React.useState<string>('');
 
   const { theme } = useContext(ThemeContext);
@@ -30,10 +30,9 @@ const VerifyRegisterForm: FC<IVerifyRegisterFormProps> = ({ email }) => {
   const handleSubmit = async () => {
     try {
       const otpNumber = Number(otp);
-      logDebug(`OTP submitted: ${otpNumber}`);
 
       await verifyRegisterEmail({ token: otpNumber, email });
-      navigation.navigate('Tabs');
+      navigation.navigate('Main');
       toastSuccess(i18next.t('notification.register_success'));
     } catch (err) {
       logError(err as Error);

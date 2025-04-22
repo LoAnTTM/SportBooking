@@ -13,7 +13,10 @@ const Input: React.FC<IInputProps> = ({
   placeholder,
   value,
   onChangeText,
+  onSubmitEditing,
   error,
+  containerStyle,
+  inputStyle,
   ...props
 }) => {
   const { theme } = useContext(ThemeContext);
@@ -21,13 +24,15 @@ const Input: React.FC<IInputProps> = ({
   const styles = createStyles(theme, error);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <TextInput
-        style={styles.input}
+        style={[styles.input, inputStyle]}
         value={value}
         placeholder={placeholder}
         placeholderTextColor={theme.borderDark}
         onChangeText={onChangeText}
+		onSubmitEditing={onSubmitEditing}
+		numberOfLines={1}
         secureTextEntry={type === 'password' && !showPassword}
         {...props}
       />

@@ -1,33 +1,50 @@
 import axios, {
-    Axios, AxiosError, AxiosHeaders, AxiosResponse, HttpStatusCode, InternalAxiosRequestConfig
+  Axios, AxiosError, AxiosHeaders, AxiosResponse, HttpStatusCode, InternalAxiosRequestConfig
 } from 'axios';
+import camelcaseKeys from 'camelcase-keys';
+import snakecaseKeys from 'snakecase-keys';
 
 import ConcurrencyHandler from '@/helpers/concurrency';
 import { ResponseError } from '@/helpers/error';
 import i18next from '@/helpers/i18n';
+import { logError } from '@/helpers/logger';
 import { getData } from '@/helpers/storage';
+import { toastError } from '@/helpers/toast';
 import authService from '@/services/auth.service';
 import { API_URL } from '@env';
 
 class AxiosConfig {
   private axiosInstance: Axios;
   private concurrencyHandler: ConcurrencyHandler;
+  private isProtected: boolean = false;
 
   constructor() {
-    console.log(API_URL);
     this.axiosInstance = axios.create({
       baseURL: API_URL,
       headers: this.defaultHeaders(),
     });
 
-    this.concurrencyHandler = new ConcurrencyHandler();
+    this.concurrencyHandler = ConcurrencyHandler.getInstance();
+
+    // Bind methods to preserve 'this' context
+    this.onRequest = this.onRequest.bind(this);
+    this.onResponse = this.onResponse.bind(this);
+    this.onErrorResponse = this.onErrorResponse.bind(this);
+    this.onGuestErrorResponse = this.onGuestErrorResponse.bind(this);
   }
 
   public guessAxios(): Axios {
+    this.axiosInstance.interceptors.request.use(this.onRequest);
+    this.axiosInstance.interceptors.response.use(
+      this.onResponse,
+      this.onGuestErrorResponse
+    );
+
     return this.axiosInstance;
   }
 
   public protectedAxios(): Axios {
+    this.isProtected = true;
     this.axiosInstance.interceptors.request.use(this.onRequest);
     this.axiosInstance.interceptors.response.use(
       this.onResponse,
@@ -40,15 +57,54 @@ class AxiosConfig {
   private async onRequest(
     config: InternalAxiosRequestConfig
   ): Promise<InternalAxiosRequestConfig> {
-    const token = await getData('accessToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (this.isProtected) {
+      const token = await getData('accessToken');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
+
+    if (
+      config.data &&
+      typeof config.data === 'object' &&
+      typeof config.headers['Content-Type'] === 'string' &&
+      config.headers['Content-Type']?.includes('application/json')
+    ) {
+      config.data = snakecaseKeys(config.data, { deep: true });
+    }
+
     return config;
   }
 
   private onResponse(response: AxiosResponse): AxiosResponse {
+    if (
+      response.data &&
+      typeof response.data === 'object' &&
+      response.headers['content-type']?.includes('application/json')
+    ) {
+      response.data = camelcaseKeys(response.data, { deep: true });
+    }
     return response;
+  }
+
+  private async onGuestErrorResponse(
+    error: AxiosError | Error
+  ): Promise<void | AxiosError> {
+    if (axios.isAxiosError(error)) {
+      const status = error.response?.status;
+
+      if (
+        status === HttpStatusCode.Forbidden ||
+        status === HttpStatusCode.Unauthorized
+      ) {
+        authService.logout();
+      }
+      if (error.code === AxiosError.ERR_NETWORK) {
+        toastError(i18next.t('error.ERS000'));
+      }
+    }
+
+    return Promise.reject(error);
   }
 
   private async onErrorResponse(
@@ -57,23 +113,37 @@ class AxiosConfig {
     if (axios.isAxiosError(error)) {
       const { response, config } = error;
       const status = response?.status;
+      try {
+        switch (status) {
+          case HttpStatusCode.NotAcceptable:
+          case HttpStatusCode.Forbidden:
+            authService.logout();
+            break;
+          case HttpStatusCode.Unauthorized:
+            if (!this.concurrencyHandler) {
+              logError(error, 'ConcurrencyHandler is not initialized');
+              return Promise.reject(error);
+            }
 
-      switch (status) {
-        case HttpStatusCode.NotAcceptable:
-        case HttpStatusCode.Forbidden:
-          authService.logout();
-          break;
-        case HttpStatusCode.Unauthorized:
-          // Use the concurrency handler to prevent multiple requests
-          // from refreshing the token at the same time
-          return await this.concurrencyHandler
-            .execute(authService.refreshToken)
-            .then(() => {
-              // Retry the original request
-              return this.axiosInstance.request(
-                config as InternalAxiosRequestConfig
-              );
-            });
+            return this.concurrencyHandler
+              .execute(authService.refreshToken)
+              .then(() => {
+                return this.axiosInstance.request(
+                  config as InternalAxiosRequestConfig
+                ) as Promise<void | AxiosError>;
+              })
+              .catch((refreshError) => {
+                if (refreshError === AxiosError.ERR_NETWORK) {
+                  toastError(i18next.t('error.ERS000'));
+                }
+                authService.logout();
+                return Promise.reject(refreshError);
+              });
+        }
+      } catch (err) {
+        if (err instanceof Error) {
+          logError(err, 'Error in onErrorResponse:');
+        }
       }
     }
 
@@ -169,11 +239,13 @@ export function apiFactory(url: string, protectedApi: boolean = true) {
   }
 
   const api = {
-    addParam: (param: string, value: string) => {
-      url += `/${param}/${value}`;
+    addPathParam: (key: string, value: string) => {
+      if (url.includes(key)) {
+        url = url.replace(key, value);
+      }
       return api;
     },
-    addQuery: (param: string, value: string | null) => {
+    addQueryParam: (param: string, value: string | number | null) => {
       if (!value) return api;
 
       if (url.includes('?')) {

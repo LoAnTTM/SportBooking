@@ -1,75 +1,95 @@
 import React, { FC, memo } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ShadowedView } from 'react-native-fast-shadow';
 
-import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
+import UnitPrice from '@/components/home/UnitPrice';
+import { DEFAULT_ICON_SIZE, fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
+import { UnitCard as UnitCardObject } from '@/services/types';
+import FullFillLocationIcon from '@/ui/icon/FullFillLocation';
+import MoveLocation from '@/ui/icon/MoveLocation';
+import { UnitRenderTypes } from '@/zustand';
+import { PLACEHOLDER_IMAGE } from '@env';
 
 interface UnitCardProps {
-  title: string;
-  address: string;
-  price: string;
-  image: string;
-  distance?: string;
-  onPress?: () => void;
+  unitCard: UnitCardObject;
+  onPress: () => void;
+  unitRenderType: UnitRenderTypes;
+  onPressLocation: (id: string, unitType: UnitRenderTypes) => void;
 }
 
 const UnitCard: FC<UnitCardProps> = ({
-  title,
-  address,
-  price,
-  distance,
-  image,
+  unitCard,
   onPress,
+  unitRenderType,
+  onPressLocation,
 }) => {
   const { theme } = React.useContext(ThemeContext);
   const styles = createStyles(theme);
 
   return (
-    <Pressable
-      style={({ pressed }) => [styles.container, pressed && styles.pressed]}
-      onPress={onPress}
-    >
-      <Pressable style={styles.imageContainer}>
-        <Image
-          source={{ uri: image }}
-          style={styles.image}
-          resizeMode="cover"
-        />
-      </Pressable>
-      <View style={styles.content}>
-        <View style={styles.headerRow}>
-          <Text style={styles.title} numberOfLines={1}>
-            {title}
-          </Text>
-          {distance && (
-            <View style={styles.distanceContainer}>
-              <Text style={styles.distance}>{distance}</Text>
-            </View>
-          )}
+    <ShadowedView style={styles.shadowBox}>
+      <Pressable
+        style={({ pressed }) => [styles.container, pressed && styles.pressed]}
+        onPress={onPress}
+      >
+        <View style={styles.imageContainer}>
+          <Image
+            source={{
+              uri:
+                unitCard.image.length > 0
+                  ? unitCard.image[0]
+                  : PLACEHOLDER_IMAGE,
+            }}
+            style={styles.image}
+            resizeMode="cover"
+          />
         </View>
-        <Text style={styles.address} numberOfLines={1}>
-          {address}
-        </Text>
-        <Text style={styles.price}>{price}</Text>
-      </View>
-    </Pressable>
+        <View style={styles.content}>
+          <View style={styles.headerRow}>
+            <Text style={styles.title} numberOfLines={1}>
+              {unitCard.title}
+            </Text>
+            <Pressable
+              style={styles.distanceContainer}
+              onPress={() => onPressLocation(unitCard.id, unitRenderType)}
+            >
+              <MoveLocation color={theme.icon} size={DEFAULT_ICON_SIZE - 8} />
+              <Text style={styles.distance}>{unitCard.distance}</Text>
+            </Pressable>
+          </View>
+          <View style={styles.addressRow}>
+            <FullFillLocationIcon
+              color={theme.primary}
+              size={DEFAULT_ICON_SIZE - 8}
+            />
+            <Text style={styles.address} numberOfLines={1}>
+              {unitCard.address}
+            </Text>
+          </View>
+          <UnitPrice prices={unitCard.price} />
+        </View>
+      </Pressable>
+    </ShadowedView>
   );
 };
 
 const createStyles = (theme: IColorScheme) =>
   StyleSheet.create({
+    shadowBox: {
+      shadowOpacity: 0.03,
+      shadowRadius: 12,
+      shadowOffset: {
+        width: 2,
+        height: 4,
+      },
+    },
     container: {
-      width: wp(75), // Increased width
+      width: wp(60), // Increased width
       borderRadius: Radius.lg,
       marginRight: wp(3),
       backgroundColor: theme.backgroundLight,
-      shadowColor: theme.shadow,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.08,
-      shadowRadius: 8,
-      elevation: 4,
-      overflow: 'hidden',
     },
     pressed: {
       opacity: 0.9,
@@ -88,45 +108,20 @@ const createStyles = (theme: IColorScheme) =>
       width: '100%',
       height: '100%',
     },
-    placeholderImage: {
-      width: '100%',
-      height: '100%',
-      backgroundColor: theme.backgroundDark,
-    },
-    pagination: {
-      position: 'absolute',
-      bottom: hp(1),
-      left: 0,
-      right: 0,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    paginationDot: {
-      width: 6,
-      height: 6,
-      borderRadius: 3,
-      backgroundColor: `${theme.backgroundLight}80`,
-      marginHorizontal: 4,
-    },
-    paginationDotActive: {
-      backgroundColor: theme.backgroundLight,
-      width: 8,
-      height: 8,
-    },
     content: {
       padding: hp(2),
+    },
+    addressRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: wp(1),
     },
     address: {
       ...fontFamily.POPPINS_REGULAR,
       fontSize: fontSize.xs,
       color: theme.textLight,
-      marginBottom: hp(1),
-    },
-    price: {
-      ...fontFamily.POPPINS_BOLD,
-      fontSize: fontSize.sm,
-      color: theme.primary,
+      flex: 1,
     },
     headerRow: {
       flexDirection: 'row',
@@ -139,6 +134,9 @@ const createStyles = (theme: IColorScheme) =>
       paddingHorizontal: wp(2),
       paddingVertical: hp(0.5),
       borderRadius: Radius.sm,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: wp(1),
     },
     distance: {
       ...fontFamily.POPPINS_REGULAR,

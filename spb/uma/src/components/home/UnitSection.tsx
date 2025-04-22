@@ -1,50 +1,44 @@
 import React, { FC, useContext } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { IColorScheme } from '@/constants';
+import UnitCard from '@/components/home/UnitCard';
+import UnitCardSkeleton from '@/components/home/UnitCardSkeleton';
+import { fontFamily, fontSize, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
-
-import UnitCard from './UnitCard';
+import { TabParamList } from '@/screens/main/tab';
+import { UnitCard as UnitCardObject } from '@/services/types';
+import { UnitRenderTypes } from '@/zustand';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 interface UnitSectionProps {
   title: string;
+  units: UnitCardObject[];
+  unitRenderType: UnitRenderTypes;
 }
 
-const UnitSection: FC<UnitSectionProps> = ({ title }) => {
+const UnitSection: FC<UnitSectionProps> = ({
+  title,
+  units,
+  unitRenderType,
+}) => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
+  const navigation = useNavigation<NativeStackNavigationProp<TabParamList>>();
 
-  // Mock data - replace with real data later
-  const units = [
-    {
-      id: '1',
-      title: 'Modern Apartment',
-      address: '123 Main St, City',
-      price: '$1,200/mo',
-      image:
-        'https://spb-clubs.s3.ap-southeast-1.amazonaws.com/san-bong-da-quyet-tam-2-2032207698+1.png',
-      distance: '2.5 km',
-    },
-    {
-      id: '2',
-      title: 'Cozy Studio',
-      address: '456 Oak Ave, Town',
-      price: '$800/mo',
-      image:
-        'https://spb-clubs.s3.ap-southeast-1.amazonaws.com/san-bong-da-quyet-tam-2-2032207698+1.png',
-      distance: '2.5 km',
-    },
-    {
-      id: '3',
-      title: 'Luxury Condo',
-      address: '789 Pine Rd, Village',
-      price: '$2,000/mo',
-      image:
-        'https://spb-clubs.s3.ap-southeast-1.amazonaws.com/san-bong-da-quyet-tam-2-2032207698+1.png',
-      distance: '2.5 km',
-    },
-  ];
+  const handleOnPress = (unitId: string) => {
+    console.log('Unit pressed:', unitId);
+  };
+
+  const handleOnPressLocation = (id: string, unitType: UnitRenderTypes) => {
+    navigation.navigate('Map', {
+      unitId: id,
+      renderType: unitType,
+    });
+  };
+
+  const isLoading = units === undefined || units.length === 0;
 
   return (
     <View style={styles.container}>
@@ -60,15 +54,16 @@ const UnitSection: FC<UnitSectionProps> = ({ title }) => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {units.map((unit) => (
+        {isLoading && <UnitCardSkeleton />}
+        {units?.map((unit) => (
           <UnitCard
             key={unit.id}
-            title={unit.title}
-            address={unit.address}
-            price={unit.price}
-            image={unit.image}
-            distance={unit.distance}
-            onPress={() => console.log('Unit pressed:', unit.id)}
+            unitCard={unit}
+            unitRenderType={unitRenderType}
+            onPress={() => handleOnPress(unit.id)}
+            onPressLocation={(id, unitType) =>
+              handleOnPressLocation(id, unitType)
+            }
           />
         ))}
       </ScrollView>
@@ -79,7 +74,7 @@ const UnitSection: FC<UnitSectionProps> = ({ title }) => {
 const createStyles = (theme: IColorScheme) =>
   StyleSheet.create({
     container: {
-      paddingVertical: hp(2),
+      paddingTop: hp(3),
     },
     header: {
       flexDirection: 'row',
@@ -89,14 +84,14 @@ const createStyles = (theme: IColorScheme) =>
       marginBottom: hp(2),
     },
     title: {
-      fontSize: 20,
-      fontWeight: '700',
+      ...fontFamily.RALEWAY_BOLD,
+      fontSize: fontSize.lg,
       color: theme.textDark,
     },
     seeAll: {
-      fontSize: 14,
+      ...fontFamily.RALEWAY_MEDIUM,
+      fontSize: fontSize.sm,
       color: theme.primary,
-      fontWeight: '600',
     },
     scrollContent: {
       paddingHorizontal: wp(4),

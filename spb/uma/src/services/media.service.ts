@@ -1,11 +1,6 @@
 import {
-  S3DeleteObjectOutput,
-  S3DeleteObjectRequest,
-  S3GetObjectOutput,
-  S3GetObjectRequest,
-  S3ListObjectsOutput,
-  S3PutObjectRequest,
-  S3SendData,
+  S3DeleteObjectOutput, S3DeleteObjectRequest, S3GetObjectOutput, S3GetObjectRequest,
+  S3ListObjectsOutput, S3PutObjectRequest, S3SendData
 } from '@/lib/aws/types';
 import { s3Factory } from '@/services/aws';
 

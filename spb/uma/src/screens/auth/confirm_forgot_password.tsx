@@ -6,18 +6,18 @@ import ConfirmForgotPasswordForm from '@/components/auth/ConfirmForgotPasswordFo
 import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
-import { ParamList } from '@/screens';
+import { AuthStackParamList } from '@/screens/auth';
 import BackButton from '@/ui/button/Back';
 import LeftIcon from '@/ui/icon/Left';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type Props = {
-  route?: RouteProp<ParamList, 'ConfirmForgotPassword'>;
+  route?: RouteProp<AuthStackParamList, 'ConfirmForgotPassword'>;
 };
 
 const ConfirmForgotPassword: FC<Props> = ({ route }) => {
-  const navigation = useNavigation<NativeStackNavigationProp<ParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
   const email = route?.params.email || '';
