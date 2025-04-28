@@ -79,11 +79,7 @@ const Dropdown: FC<DropdownProps> = ({
   }, [searchQuery, items]);
 
   useEffect(() => {
-    if (isOpen && searchable && searchInputRef.current) {
-      setTimeout(() => {
-        searchInputRef.current?.focus();
-      }, 300);
-    } else {
+    if (!(isOpen && searchable)) {
       setSearchQuery('');
     }
   }, [isOpen, searchable]);
@@ -223,7 +219,7 @@ const Dropdown: FC<DropdownProps> = ({
                   ItemSeparatorComponent={() => (
                     <View style={styles.separator} />
                   )}
-                  keyboardShouldPersistTaps="always"
+                  keyboardShouldPersistTaps="handled"
                   initialNumToRender={10}
                   maxToRenderPerBatch={10}
                   windowSize={10}

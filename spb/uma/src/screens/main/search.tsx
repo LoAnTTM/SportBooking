@@ -1,7 +1,7 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useShallow } from 'zustand/shallow';
 
-import NotFound from '@/components/common/NotFound';
 import FilterButton from '@/components/search/FilterButton';
 import FilterModal from '@/components/search/FilterModal';
 import SearchBar from '@/components/search/Searchbar';
@@ -14,40 +14,40 @@ import { buildSearchUnitQueryFromFilter } from '@/helpers/pagination';
 import { MainStackParamList } from '@/screens/main';
 import BackButton from '@/ui/button/Back';
 import LeftArrowIcon from '@/ui/icon/LeftArrow';
-import Loading from '@/ui/Loading';
 import { initFilter, useLocationStore, useUnitStore } from '@/zustand';
 import { RouteProp } from '@react-navigation/native';
 
-type SearchProps = {
+type Props = {
   route?: RouteProp<MainStackParamList, 'Search'>;
 };
 
-const SearchScreen: FC<SearchProps> = ({ route }) => {
+const SearchScreen: FC<Props> = ({ route }) => {
   const showFilter = !!route?.params?.showFilter;
 
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
   const [filterModalVisible, setFilterModalVisible] = useState(showFilter);
 
-  const searchUnits = useUnitStore((state) => state.searchUnits);
-  const isLoading = useUnitStore((state) => state.isLoading);
-  const hasFilter = useUnitStore((state) => state.hasFilter);
-  const filter = useUnitStore((state) => state.filter);
   const updateFilter = useUnitStore((state) => state.updateFilter);
   const resetSearch = useUnitStore((state) => state.resetSearch);
   const search = useUnitStore((state) => state.search);
-  const longitude = useLocationStore((state) => state.longitude);
-  const latitude = useLocationStore((state) => state.latitude);
-  const radius = useLocationStore((state) => state.radius);
+
+  const hasFilter = useUnitStore(useShallow((state) => state.hasFilter));
+  const filter = useUnitStore(useShallow((state) => state.filter));
+
+  const { latitude, longitude } = useLocationStore(
+    useShallow((s) => ({
+      latitude: s.latitude,
+      longitude: s.longitude,
+    }))
+  );
 
   const handleApplyFilter = () => {
     let additionParams;
-    // Add location to the search query if nearby is selected
     if (filter.isNearby) {
       additionParams = {
         longitude: longitude,
         latitude: latitude,
-        radius: radius,
       };
     }
     const unitQuerySearch = buildSearchUnitQueryFromFilter(
@@ -84,9 +84,7 @@ const SearchScreen: FC<SearchProps> = ({ route }) => {
         />
       </View>
       <View style={styles.searchBody}>
-        {isLoading && searchUnits.length === 0 && <Loading />}
-        {!isLoading && searchUnits.length === 0 && <NotFound />}
-        {!isLoading && searchUnits.length > 0 && <SearchResult />}
+        <SearchResult />
       </View>
     </View>
   );
@@ -115,4 +113,4 @@ const createStyles = (theme: IColorScheme) =>
     },
   });
 
-export default SearchScreen;
+export default React.memo(SearchScreen);

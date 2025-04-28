@@ -46,3 +46,6 @@ export const PROVINCE_PATH = `${V1_PREFIX}/addresses/provinces`;
 export const DISTRICT_PATH = `${V1_PREFIX}/addresses/provinces/:id/districts`;
 
 export const WARD_PATH = `${V1_PREFIX}/addresses/districts/:id/wards`;
+
+// Sport type API paths
+export const GET_ALL_SPORT_TYPE_PATH = `${V1_PREFIX}/sport-types`;

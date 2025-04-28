@@ -1,9 +1,8 @@
-import React, { FC, memo, useCallback, useRef, useState } from 'react';
-import {
-  Animated, Dimensions, NativeScrollEvent, NativeSyntheticEvent, Pressable, StyleSheet, Text, View
-} from 'react-native';
+import React, { FC, memo } from 'react';
+import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
 import { ShadowedView } from 'react-native-fast-shadow';
 
+import ImageSlider from '@/components/common/ImageSlider';
 import UnitPrice from '@/components/home/UnitPrice';
 import { DEFAULT_ICON_SIZE, fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
@@ -28,134 +27,15 @@ const SearchCard: FC<SearchCardProps> = ({
 }) => {
   const { theme } = React.useContext(ThemeContext);
   const styles = createStyles(theme);
-  const scrollX = useRef(new Animated.Value(0)).current;
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const handlePressLocation = () => {
     onPressLocation(unitCard.id, UnitRenderTypes.SEARCH);
   };
 
-  const keyExtractor = useCallback(
-    (_: any, index: number) => index.toString(),
-    []
-  );
-  const getItemLayout = useCallback(
-    (_: any, index: number) => ({
-      length: WINDOW_WIDTH,
-      offset: WINDOW_WIDTH * index,
-      index,
-    }),
-    []
-  );
-
-  const renderImage = ({
-    item: imageUrl,
-    index,
-  }: {
-    item: string;
-    index: number;
-  }) => {
-    const inputRange = [
-      (index - 1) * WINDOW_WIDTH,
-      index * WINDOW_WIDTH,
-      (index + 1) * WINDOW_WIDTH,
-    ];
-
-    const scale = scrollX.interpolate({
-      inputRange,
-      outputRange: [0.8, 1, 0.8],
-      extrapolate: 'clamp',
-    });
-
-    return (
-      <View style={styles.imageWrapper}>
-        <Animated.Image
-          source={{ uri: imageUrl }}
-          style={[
-            styles.image,
-            {
-              transform: [{ scale }],
-            },
-          ]}
-          resizeMode="cover"
-        />
-      </View>
-    );
-  };
-
-  const handleScroll = Animated.event(
-    [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-    {
-      useNativeDriver: true,
-      listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-        const slideIndex = Math.round(
-          event.nativeEvent.contentOffset.x / WINDOW_WIDTH
-        );
-        if (slideIndex !== currentIndex) {
-          setCurrentIndex(slideIndex);
-        }
-      },
-    }
-  );
-
-  const renderDots = () => {
-    if (!unitCard.image || unitCard.image.length <= 1) return null;
-
-    return (
-      <View style={styles.paginationContainer}>
-        {unitCard.image.map((_, index) => {
-          const opacity = scrollX.interpolate({
-            inputRange: [
-              (index - 1) * WINDOW_WIDTH,
-              index * WINDOW_WIDTH,
-              (index + 1) * WINDOW_WIDTH,
-            ],
-            outputRange: [0.3, 1, 0.3],
-            extrapolate: 'clamp',
-          });
-
-          return (
-            <Animated.View
-              key={index}
-              style={[
-                styles.dot,
-                {
-                  opacity,
-                  backgroundColor:
-                    index === currentIndex
-                      ? theme.backgroundLight
-                      : theme.backgroundDark,
-                },
-              ]}
-            />
-          );
-        })}
-      </View>
-    );
-  };
-
   return (
     <ShadowedView style={styles.shadowBox}>
       <View style={styles.container}>
-        <View style={styles.imageOuterContainer}>
-          <Animated.FlatList
-            data={unitCard.image}
-            renderItem={renderImage}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            bounces={false}
-            initialNumToRender={1}
-            maxToRenderPerBatch={2}
-            windowSize={3}
-			snapToInterval={WINDOW_WIDTH}
-            onScroll={handleScroll}
-            keyExtractor={keyExtractor}
-            getItemLayout={getItemLayout}
-          />
-          {renderDots()}
-        </View>
-
+        <ImageSlider image={unitCard.image} />
         <Pressable onPress={onPress} style={styles.content}>
           <View style={styles.header}>
             <Text style={styles.title} numberOfLines={1}>

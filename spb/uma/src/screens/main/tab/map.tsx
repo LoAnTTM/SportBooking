@@ -33,7 +33,7 @@ const createStyles = (theme: IColorScheme) =>
     container: {
       height: '100%',
       width: '100%',
-      backgroundColor: theme.backgroundLight,
+      backgroundColor: theme.backgroundDark,
       flexDirection: 'column',
     },
     floatingSearchBar: {

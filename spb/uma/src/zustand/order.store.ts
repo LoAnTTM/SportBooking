@@ -7,8 +7,9 @@ import { createSelectors } from '@/zustand/selectors';
 
 interface OrderState {
   orders: OrderModel[];
-  currentOrder: OrderModel | null;
-  payment: PaymentResponse | null;
+  paymentResponse: PaymentResponse | null;
+  isLoading: boolean;
+  lastBooking: PaymentRequest | null;
 }
 
 interface OrderActions {
@@ -19,25 +20,36 @@ interface OrderActions {
 
 const initialState: OrderState = {
   orders: [],
-  currentOrder: null,
-  payment: null,
+  paymentResponse: null,
+  isLoading: false,
+  lastBooking: null,
 };
 
 const useOrderStoreBase = create<OrderState & OrderActions>((set) => ({
   ...initialState,
 
   fetchOrdersByUser: async (userId: string) => {
-    const response = await orderService.getOrdersByUser(userId);
-    if (response instanceof Error) throw response;
+    try {
+      set({ isLoading: true });
+      const response = await orderService.getOrdersByUser(userId);
+      if (response instanceof Error) throw response;
 
-    set({ orders: response.data.orders });
+      set({ orders: response.data.orders });
+    } finally {
+      set({ isLoading: false });
+    }
   },
 
   pay: async (paymentData: PaymentRequest) => {
-    const response = await orderService.processPayment(paymentData);
-    if (response instanceof Error) throw response;
+    try {
+      set({ isLoading: true });
+      const response = await orderService.processPayment(paymentData);
+      if (response instanceof Error) throw response;
 
-    set({ payment: response.data });
+      set({ paymentResponse: response.data });
+    } finally {
+      set({ isLoading: false, lastBooking: paymentData });
+    }
   },
 
   reset: () => set({ ...initialState, orders: [] }),

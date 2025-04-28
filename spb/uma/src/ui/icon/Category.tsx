@@ -4,7 +4,7 @@ import Svg, { Path } from 'react-native-svg';
 import { DEFAULT_ICON_SIZE } from '@/constants';
 import { IIconProps } from '@/ui/icon';
 
-const DownIcon: React.FC<IIconProps> = ({
+const CategoryIcon: React.FC<IIconProps> = ({
   color,
   size = DEFAULT_ICON_SIZE,
   ...props
@@ -35,4 +35,4 @@ const DownIcon: React.FC<IIconProps> = ({
   );
 };
 
-export default DownIcon;
+export default CategoryIcon;

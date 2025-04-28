@@ -9,7 +9,7 @@ import { hp } from '@/helpers/dimensions';
 import i18n from '@/helpers/i18n';
 import { logError } from '@/helpers/logger';
 import { SearchUnitQueryBuilder } from '@/helpers/pagination';
-import { UnitRenderTypes, useLocationStore, useUnitStore } from '@/zustand';
+import { UnitRenderTypes, useLocationStore, useSportTypeStore, useUnitStore } from '@/zustand';
 
 const HomeScreen: React.FC = () => {
   const { theme } = useContext(ThemeContext);
@@ -20,6 +20,7 @@ const HomeScreen: React.FC = () => {
   const fetchNearByUnits = useUnitStore((s) => s.fetchNearByUnits);
   const popularUnits = useUnitStore((s) => s.popularUnits);
   const nearByUnits = useUnitStore((s) => s.nearByUnits);
+  const fetchSportTypes = useSportTypeStore((s) => s.fetchSportTypes);
 
   const getCurrentLocation = useLocationStore((s) => s.getCurrentLocation);
   const radius = useLocationStore((s) => s.radius);
@@ -62,7 +63,8 @@ const HomeScreen: React.FC = () => {
 
   useEffect(() => {
     fetchHomeData();
-  }, [fetchHomeData]);
+    fetchSportTypes();
+  }, [fetchHomeData, fetchSportTypes]);
 
   return (
     <View style={styles.container}>

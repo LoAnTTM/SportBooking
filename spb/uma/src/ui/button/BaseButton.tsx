@@ -1,12 +1,6 @@
 import React, { useContext, useRef } from 'react';
 import {
-  Animated,
-  Pressable,
-  StyleProp,
-  StyleSheet,
-  Text,
-  TextStyle,
-  ViewStyle,
+  Animated, Pressable, StyleProp, StyleSheet, Text, TextStyle, ViewStyle
 } from 'react-native';
 
 import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
@@ -16,7 +10,7 @@ import { hp } from '@/helpers/dimensions';
 interface ButtonProps {
   title: string;
   buttonStyle?: StyleProp<ViewStyle>;
-  textStyles?: StyleProp<TextStyle>;
+  textStyle?: StyleProp<TextStyle>;
   disable?: boolean;
   shadow?: boolean;
   onPress?: (e: any) => void;
@@ -27,7 +21,7 @@ interface ButtonProps {
 function Button({
   title,
   buttonStyle,
-  textStyles,
+  textStyle,
   disable = false,
   shadow = true,
   onPress,
@@ -44,12 +38,12 @@ function Button({
     Animated.parallel([
       Animated.timing(scaleAnim, {
         toValue: 0.95,
-        duration: 100,
+        duration: 50,
         useNativeDriver: true,
       }),
       Animated.timing(opacityAnim, {
         toValue: 0.8,
-        duration: 100,
+        duration: 50,
         useNativeDriver: true,
       }),
     ]).start();
@@ -59,12 +53,12 @@ function Button({
     Animated.parallel([
       Animated.timing(scaleAnim, {
         toValue: 1,
-        duration: 100,
+        duration: 50,
         useNativeDriver: true,
       }),
       Animated.timing(opacityAnim, {
         toValue: 1,
-        duration: 100,
+        duration: 50,
         useNativeDriver: true,
       }),
     ]).start();
@@ -89,7 +83,7 @@ function Button({
         accessibilityRole="button"
       >
         {before ?? null}
-        {title && <Text style={[defaultStyles.text, textStyles]}>{title}</Text>}
+        {title && <Text style={[defaultStyles.text, textStyle]}>{title}</Text>}
         {after ?? null}
       </Pressable>
     </Animated.View>
@@ -100,7 +94,7 @@ const createStyle = (theme: IColorScheme) =>
   StyleSheet.create({
     button: {
       backgroundColor: theme.primary,
-      height: hp(6.6),
+      height: hp(6),
       alignItems: 'center',
       borderRadius: Radius.xs,
       flexDirection: 'row',

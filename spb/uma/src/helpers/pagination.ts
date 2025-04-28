@@ -116,7 +116,11 @@ export class SearchUnitQueryBuilder {
   }
 
   setRadius(radius: number): this {
-    this.query.radius = radius;
+    if (radius > 0) {
+      this.query.radius = radius;
+    } else {
+      this.query.radius = null;
+    }
     return this;
   }
 
@@ -139,6 +143,7 @@ export const buildSearchUnitQueryFromFilter = (
     .setProvince(filter.location.province)
     .setDistrict(filter.location.district)
     .setWard(filter.location.ward)
+    .setRadius(filter.isNearby ? filter.radius : 0)
     .setQuery(filter.query || '');
 
   if (!args) return query.build();
@@ -148,9 +153,6 @@ export const buildSearchUnitQueryFromFilter = (
   }
   if ('latitude' in args) {
     query.setLatitude(args.latitude as number);
-  }
-  if ('radius' in args) {
-    query.setRadius(args.radius as number);
   }
   return query.build();
 };

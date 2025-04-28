@@ -5,7 +5,7 @@ import { IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp } from '@/helpers/dimensions';
 
-interface IButtonProps {
+export type IconButtonProps = {
   buttonStyle?: StyleProp<ViewStyle>;
   disable?: boolean;
   shadow?: boolean;
@@ -13,7 +13,7 @@ interface IButtonProps {
   icon: React.ReactNode;
 }
 
-const IconButton: FC<IButtonProps> = ({
+const IconButton: FC<IconButtonProps> = ({
   buttonStyle,
   disable = false,
   shadow = true,

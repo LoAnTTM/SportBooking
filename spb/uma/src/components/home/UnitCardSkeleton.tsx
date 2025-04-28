@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
+import { ShadowedView } from 'react-native-fast-shadow';
 
 import { IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
@@ -37,7 +38,7 @@ const UnitCardSkeleton: FC = () => {
   });
 
   return (
-    <View style={styles.container}>
+    <ShadowedView style={styles.container}>
       <Animated.View style={[styles.imageContainer, { opacity }]} />
       <View style={styles.content}>
         <View style={styles.headerRow}>
@@ -47,7 +48,7 @@ const UnitCardSkeleton: FC = () => {
         <Animated.View style={[styles.addressSkeleton, { opacity }]} />
         <Animated.View style={[styles.priceSkeleton, { opacity }]} />
       </View>
-    </View>
+    </ShadowedView>
   );
 };
 
@@ -62,7 +63,6 @@ const createStyles = (theme: IColorScheme) =>
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.08,
       shadowRadius: 8,
-      elevation: 4,
       overflow: 'hidden',
     },
     imageContainer: {

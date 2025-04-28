@@ -1,0 +1,108 @@
+diff --git a/node_modules/react-native-calendars/src/timeline-list/index.js b/node_modules/react-native-calendars/src/timeline-list/index.js
+index 18814e2..e139ac7 100644
+--- a/node_modules/react-native-calendars/src/timeline-list/index.js
++++ b/node_modules/react-native-calendars/src/timeline-list/index.js
+@@ -84,7 +84,7 @@ const TimelineList = (props) => {
+             return renderItem(_timelineProps, { item, index, isCurrent, isInitialPage, isToday: _isToday });
+         }
+         return (<>
+-          <Timeline {..._timelineProps}/>
++          <Timeline {..._timelineProps} key={_timelineProps.key}/>
+           {/* NOTE: Keeping this for easy debugging */}
+           {/* <Text style={{position: 'absolute'}}>{item}</Text>*/}
+         </>);
+diff --git a/node_modules/react-native-calendars/src/timeline/Timeline.d.ts b/node_modules/react-native-calendars/src/timeline/Timeline.d.ts
+index 9cbc300..3e1217a 100644
+--- a/node_modules/react-native-calendars/src/timeline/Timeline.d.ts
++++ b/node_modules/react-native-calendars/src/timeline/Timeline.d.ts
+@@ -1,8 +1,10 @@
+ import React from 'react';
++
+ import { Theme } from '../types';
++import { Event, PackedEvent } from './EventBlock';
+ import { UnavailableHours } from './Packer';
+ import { TimelineHoursProps } from './TimelineHours';
+-import { Event, PackedEvent } from './EventBlock';
++
+ export interface TimelineProps {
+     /**
+      * The date / dates of this timeline instance in ISO format (e.g. 2011-10-25)
+@@ -103,6 +105,10 @@ export interface TimelineProps {
+     timelineLeftInset?: number;
+     /** Identifier for testing */
+     testID?: string;
++	/**
++	 * The reference to the scroll position of the timeline component
++	 */
++	scrollY?: React.MutableRefObject<number>;
+ }
+ export { Event as TimelineEventProps, PackedEvent as TimelinePackedEventProps };
+ declare const _default: React.MemoExoticComponent<(props: TimelineProps) => React.JSX.Element>;
+diff --git a/node_modules/react-native-calendars/src/timeline/Timeline.js b/node_modules/react-native-calendars/src/timeline/Timeline.js
+index b7e02da..b879cdb 100644
+--- a/node_modules/react-native-calendars/src/timeline/Timeline.js
++++ b/node_modules/react-native-calendars/src/timeline/Timeline.js
+@@ -15,7 +15,7 @@ import EventBlock from './EventBlock';
+ import NowIndicator from './NowIndicator';
+ import useTimelineOffset from './useTimelineOffset';
+ const Timeline = (props) => {
+-    const { format24h = true, start = 0, end = 24, date = '', events, onEventPress, onBackgroundLongPress, onBackgroundLongPressOut, renderEvent, theme, scrollToFirst, scrollToNow, initialTime, showNowIndicator, scrollOffset, onChangeOffset, overlapEventsSpacing = 0, rightEdgeSpacing = 0, unavailableHours, unavailableHoursColor, eventTapped, numberOfDays = 1, timelineLeftInset = 0, testID } = props;
++    const {format24h = true, start = 0, end = 24, date = '', events, onEventPress, onBackgroundLongPress, onBackgroundLongPressOut, renderEvent, theme, scrollToFirst, scrollToNow, initialTime, showNowIndicator, scrollOffset, onChangeOffset, overlapEventsSpacing = 0, rightEdgeSpacing = 0, unavailableHours, unavailableHoursColor, eventTapped, numberOfDays = 1, timelineLeftInset = 0, testID, scrollY} = props;
+     const pageDates = useMemo(() => {
+         return typeof date === 'string' ? [date] : date;
+     }, [date]);
+@@ -91,7 +91,7 @@ const Timeline = (props) => {
+     };
+     return (<ScrollView 
+     // @ts-expect-error
+-    ref={scrollView} style={styles.current.container} contentContainerStyle={[styles.current.contentStyle, { width: constants.screenWidth }]} showsVerticalScrollIndicator={false} {...scrollEvents} testID={testID}>
++    key={date} ref={scrollView} style={styles.current.container} contentContainerStyle={[styles.current.contentStyle, { width: constants.screenWidth }]} showsVerticalScrollIndicator={false} {...scrollEvents} testID={testID} onScroll={(e) => {scrollY.current = e.nativeEvent.contentOffset.y}}>
+       <TimelineHours start={start} end={end} date={pageDates[0]} format24h={format24h} styles={styles.current} unavailableHours={unavailableHours} unavailableHoursColor={unavailableHoursColor} onBackgroundLongPress={onBackgroundLongPress} onBackgroundLongPressOut={onBackgroundLongPressOut} width={width} numberOfDays={numberOfDays} timelineLeftInset={timelineLeftInset} testID={`${testID}.hours`}/>
+       {times(numberOfDays, renderTimelineDay)}
+     </ScrollView>);
+diff --git a/node_modules/react-native-calendars/src/timeline/TimelineHours.d.ts b/node_modules/react-native-calendars/src/timeline/TimelineHours.d.ts
+index 1afa163..c790c4a 100644
+--- a/node_modules/react-native-calendars/src/timeline/TimelineHours.d.ts
++++ b/node_modules/react-native-calendars/src/timeline/TimelineHours.d.ts
+@@ -1,6 +1,8 @@
+ import React from 'react';
+-import { ViewStyle, TextStyle } from 'react-native';
++import { TextStyle, ViewStyle } from 'react-native';
++
+ import { UnavailableHours } from './Packer';
++
+ interface NewEventTime {
+     hour: number;
+     minutes: number;
+@@ -11,7 +13,7 @@ export interface TimelineHoursProps {
+     end?: number;
+     date?: string;
+     format24h?: boolean;
+-    onBackgroundLongPress?: (timeString: string, time: NewEventTime) => void;
++    onBackgroundLongPress?: (timeString: string, time: NewEventTime, yPosition: number) => void;
+     onBackgroundLongPressOut?: (timeString: string, time: NewEventTime) => void;
+     unavailableHours?: UnavailableHours[];
+     unavailableHoursColor?: string;
+diff --git a/node_modules/react-native-calendars/src/timeline/TimelineHours.js b/node_modules/react-native-calendars/src/timeline/TimelineHours.js
+index 38f76e5..fc28048 100644
+--- a/node_modules/react-native-calendars/src/timeline/TimelineHours.js
++++ b/node_modules/react-native-calendars/src/timeline/TimelineHours.js
+@@ -41,7 +41,7 @@ const TimelineHours = (props) => {
+         const dateByPosition = calcDateByPosition(xPosition, timelineLeftInset, numberOfDays, date);
+         lastLongPressEventTime.current = { hour, minutes, date: dateByPosition };
+         const timeString = buildTimeString(hour, minutes, dateByPosition);
+-        onBackgroundLongPress?.(timeString, lastLongPressEventTime.current);
++        onBackgroundLongPress?.(timeString, lastLongPressEventTime.current, yPosition);
+     }, [onBackgroundLongPress, date]);
+     const handlePressOut = useCallback(() => {
+         if (lastLongPressEventTime.current) {
+@@ -56,8 +56,8 @@ const TimelineHours = (props) => {
+         <View style={StyleSheet.absoluteFillObject}/>
+       </TouchableWithoutFeedback>
+       {unavailableHoursBlocks.map((block, index) => (<View key={index} style={[
++		  		block,
+                 styles.unavailableHoursBlock,
+-                block,
+                 unavailableHoursColor ? { backgroundColor: unavailableHoursColor } : undefined,
+                 { left: timelineLeftInset }
+             ]}/>))}

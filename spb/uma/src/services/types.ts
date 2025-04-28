@@ -60,13 +60,7 @@ export type GetUnitResponse = UnitModel;
 export type GetUnitsResponse = {
   units: UnitModel[];
   total: number;
-  pagination: UnitPagination | null;
-};
-
-export type PaymentRequest = {
-  orderId: string;
-  amount: number;
-  paymentMethod: string;
+  pagination: UnitPagination | undefined;
 };
 
 export type PaymentResponse = {
@@ -96,14 +90,26 @@ export type UnitPrice = {
   currency: string;
 };
 
+export type UnitService = {
+  title: string;
+  price: number;
+  description: string;
+};
+
 export type UnitCard = {
   id: string;
   title: string;
+  phone: string;
+  openTime: Date;
+  closeTime: Date;
+  description: string;
   address: string;
   price: UnitPrice[];
   image: string[];
   distance: string;
   coords: GeographyModel;
+  sportTypes: string[];
+  services: UnitService[];
 };
 
 export type Location = {
@@ -123,17 +129,67 @@ export type Ward = Location & {
   districtId: string;
 };
 
-export interface LocationFilter {
+export type LocationFilter = {
   province: string;
   district: string;
   ward: string;
-}
+};
 
-export interface FilterOptions {
+export type FilterOptions = {
   location: LocationFilter;
   sportType: string;
   isNearby: boolean;
+  radius: number;
   orderBy: string;
   orderType: string;
   query?: string;
-}
+};
+
+export type TimeRange = {
+  startTime: string;
+  endTime: string;
+};
+
+export type GetBookedTimeRequest = {
+  bookedDay: string;
+};
+
+export type GetBookedTimeResponse = {
+  bookedTimes: TimeRange[];
+  total: number;
+};
+
+export type BookingTime = {
+  startTime: string;
+  endTime: string;
+  unitId: string;
+  bookedDay: string;
+};
+
+export type PaymentRequest = {
+  amount: number;
+  orderInfo: string;
+  userId: string;
+  startTime: string;
+  endTime: string;
+  bookingDay: string;
+  unitId: string;
+  unitName: string;
+  timestamp: string;
+};
+
+export type CalendarSection = {
+  title: string;
+  data: CalendarEvent[];
+};
+
+export type CalendarEvent = {
+  startTime: Date;
+  endTime: Date;
+  duration: string;
+  title: string;
+  price: number;
+  currency: string;
+  itemCustomHeightType?: string;
+  id: string;
+};

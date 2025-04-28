@@ -69,6 +69,11 @@
         "nearby": "Nearby Units",
         "see_all": "See All"
     },
+    "common": {
+        "back_to_home": "Back to Home",
+        "loading": "Loading...",
+        "refresh": "Refresh"
+    },
     "filter": {
         "title": "Filter",
         "reset": "Reset",
@@ -81,6 +86,69 @@
             "order_by": "Order By",
             "order_type": "Order Type"
         }
+    },
+    "detail": {
+        "service": "Services & Amenities",
+        "price": "Price",
+        "book_now": "Book Now"
+    },
+    "booking": {
+        "title": "Booking",
+        "submit": "Book Now",
+        "select_date": {
+            "title": "Select Date & Time",
+            "description": "Choose the date and time for your booking",
+            "submit": "Next",
+            "select_in_past": "Choose a date/time in the future",
+            "change_time": "Change Time"
+        },
+        "error": {
+            "title": "Booking Error",
+            "description": "An error occurred while booking. Please try again later."
+        },
+        "details_not_found": "Booking details not found. Please check your booking ID and try again.",
+        "success_title": "Your booking has been successfully completed.",
+        "success_subtitle": "Your booking was successful!",
+        "venue_details": "Venue Details",
+        "booking_details": "Booking Details",
+        "payment_details": "Payment Details",
+        "total_amount": "Total Amount",
+        "payment_method": "Payment Method",
+        "order_info": "Order Info",
+        "important_notes": "Important Notes",
+        "notes_content": "Please arrive 10 minutes early. Bring your confirmation code for verification.",
+        "view_my_bookings": "View My Bookings",
+        "back_to_home": "Back to Home"
+    },
+    "payment": {
+        "error_invalid_url": "Invalid URL",
+        "error_cannot_open_url": "Cannot open URL",
+        "error_redirect": "Payment Error",
+        "redirect_title": "Redirecting",
+        "redirect_description": "You will be redirected to the payment page. Please wait.",
+        "opening_browser": "Opening browser",
+        "proceed_to_payment": "Proceed to Payment",
+        "i_already_paid": "I already paid",
+        "redirect_note": "If you are not redirected, please click the button below."
+    },
+    "schedule": {
+        "my_bookings": "My Bookings",
+        "no_bookings_title": "No bookings found",
+        "no_bookings_description": "You have no bookings yet. Book a field to see it here.",
+        "month_view": "Month View",
+        "week_view": "Week View"
+    },
+    "profile": {
+        "edit_profile": "Edit Profile",
+        "app_settings": "App Settings",
+        "language": "Language",
+        "notifications": "Notifications",
+        "security": "Security",
+        "app_preferences": "App Preferences",
+        "about": "About",
+        "terms_conditions": "Terms & Conditions",
+        "privacy_policy": "Privacy Policy",
+        "logout": "Log Out"
     },
     "error": {
         "ERS000": "Network error, please try again later.",

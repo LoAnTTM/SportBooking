@@ -49,8 +49,15 @@ const useAuthStoreBase = create<AuthState & AuthActions>((set) => ({
 
   checkIsLoggedIn: async () => {
     const accessToken = await getData('accessToken');
-    if (accessToken) {
-      set(() => ({ isLoggedIn: true }));
+    const userRaw = await getData('userInfo');
+    if (accessToken && userRaw) {
+      const user = JSON.parse(userRaw);
+      set(() => ({
+        isLoggedIn: true,
+        userId: user.userId,
+        email: user.email,
+        fullName: user.fullName,
+      }));
     }
   },
 
@@ -69,7 +76,7 @@ const useAuthStoreBase = create<AuthState & AuthActions>((set) => ({
   },
 
   logout: async () => {
-	logDebug('logout');
+    logDebug('logout');
     await authService.logout();
 
     set(() => ({

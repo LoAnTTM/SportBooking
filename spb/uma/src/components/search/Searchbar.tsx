@@ -1,10 +1,10 @@
+import { debounce } from 'lodash';
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { DEFAULT_ICON_SIZE, fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
-import { debounce } from '@/helpers/function';
 import i18next from '@/helpers/i18n';
 import { buildSearchUnitQueryFromFilter } from '@/helpers/pagination';
 import { SearchUnitQuery } from '@/services/types';

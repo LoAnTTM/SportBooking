@@ -18,7 +18,7 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onPress }) => {
   return (
     <Button
       buttonStyle={styles.button}
-      textStyles={styles.buttonText}
+      textStyle={styles.buttonText}
       title={i18next.t('login.google')}
       onPress={onPress}
       before={<GoogleIcon size={22} />}

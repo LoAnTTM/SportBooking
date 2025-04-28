@@ -1,3 +1,4 @@
+import { GET_ALL_SPORT_TYPE_PATH } from '@/constants';
 import { ResponseError } from '@/helpers/error';
 import { apiFactory, ApiResponse } from '@/services/http';
 import { GetSportTypesResponse } from '@/services/types';
@@ -10,7 +11,7 @@ interface ISportTypeService {
 
 class SportTypeService implements ISportTypeService {
   getSportTypes(): Promise<ApiResponse<GetSportTypesResponse> | ResponseError> {
-    return apiFactory('/sport-types').get<GetSportTypesResponse>();
+    return apiFactory(GET_ALL_SPORT_TYPE_PATH).get<GetSportTypesResponse>();
   }
 }
 

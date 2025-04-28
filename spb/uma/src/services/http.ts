@@ -7,7 +7,7 @@ import snakecaseKeys from 'snakecase-keys';
 import ConcurrencyHandler from '@/helpers/concurrency';
 import { ResponseError } from '@/helpers/error';
 import i18next from '@/helpers/i18n';
-import { logError } from '@/helpers/logger';
+import { logDebug, logError } from '@/helpers/logger';
 import { getData } from '@/helpers/storage';
 import { toastError } from '@/helpers/toast';
 import authService from '@/services/auth.service';
@@ -100,6 +100,7 @@ class AxiosConfig {
         authService.logout();
       }
       if (error.code === AxiosError.ERR_NETWORK) {
+        logError(error, 'Network error in onGuestErrorResponse:');
         toastError(i18next.t('error.ERS000'));
       }
     }
@@ -134,6 +135,7 @@ class AxiosConfig {
               })
               .catch((refreshError) => {
                 if (refreshError === AxiosError.ERR_NETWORK) {
+                  logError(refreshError, 'Network error in onErrorResponse:');
                   toastError(i18next.t('error.ERS000'));
                 }
                 authService.logout();
@@ -225,7 +227,8 @@ const responseParse = <K, T extends ApiResponse<K> = ApiResponse<K>>(
 
       return new ResponseError(i18next.t(res.data.code));
     })
-    .catch(() => {
+    .catch((error) => {
+      logDebug(error, 'Error in responseParse:');
       return new ResponseError(i18next.t('error.ERS001'));
     });
 };

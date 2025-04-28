@@ -18,7 +18,7 @@ const NotFound: FC<NotFoundProps> = ({
   return (
     <View style={styles.container}>
       <Image
-        source={require('../../../assets/images/not-found.svg')}
+        source={require('../../../assets/images/not-found.png')}
         style={styles.image}
         resizeMode="contain"
       />

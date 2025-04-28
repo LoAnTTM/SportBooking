@@ -1,9 +1,11 @@
+import { debounce } from 'lodash';
 import React, { FC, useEffect, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useShallow } from 'zustand/shallow';
 
 import {
-  DEFAULT_ICON_SIZE, fontFamily, fontSize, IColorScheme, Radius, UNIT_ORDER_BY, UNIT_ORDER_TYPE
+  DEFAULT_ICON_SIZE, fontFamily, fontSize, GEOGRAPHY_RADIUS, IColorScheme, Radius, UNIT_ORDER_BY,
+  UNIT_ORDER_TYPE
 } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
@@ -17,27 +19,27 @@ import CloseIcon from '@/ui/icon/Close';
 import LocationIcon from '@/ui/icon/Location';
 import SortIcon from '@/ui/icon/Sort';
 import TagIcon from '@/ui/icon/Tag';
-import { useLocationStore, useUnitStore } from '@/zustand';
+import BaseModal from '@/ui/modal/BaseModal';
+import { useLocationStore, useSportTypeStore, useUnitStore } from '@/zustand';
+import Slider from '@react-native-community/slider';
 
-interface FilterModalProps {
+type Props = {
   visible: boolean;
   onClose: () => void;
   onApply: () => void;
 }
 
-// Mock data - replace with your actual data
-const SPORT_TYPES = ['Badminton', 'Tennis', 'Football', 'Basketball'];
-
-const FilterModal: FC<FilterModalProps> = ({ visible, onClose, onApply }) => {
-  const insets = useSafeAreaInsets();
+const FilterModal: FC<Props> = ({ visible, onClose, onApply }) => {
   const { theme } = React.useContext(ThemeContext);
-  const styles = createStyles(theme, insets);
+  const styles = createStyles(theme);
 
   const getProvince = useLocationStore((state) => state.getProvince);
   const getDistrict = useLocationStore((state) => state.getDistrict);
   const getWard = useLocationStore((state) => state.getWard);
-  const filter = useUnitStore((state) => state.filter);
   const updateFilter = useUnitStore((state) => state.updateFilter);
+
+  const filter = useUnitStore(useShallow((state) => state.filter));
+  const sportType = useSportTypeStore((state) => state.sportType);
 
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [districts, setDistricts] = useState<District[]>([]);
@@ -109,6 +111,10 @@ const FilterModal: FC<FilterModalProps> = ({ visible, onClose, onApply }) => {
     updateFilter({ ...filter, orderType });
   };
 
+  const handleRadiusChange = debounce((value: number) => {
+    updateFilter({ radius: Math.round(value) });
+  }, 500);
+
   const handleApply = () => {
     onApply();
     onClose();
@@ -119,6 +125,7 @@ const FilterModal: FC<FilterModalProps> = ({ visible, onClose, onApply }) => {
       location: { province: '', district: '', ward: '' },
       sportType: '',
       isNearby: false,
+      radius: GEOGRAPHY_RADIUS,
       orderBy: '',
       orderType: '',
       query: filter.query,
@@ -140,207 +147,221 @@ const FilterModal: FC<FilterModalProps> = ({ visible, onClose, onApply }) => {
   }, [getProvince, setProvinces]);
 
   return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      transparent
-      onRequestClose={onClose}
-    >
-      <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
-          <View style={styles.header}>
-            <Text style={styles.title}>{i18n.t('filter.title')}</Text>
-            <Pressable onPress={onClose} hitSlop={10}>
-              <CloseIcon size={DEFAULT_ICON_SIZE} color={theme.textDark} />
-            </Pressable>
-          </View>
+    <BaseModal onClose={onClose} visible={visible}>
+      <View style={styles.modalContent}>
+        <View style={styles.header}>
+          <Text style={styles.title}>{i18n.t('filter.title')}</Text>
+          <Pressable onPress={onClose} hitSlop={10}>
+            <CloseIcon size={DEFAULT_ICON_SIZE} color={theme.textDark} />
+          </Pressable>
+        </View>
 
-          <ScrollView
-            style={styles.scrollView}
-            showsVerticalScrollIndicator={false}
-          >
-            {/* Section 1: Tags */}
-            <View style={styles.section}>
-              <View style={styles.sectionHeader}>
-                <TagIcon size={DEFAULT_ICON_SIZE - 4} color={theme.primary} />
-                <Text style={styles.sectionTitle}>Tags</Text>
-              </View>
-              <View style={styles.sectionContent}>
-                <Pressable
-                  style={[
-                    styles.tagButton,
-                    filter.isNearby && styles.activeTagButton,
-                    hasLocationSelected && styles.disabledTagButton,
-                  ]}
-                  onPress={toggleNearby}
-                  disabled={hasLocationSelected}
-                >
-                  <Text
-                    style={[
-                      styles.tagText,
-                      filter.isNearby && styles.activeTagText,
-                      hasLocationSelected && styles.disabledTagText,
-                    ]}
-                  >
-                    Nearby
-                  </Text>
-                </Pressable>
-                {hasLocationSelected && (
-                  <Text style={styles.disabledTagNote}>
-                    (Disabled when location is selected)
-                  </Text>
-                )}
-              </View>
+        <ScrollView
+          style={styles.scrollView}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Section 1: Tags */}
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <TagIcon size={DEFAULT_ICON_SIZE - 4} color={theme.primary} />
+              <Text style={styles.sectionTitle}>Tags</Text>
             </View>
-
-            {/* Section 2: Location */}
-            <View
-              style={[
-                styles.section,
-                filter.isNearby && styles.disabledSection,
-              ]}
-            >
-              <View style={styles.sectionHeader}>
-                <LocationIcon
-                  size={DEFAULT_ICON_SIZE - 4}
-                  color={filter.isNearby ? theme.textLight : theme.primary}
-                />
+            <View style={styles.sectionContent}>
+              <Pressable
+                style={[
+                  styles.tagButton,
+                  filter.isNearby && styles.activeTagButton,
+                  hasLocationSelected && styles.disabledTagButton,
+                ]}
+                onPress={toggleNearby}
+                disabled={hasLocationSelected}
+              >
                 <Text
                   style={[
-                    styles.sectionTitle,
-                    filter.isNearby && styles.disabledText,
+                    styles.tagText,
+                    filter.isNearby && styles.activeTagText,
+                    hasLocationSelected && styles.disabledTagText,
                   ]}
                 >
-                  Location
+                  Nearby
                 </Text>
-                {filter.isNearby && (
-                  <Text style={styles.disabledNote}>
-                    (Disabled when Nearby is selected)
+              </Pressable>
+              {hasLocationSelected && (
+                <Text style={styles.disabledTagNote}>
+                  (Disabled when location is selected)
+                </Text>
+              )}
+
+              {/* Nearby Radius Subsection */}
+              {filter.isNearby && (
+                <View style={styles.radiusContainer}>
+                  <Text style={styles.radiusLabel}>
+                    Radius: {Math.round(filter.radius / 1000)}km
                   </Text>
-                )}
-              </View>
-              <View style={styles.sectionContent}>
-                <Dropdown
-                  value={filter.location.province}
-                  items={provinces.map((item: Province) => ({
-                    label: item.name,
-                    value: item.id,
-                  }))}
-                  onSelect={handleProvinceChange}
-                  placeholder={i18n.t('filter.dropdown.province')}
-                  containerStyle={styles.dropdown}
-                  disabled={filter.isNearby}
-                />
-                <Dropdown
-                  value={filter.location.district}
-                  items={districts.map((item: District) => ({
-                    label: item.name,
-                    value: item.id,
-                  }))}
-                  onSelect={handleDistrictChange}
-                  placeholder={i18n.t('filter.dropdown.district')}
-                  containerStyle={styles.dropdown}
-                  disabled={!filter.location.province || filter.isNearby}
-                />
-                <Dropdown
-                  value={filter.location.ward}
-                  items={wards.map((item: Ward) => ({
-                    label: item.name,
-                    value: item.id,
-                  }))}
-                  onSelect={handleWardChange}
-                  placeholder={i18n.t('filter.dropdown.ward')}
-                  containerStyle={styles.dropdown}
-                  disabled={!filter.location.district || filter.isNearby}
-                />
-              </View>
+                  <Slider
+                    style={styles.slider}
+                    minimumValue={1}
+                    maximumValue={GEOGRAPHY_RADIUS}
+                    step={1000}
+                    value={filter.radius}
+                    onValueChange={handleRadiusChange}
+                    minimumTrackTintColor={theme.primary}
+                    maximumTrackTintColor={theme.borderLight}
+                    thumbTintColor={theme.primary}
+                  />
+                  <View style={styles.sliderLabels}>
+                    <Text style={styles.sliderLabel}>1km</Text>
+                    <Text style={styles.sliderLabel}>
+                      {Math.round(GEOGRAPHY_RADIUS / 1000)}km
+                    </Text>
+                  </View>
+                </View>
+              )}
             </View>
-
-            {/* Section 3: Sport Type */}
-            <View style={styles.section}>
-              <View style={styles.sectionHeader}>
-                <CategoryIcon
-                  size={DEFAULT_ICON_SIZE - 4}
-                  color={theme.primary}
-                />
-                <Text style={styles.sectionTitle}>Sport Type</Text>
-              </View>
-              <View style={styles.sectionContent}>
-                <Dropdown
-                  value={filter.sportType}
-                  items={SPORT_TYPES.map((item) => ({
-                    label: item,
-                    value: item,
-                  }))}
-                  onSelect={handleSportTypeChange}
-                  placeholder={i18n.t('filter.dropdown.sport_type')}
-                  containerStyle={styles.dropdown}
-                />
-              </View>
-            </View>
-
-            {/* Section 4: Sort */}
-            <View style={styles.section}>
-              <View style={styles.sectionHeader}>
-                <SortIcon size={DEFAULT_ICON_SIZE - 4} color={theme.primary} />
-                <Text style={styles.sectionTitle}>Sort</Text>
-              </View>
-              <View style={styles.sectionContent}>
-                <Dropdown
-                  value={filter.orderBy}
-                  items={UNIT_ORDER_BY.map((item) => ({
-                    label: item.name,
-                    value: item.value,
-                  }))}
-                  onSelect={handleOrderByChange}
-                  placeholder={i18n.t('filter.dropdown.order_by')}
-                  containerStyle={styles.dropdown}
-                />
-                <Dropdown
-                  value={filter.orderType}
-                  items={UNIT_ORDER_TYPE.map((item) => ({
-                    label: item.name,
-                    value: item.value,
-                  }))}
-                  onSelect={handleOrderTypeChange}
-                  placeholder={i18n.t('filter.dropdown.order_type')}
-                  containerStyle={styles.dropdown}
-                />
-              </View>
-            </View>
-          </ScrollView>
-
-          <View style={styles.footer}>
-            <Button
-              title={i18n.t('filter.reset')}
-              onPress={handleReset}
-              buttonStyle={styles.resetButton}
-            />
-            <Button
-              title={i18n.t('filter.apply')}
-              onPress={handleApply}
-              buttonStyle={styles.applyButton}
-            />
           </View>
+
+          {/* Section 2: Location */}
+          <View
+            style={[styles.section, filter.isNearby && styles.disabledSection]}
+          >
+            <View style={styles.sectionHeader}>
+              <LocationIcon
+                size={DEFAULT_ICON_SIZE - 4}
+                color={filter.isNearby ? theme.textLight : theme.primary}
+              />
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  filter.isNearby && styles.disabledText,
+                ]}
+              >
+                Location
+              </Text>
+              {filter.isNearby && (
+                <Text style={styles.disabledNote}>
+                  (Disabled when Nearby is selected)
+                </Text>
+              )}
+            </View>
+            <View style={styles.sectionContent}>
+              <Dropdown
+                value={filter.location.province}
+                items={provinces.map((item: Province) => ({
+                  label: item.name,
+                  value: item.id,
+                }))}
+                onSelect={handleProvinceChange}
+                placeholder={i18n.t('filter.dropdown.province')}
+                containerStyle={styles.dropdown}
+                disabled={filter.isNearby}
+              />
+              <Dropdown
+                value={filter.location.district}
+                items={districts.map((item: District) => ({
+                  label: item.name,
+                  value: item.id,
+                }))}
+                onSelect={handleDistrictChange}
+                placeholder={i18n.t('filter.dropdown.district')}
+                containerStyle={styles.dropdown}
+                disabled={!filter.location.province || filter.isNearby}
+              />
+              <Dropdown
+                value={filter.location.ward}
+                items={wards.map((item: Ward) => ({
+                  label: item.name,
+                  value: item.id,
+                }))}
+                onSelect={handleWardChange}
+                placeholder={i18n.t('filter.dropdown.ward')}
+                containerStyle={styles.dropdown}
+                disabled={!filter.location.district || filter.isNearby}
+              />
+            </View>
+          </View>
+
+          {/* Section 3: Sport Type */}
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <CategoryIcon
+                size={DEFAULT_ICON_SIZE - 4}
+                color={theme.primary}
+              />
+              <Text style={styles.sectionTitle}>Sport Type</Text>
+            </View>
+            <View style={styles.sectionContent}>
+              <Dropdown
+                searchable={false}
+                value={filter.sportType}
+                items={sportType.map((item) => ({
+                  label: item.name,
+                  value: item.id,
+                }))}
+                onSelect={handleSportTypeChange}
+                placeholder={i18n.t('filter.dropdown.sport_type')}
+                containerStyle={styles.dropdown}
+              />
+            </View>
+          </View>
+
+          {/* Section 4: Sort */}
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <SortIcon size={DEFAULT_ICON_SIZE - 4} color={theme.primary} />
+              <Text style={styles.sectionTitle}>Sort</Text>
+            </View>
+            <View style={styles.sectionContent}>
+              <Dropdown
+                searchable={false}
+                value={filter.orderBy}
+                items={UNIT_ORDER_BY.map((item) => ({
+                  label: item.name,
+                  value: item.value,
+                }))}
+                onSelect={handleOrderByChange}
+                placeholder={i18n.t('filter.dropdown.order_by')}
+                containerStyle={styles.dropdown}
+              />
+              <Dropdown
+                searchable={false}
+                value={filter.orderType}
+                items={UNIT_ORDER_TYPE.map((item) => ({
+                  label: item.name,
+                  value: item.value,
+                }))}
+                onSelect={handleOrderTypeChange}
+                placeholder={i18n.t('filter.dropdown.order_type')}
+                containerStyle={styles.dropdown}
+              />
+            </View>
+          </View>
+        </ScrollView>
+
+        <View style={styles.footer}>
+          <Button
+            title={i18n.t('filter.reset')}
+            onPress={handleReset}
+            buttonStyle={styles.resetButton}
+          />
+          <Button
+            title={i18n.t('filter.apply')}
+            onPress={handleApply}
+            buttonStyle={styles.applyButton}
+          />
         </View>
       </View>
-    </Modal>
+    </BaseModal>
   );
 };
 
-const createStyles = (theme: IColorScheme, insets: any) =>
+const createStyles = (theme: IColorScheme) =>
   StyleSheet.create({
-    modalContainer: {
-      flex: 1,
-      backgroundColor: theme.overlay,
-      justifyContent: 'flex-end',
-    },
     modalContent: {
       backgroundColor: theme.backgroundLight,
       borderTopLeftRadius: Radius.xl,
       borderTopRightRadius: Radius.xl,
-      paddingBottom: insets.bottom > 0 ? insets.bottom : hp(2),
       maxHeight: '90%',
+      width: '100%',
     },
     header: {
       flexDirection: 'row',
@@ -382,7 +403,7 @@ const createStyles = (theme: IColorScheme, insets: any) =>
     },
     tagButton: {
       borderWidth: 1,
-      borderColor: theme.borderDark,
+      borderColor: theme.borderLight,
       borderRadius: Radius.md,
       paddingHorizontal: wp(4),
       paddingVertical: hp(1),
@@ -438,6 +459,33 @@ const createStyles = (theme: IColorScheme, insets: any) =>
       fontSize: fontSize.xs,
       color: theme.textLight,
       marginTop: hp(0.5),
+    },
+    radiusContainer: {
+      marginTop: hp(2),
+      paddingTop: hp(1.5),
+      borderTopWidth: 1,
+      borderTopColor: theme.borderLight,
+      width: '100%',
+    },
+    radiusLabel: {
+      ...fontFamily.POPPINS_MEDIUM,
+      fontSize: fontSize.sm,
+      color: theme.textDark,
+      marginBottom: hp(1),
+    },
+    slider: {
+      width: '100%',
+      height: hp(4),
+    },
+    sliderLabels: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: wp(1),
+    },
+    sliderLabel: {
+      ...fontFamily.POPPINS_REGULAR,
+      fontSize: fontSize.xs,
+      color: theme.textLight,
     },
   });
 

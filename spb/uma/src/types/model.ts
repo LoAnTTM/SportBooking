@@ -90,6 +90,7 @@ export type OrderItemModel = {
   itemName: string;
   quantity: number;
   itemType: string;
+  bookedDay: string;
 };
 
 export type OrderModel = {

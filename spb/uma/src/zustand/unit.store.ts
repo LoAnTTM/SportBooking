@@ -1,11 +1,14 @@
 import { create } from 'zustand';
 
+import { GEOGRAPHY_RADIUS } from '@/constants';
 import { calculateDistance } from '@/helpers/location';
 import { mappingUnitModelToUnitCard } from '@/helpers/mapping';
 import { round } from '@/helpers/number';
 import { compare, deepClone } from '@/helpers/object';
 import { stringQueryToSearchUnitQuery } from '@/helpers/pagination';
-import { FilterOptions, PopularUnitRequest, SearchUnitQuery, UnitCard } from '@/services/types';
+import {
+  FilterOptions, GetBookedTimeRequest, PopularUnitRequest, SearchUnitQuery, TimeRange, UnitCard
+} from '@/services/types';
 import unitService from '@/services/unit.service';
 import { GeographyModel, UnitModel, UnitPagination } from '@/types/model';
 
@@ -19,10 +22,13 @@ interface UnitState {
   popularUnits: UnitCard[];
   nearByUnits: UnitCard[];
   searchUnits: UnitCard[];
-  currentUnit: UnitModel | null;
-  total: number | null;
-  pagination: UnitPagination | null;
+  currentUnit: UnitCard;
+  total: number;
+  pagination: UnitPagination;
   filter: FilterOptions;
+  bookedTimes: {
+    [date: string]: TimeRange[];
+  };
   isLoading: boolean;
   canLoadMore: boolean;
 }
@@ -30,11 +36,11 @@ interface UnitState {
 interface UnitActions {
   fetchPopularUnits: (query: PopularUnitRequest) => Promise<void>;
   fetchNearByUnits: (query: SearchUnitQuery) => Promise<void>;
-  fetchDetailUnit: (id: string) => Promise<void>;
+  fetchDetailUnit: (id: string, location: GeographyModel) => Promise<void>;
   search: (query: SearchUnitQuery, location: GeographyModel) => Promise<void>;
-  updateFilter: (filter: FilterOptions) => void;
+  updateFilter: (filter: Partial<FilterOptions>) => void;
   loadMore: (location: GeographyModel) => Promise<void>;
-
+  fetchBookedTime: (day: string) => Promise<void>;
   hasFilter: () => boolean;
   reset: () => void;
   resetSearch: () => void;
@@ -44,6 +50,7 @@ export const initFilter = {
   location: { province: '', district: '', ward: '' },
   sportType: '',
   isNearby: false,
+  radius: GEOGRAPHY_RADIUS,
   orderBy: '',
   orderType: '',
 } as FilterOptions;
@@ -51,13 +58,14 @@ export const initFilter = {
 const initialState: UnitState = {
   popularUnits: [],
   nearByUnits: [],
-  currentUnit: null,
+  currentUnit: {} as UnitCard,
   searchUnits: [],
-  total: null,
-  pagination: null,
+  total: 0,
+  pagination: {} as UnitPagination,
   filter: deepClone(initFilter),
   isLoading: false,
   canLoadMore: false,
+  bookedTimes: {},
 };
 
 export const useUnitStore = create<UnitState & UnitActions>((set, get) => ({
@@ -117,7 +125,7 @@ export const useUnitStore = create<UnitState & UnitActions>((set, get) => ({
     set({ nearByUnits, isLoading: false });
   },
 
-  fetchDetailUnit: async (id: string) => {
+  fetchDetailUnit: async (id: string, location: GeographyModel) => {
     set({ isLoading: true });
     const response = await unitService.getDetail(id);
     if (response instanceof Error) {
@@ -126,7 +134,16 @@ export const useUnitStore = create<UnitState & UnitActions>((set, get) => ({
     }
 
     const unit = response.data;
-    set({ currentUnit: unit, isLoading: false });
+    const unitCard = mappingUnitModelToUnitCard(unit);
+
+    const distance = round(
+      calculateDistance(
+        { latitude: location.latitude, longitude: location.longitude },
+        unit.address?.locationGeography
+      )
+    );
+    unitCard.distance = `${distance} km`;
+    set({ currentUnit: unitCard, isLoading: false });
   },
 
   search: async (query: SearchUnitQuery, location: GeographyModel) => {
@@ -173,14 +190,6 @@ export const useUnitStore = create<UnitState & UnitActions>((set, get) => ({
     });
   },
 
-  updateFilter: (filter: FilterOptions) => {
-    set({ filter });
-  },
-
-  hasFilter: () => {
-    return !compare(get().filter, initFilter, ['query']);
-  },
-
   loadMore: async (location: GeographyModel) => {
     const { pagination } = get();
     if (!pagination || !pagination.nextPage) {
@@ -189,10 +198,8 @@ export const useUnitStore = create<UnitState & UnitActions>((set, get) => ({
 
     // convert pagination.nextPage to query
     const query = stringQueryToSearchUnitQuery(pagination.nextPage);
-    set({ isLoading: true });
     const response = await unitService.search(query);
     if (response instanceof Error) {
-      set({ isLoading: false });
       throw response;
     }
 
@@ -218,8 +225,47 @@ export const useUnitStore = create<UnitState & UnitActions>((set, get) => ({
       canLoadMore: !!paginationData?.nextPage,
       total,
       pagination: paginationData,
-      isLoading: false,
     });
+  },
+
+  fetchBookedTime: async (day: string) => {
+    const { currentUnit } = get();
+    if (!currentUnit.id) {
+      return;
+    }
+
+    try {
+      const requestData = {
+        bookedDay: day,
+      } as GetBookedTimeRequest;
+
+      set({ isLoading: true });
+      const response = await unitService.bookedTime(
+        currentUnit.id,
+        requestData
+      );
+      if (response instanceof Error) {
+        set({ isLoading: false });
+        throw response;
+      }
+      const bookedTimes = response.data.bookedTimes;
+      set({ bookedTimes: { [requestData.bookedDay]: bookedTimes } });
+    } catch (error) {
+      console.error('Error fetching booked time:', error);
+      if (error instanceof Error) {
+        throw error;
+      }
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  updateFilter: (filter: Partial<FilterOptions>) => {
+    set({ filter: { ...get().filter, ...filter } });
+  },
+
+  hasFilter: () => {
+    return !compare(get().filter, initFilter, ['query']);
   },
 
   reset: () => {

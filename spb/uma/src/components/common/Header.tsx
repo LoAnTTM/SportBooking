@@ -14,10 +14,11 @@ const Header: FC = () => {
   const styles = createStyles(theme);
   const address = useLocationStore((state) => state.address);
   const city = useLocationStore((state) => state.city);
+  const updateAddress = useLocationStore((state) => state.updateAddress);
 
   const handleLocationPress = useCallback(() => {
-    console.log('Location pressed');
-  }, []);
+    updateAddress();
+  }, [updateAddress]);
 
   const handleNotificationPress = useCallback(() => {
     console.log('Notifications pressed');

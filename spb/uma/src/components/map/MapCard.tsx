@@ -76,7 +76,7 @@ const createStyles = (theme: IColorScheme) =>
     container: {
       width: wp(65),
       borderRadius: Radius.lg,
-      backgroundColor: theme.backgroundLight,
+      backgroundColor: theme.backgroundDark,
     },
     pressed: {
       opacity: 0.9,

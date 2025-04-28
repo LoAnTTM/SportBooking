@@ -20,7 +20,10 @@ const FilterButton: FC<FilterButtonProps> = ({ onPress, hasFilter }) => {
       hitSlop={10}
       style={[styles.container, hasFilter && styles.active]}
     >
-      <FilterIcon color={hasFilter ? theme.white : theme.icon} size={DEFAULT_ICON_SIZE + 4} />
+      <FilterIcon
+        color={hasFilter ? theme.white : theme.icon}
+        size={DEFAULT_ICON_SIZE + 4}
+      />
     </Pressable>
   );
 };
@@ -30,10 +33,12 @@ const createStyles = (theme: IColorScheme) =>
     container: {
       padding: wp(2),
       borderRadius: 8,
-      backgroundColor: theme.secondary,
+      //   backgroundColor: theme.secondary,
       alignItems: 'center',
       justifyContent: 'center',
       marginLeft: wp(2),
+      borderWidth: 1,
+      borderColor: theme.borderLight,
     },
     active: {
       backgroundColor: theme.primary,

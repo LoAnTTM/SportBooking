@@ -40,6 +40,7 @@ class AuthService {
 
     if ('data' in response) {
       await storeData('accessToken', response.data.accessToken);
+	  await storeData('userInfo', JSON.stringify(response.data.user));
     }
     return response;
   }
@@ -87,6 +88,7 @@ class AuthService {
 
     if ('data' in response) {
       await storeData('accessToken', response.data.accessToken);
+	  await storeData('userInfo', JSON.stringify(response.data.user));
     }
     return response;
   }

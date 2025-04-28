@@ -1,10 +1,10 @@
 import React from 'react';
 
-import BookingScreen from '@/screens/main/tab/booking';
 import HomeScreen from '@/screens/main/tab/home';
 import MapScreen from '@/screens/main/tab/map';
 import ProfileScreen from '@/screens/main/tab/profile';
-import CalenderIcon from '@/ui/icon/Calender';
+import ScheduleScreen from '@/screens/main/tab/schedule';
+import CalendarIcon from '@/ui/icon/Calendar';
 import HomeIcon from '@/ui/icon/Home';
 import MapIcon from '@/ui/icon/Map';
 import UserIcon from '@/ui/icon/User';
@@ -18,14 +18,14 @@ export type TabParamList = {
     unitId: string | undefined;
     renderType: UnitRenderTypes | undefined;
   };
-  Booking: undefined;
+  Schedule: undefined;
   Profile: undefined;
 };
 
 export const TabScreens: Record<string, keyof TabParamList> = {
   Home: 'Home',
   Map: 'Map',
-  Booking: 'Booking',
+  Schedule: 'Schedule',
   Profile: 'Profile',
 };
 
@@ -37,8 +37,8 @@ const renderTabBarIcon = (route: { name: string }, color: string) => {
       return <HomeIcon color={color} />;
     case TabScreens.Map:
       return <MapIcon color={color} />;
-    case TabScreens.Booking:
-      return <CalenderIcon color={color} />;
+    case TabScreens.Schedule:
+      return <CalendarIcon color={color} />;
     case TabScreens.Profile:
       return <UserIcon color={color} />;
   }
@@ -62,7 +62,7 @@ const TabStack: React.FC = () => {
     >
       <Tab.Screen name={TabScreens.Home} component={HomeScreen} />
       <Tab.Screen name={TabScreens.Map} component={MapScreen} />
-      <Tab.Screen name={TabScreens.Booking} component={BookingScreen} />
+      <Tab.Screen name={TabScreens.Schedule} component={ScheduleScreen} />
       <Tab.Screen name={TabScreens.Profile} component={ProfileScreen} />
     </Tab.Navigator>
   );
