@@ -1,0 +1,2315 @@
+{
+	"info": {
+		"_postman_id": "d01a5b41-9cea-45ef-b661-3868171535b5",
+		"name": "Sport Booking",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44430587",
+		"_collection_link": "https://speeding-star-993488.postman.co/workspace/Team-Workspace~46029814-fe98-4afa-85bb-7536cd50025d/collection/3418009-d01a5b41-9cea-45ef-b661-3868171535b5?action=share&source=collection_link&creator=44430587"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let json_data = JSON.parse(pm.response.text())",
+									"let access_token = json_data.data?.access_token",
+									"",
+									"pm.environment.set(\"access_token\", access_token)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// Admin ==================================\n// {\n//     \"email\": \"admin@gmail.com\",\n//     \"password\": \"Admin1234@\"\n// }\n\n// Client =================================\n// {\n//     \"email\": \"client@gmail.com\",\n//     \"password\": \"Client1234@\"\n// }\n\n{\n    \"email\": \"lolizilker@gmail.com\",\n    \"password\": \"Client1234@\"\n}\n// User ===================================\n// {\n//     \"email\": \"hoangzrik@gmail.com\",\n//     \"password\": \"User1234@\"\n// }\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/auth/login",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let json_data = JSON.parse(pm.response.text())",
+									"let access_token = json_data.data?.access_token",
+									"",
+									"pm.environment.set(\"access_token\", access_token)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/auth/logout",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"hoangzrik@gmail.com\",\n    \"password\": \"User1234@\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/auth/register",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[register]: verify-register-token",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let json_data = JSON.parse(pm.response.text())",
+									"let access_token = json_data.data?.access_token",
+									"",
+									"pm.environment.set(\"access_token\", access_token)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"lolizilker@gmail.com\",\n    \"token\": 3499\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/auth/verify-register-token",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"auth",
+								"verify-register-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[register]: verify-register-token resend",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let json_data = JSON.parse(pm.response.text())",
+									"let access_token = json_data.data?.access_token",
+									"",
+									"pm.environment.set(\"access_token\", access_token)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": 8349\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/auth/verify-register-token/resend",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"auth",
+								"verify-register-token",
+								"resend"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh token",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let json_data = JSON.parse(pm.response.text())",
+									"let access_token = json_data.data?.access_token",
+									"",
+									"pm.environment.set(\"access_token\", access_token)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/auth/refresh",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forgot password",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let json_data = JSON.parse(pm.response.text())",
+									"let access_token = json_data.data?.access_token",
+									"",
+									"pm.environment.set(\"access_token\", access_token)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"hoangzrik@gmail.com\"\n} ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/auth/forgot-password",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"auth",
+								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[forgot password]: verify-forgot-password-token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"hoangzrik@gmail.com\",\n    \"token\": 828098\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/auth/verify-forgot-password-token",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"auth",
+								"verify-forgot-password-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[forgot password]: reset password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"hoangzrik@gmail.com\",\n    \"token\": 828098,\n    \"password\": \"user12345\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/auth/reset-password",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"auth",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[social] google callback",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": \"eyJhbGciOiJSUzI1NiIsImtpZCI6ImVlYzUzNGZhNWI4Y2FjYTIwMWNhOGQwZmY5NmI1NGM1NjIyMTBkMWUiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI3MzEwNDE4ODczNjEtZDBraW1mcDVvb2JhY3JpZ3UyZjEyZnNtZDVzNHU0MmouYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI3MzEwNDE4ODczNjEtODNiOG9mdGUxZGNza25rMGdiYWhscGlrb3MyMTM3Z3EuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTY2MDI5ODY2Mjk5NDg0NTc1NDQiLCJlbWFpbCI6ImxvbGl6aWxrZXJAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5hbWUiOiJsb2xpenJpayIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NMYk1mZWMtVWRQMWdyeUlwWTlSV0o1Zld0eWhkRGQtZXVGX2RjMnl1MnRXSDFSdHc9czk2LWMiLCJnaXZlbl9uYW1lIjoibG9saXpyaWsiLCJpYXQiOjE3MzkxNTc4ODMsImV4cCI6MTczOTE2MTQ4M30.0_KVwe2EHvZU2wDKI4xu8FTO_3xjloXQNDQKagaPV8qc7GCo1OYoHLJXL1Zz9ekx3-NvTpM5U7v2koWqnWd2Yvxcckp2EaNJ0skhuojCEcoeSzVMKcQ4DVGqf8f00Cctj6vq6xfgciRP3y2NQrAoIaIpXMeptDf7GrScCIuFLoJFhA8z9PdAa8Ec2vObLFniED-jO9BYvw9H_hCfmCa5k5-nfuRTQj2pbzff7rO1M8sfoWMnJlL6Bl5JGSrdB8qD-wBJryx8o8A535O4O_NhSEk0CW1Y-sPioNyrsfdFZP0plvg_2AiA4bq752uk_vzFhYJg_YN35LxTZXLfrNRFAQ\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/google/callback",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"google",
+								"callback"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "get all users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/users/?i=10&p=1&b=email&t=asc",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"users",
+								""
+							],
+							"query": [
+								{
+									"key": "i",
+									"value": "10"
+								},
+								{
+									"key": "p",
+									"value": "1"
+								},
+								{
+									"key": "b",
+									"value": "email"
+								},
+								{
+									"key": "t",
+									"value": "asc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create user -- error [skip]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"nguyenanh@example.com\",\n    \"password\": \"testPass123\",\n    \"role\": \"6c8647dc-091f-4249-b9f7-12bed594d124\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/users",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/users/6bb9e18d-69e7-4dd3-bf7a-7b9ee15b3aeb",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"users",
+								"6bb9e18d-69e7-4dd3-bf7a-7b9ee15b3aeb"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update user by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"full_name\": \"Loan Truong\",\n    \"phone\": \"+84929280524\",\n    \"role\": \"6c8647dc-091f-4249-b9f7-12bed594d124\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/users/bad8518e-6c2c-4776-8b30-e01246eec140",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"users",
+								"bad8518e-6c2c-4776-8b30-e01246eec140"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/users/8621623d-b63a-4653-8ae3-70da934db818",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"users",
+								"8621623d-b63a-4653-8ae3-70da934db818"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "metadatas",
+			"item": [
+				{
+					"name": "get metadata by key",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/metadatas/operator_email",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"metadatas",
+								"operator_email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update metadata by key",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"value\": \"hoangduc97dn@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/metadatas/operator_email",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"metadatas",
+								"operator_email"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "testing",
+			"item": [
+				{
+					"name": "ses verify",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let json_data = JSON.parse(pm.response.text())",
+									"let access_token = json_data.data?.access_token",
+									"",
+									"pm.environment.set(\"access_token\", access_token)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"lolizilker@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/auth/ses-verify",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"auth",
+								"ses-verify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ses verify Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let json_data = JSON.parse(pm.response.text())",
+									"let access_token = json_data.data?.access_token",
+									"",
+									"pm.environment.set(\"access_token\", access_token)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"lolizilker@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.opencagedata.com/geocode/v1/json?q=16.048437+108.214955&key=908c3c75e9e748c8aad87e5377ab465a",
+							"protocol": "https",
+							"host": [
+								"api",
+								"opencagedata",
+								"com"
+							],
+							"path": [
+								"geocode",
+								"v1",
+								"json"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "16.048437+108.214955"
+								},
+								{
+									"key": "key",
+									"value": "908c3c75e9e748c8aad87e5377ab465a"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "address",
+			"item": [
+				{
+					"name": "get provinces",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/addresses/provinces",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"addresses",
+								"provinces"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get province byid",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/addresses/provinces/:id",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"addresses",
+								"provinces",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1f7d45c7-6c36-46f4-890b-322c9e6194ed"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get province districts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/addresses/provinces/:id/districts",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"addresses",
+								"provinces",
+								":id",
+								"districts"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1f7d45c7-6c36-46f4-890b-322c9e6194ed"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get districts byid",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/addresses/districts/:id",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"addresses",
+								"districts",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "52170058-aebb-425d-9341-e608afdeaa65"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get district wards",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/addresses/districts/:id/wards",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"addresses",
+								"districts",
+								":id",
+								"wards"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "52170058-aebb-425d-9341-e608afdeaa65"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get wards byid",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/addresses/wards/:id",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"addresses",
+								"wards",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "96f7b3bf-5844-4696-8836-a7f02f649f40"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "units",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"San Nguyen Van Linh\",\n\t\"open_time\": \"16:00\",\n\t\"close_time\": \"22:00\",\n\t\"phone\": \"+84123412343\",\n\t\"description\": \"San bong Nguyen Van Linh\",\n\t\"status\": 1,\n\t\"club_id\": \"8a5d0219-01dd-43ad-a6dc-c287642a5b3f\",\n\t\"address\": {\n\t\t\"address\": \"21 Nguyen Van Linh\",\n        \"ward_id\": \"1fcdc473-347a-473e-81bb-f489829d68b8\",\n        \"location_geography\": {\n            \"longitude\": 12.3532,\n            \"latitude\": 30.23110\n        }\n\t},\n\t\"unit_prices\": [\n\t\t{\n\t\t\t\"price\": 4000,\n            \"currency\": \"VND\",\n\t\t\t\"start_time\": \"16:00\",\n\t\t\t\"end_time\": \"20:00\"\n\t\t},\n\t\t{\n\t\t\t\"price\": 2000,\n            \"currency\": \"VND\",\n\t\t\t\"start_time\": \"20:00\",\n\t\t\t\"end_time\": \"22:00\"\n\t\t}\n\t],\n\t\"unit_services\": [\n        {\n            \"name\": \"Nuoc ngot co gas\",\n            \"icon\": \"http://aasdf\",\n            \"price\": 12000,\n            \"currency\": \"VND\",\n            \"description\": \"nuoc ngot co gas pepsi, co lanh\",\n            \"status\": 1\n        },\n        {\n            \"name\": \"Tra da lanh\",\n            \"icon\": \"http://aasdf\",\n            \"price\": 0,\n            \"currency\": \"VND\",\n            \"description\": \"nuoc, tra da lanh mien phi\",\n            \"status\": 1\n        }\n    ],\n\t\"media\": [\n\t\t{\n\t\t\t\"file_path\": \"http://localhost:9000/clubs/sasbndd%201.png\",\n\t\t\t\"file_type\": \"png\",\n\t\t\t\"hash\": \"ad22a2e8451c0e937dbbe1fdf79aewerer\"\n\t\t}\n\t],\n    \"sport_types\": [\n\t\t\"f6fcc299-38fa-448c-bf34-32291f356e37\"\n\t]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/units",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"units"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/units/:id",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"units",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "25cda1d5-9848-4873-ae4d-8cbe77c3cfff"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get popularity",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"latitude\":108.2095133,\"longitude\":16.0500133,\"radius\":30000,\"top_n\":30000,\"limit\":10}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/units/popularity",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"units",
+								"popularity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get booked time",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"booked_day\": \"2015-04-15\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/units/:id/booked-time",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"units",
+								":id",
+								"booked-time"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "8f4f2df0-b5db-4e32-9bd0-7619aeb517fe"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"address\": {\n        \"location_geography\": {\n            \"longitude\": 16.046713,\n            \"latitude\": 108.205804\n        }\n    }\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/units/:id",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"units",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "8f4f2df0-b5db-4e32-9bd0-7619aeb517fe"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/units/:id",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"units",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "8759128a-c58d-4d40-9245-1734f945e121"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/units?i=&p=&b=&t=&q=2&st=&pv=&wd=&dt=",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"units"
+							],
+							"query": [
+								{
+									"key": "i",
+									"value": ""
+								},
+								{
+									"key": "p",
+									"value": ""
+								},
+								{
+									"key": "b",
+									"value": ""
+								},
+								{
+									"key": "t",
+									"value": ""
+								},
+								{
+									"key": "q",
+									"value": "2"
+								},
+								{
+									"key": "st",
+									"value": ""
+								},
+								{
+									"key": "pv",
+									"value": ""
+								},
+								{
+									"key": "wd",
+									"value": ""
+								},
+								{
+									"key": "dt",
+									"value": ""
+								},
+								{
+									"key": "lng",
+									"value": "108.205804",
+									"disabled": true
+								},
+								{
+									"key": "lat",
+									"value": "16.046713",
+									"disabled": true
+								},
+								{
+									"key": "r",
+									"value": "30000",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add media",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"file_path\": \"http://localhost:9000/clubs/san-bong-da-4-unit.png\",\n    \"file_type\": \"png\",\n    \"hash\": \"ad22a2e8451c0e937dbbe1fdf79a6f99\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/units/:id/media",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"units",
+								":id",
+								"media"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "68de781f-8a2d-4e4b-9a83-88e97baa59e7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete media",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/units/media/:id",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"units",
+								"media",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "fdd5a196-2793-4fd8-8985-841384a5be35"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "sport-types",
+			"item": [
+				{
+					"name": "create sport type",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Football\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/sport-types",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"sport-types"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all sport type",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/sport-types",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"sport-types"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get sport type by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/sport-types/?id",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"sport-types",
+								""
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete sport type",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/sport-types/?id",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"sport-types",
+								""
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update sport type by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"end_time\": \"string\",\n  \"price\": 0,\n  \"start_time\": \"string\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/sport-types/?id",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"sport-types",
+								""
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "clubs",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Football club 2\",\r\n  \"phone\": \"+84991244563\",\r\n  \"owner_id\": \"148eea19-4ab5-40d6-8ba7-6f77e7607399\",\r\n  \"address\": {\r\n    \"address\": \"Hung Vuong\",\r\n    \"ward_id\": \"2fede5db-4c8e-4d86-bce8-9f59c83b7b9d\",\r\n    \"location_geography\": {\r\n        \"longitude\": 12.3432,\r\n        \"latitude\": 30.23434\r\n    }\r\n  },\r\n  \"description\": \"The football club test 2\",\r\n  \"media\": [\r\n\t\t{\r\n\t\t\t\"file_path\": \"https://spb-clubs.s3.ap-southeast-1.amazonaws.com/san-bong-da-quyet-tam-2-2032207698+1.png\",\r\n\t\t\t\"file_type\": \"png\",\r\n\t\t\t\"hash\": \"ad22a2e8451c0e937dbbe1fdf79a6f88\"\r\n\t\t}\r\n\t],\r\n  \"sport_types\": [\r\n\t\t\"f6fcc299-38fa-448c-bf34-32291f356e37\"\r\n\t]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/clubs",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"clubs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get club by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/clubs/:id",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"clubs",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2fc33568-73cb-4db3-9890-162f8b42752d"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add media",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"file_path\": \"http://localhost:9000/clubs/san-bong-da-1.png\",\n    \"file_type\": \"png\",\n    \"hash\": \"ad22a2e8451c0e937dbbe1fdf79a6f99\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/clubs/:id/media",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"clubs",
+								":id",
+								"media"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "79bb58d9-cb5c-435e-892d-6501f403d6c6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get clubs",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/clubs",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"clubs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update club info",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"address\": {\n        \"location_geography\": {\n            \"longitude\": 22.3432,\n            \"latitude\": 20.23434\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/clubs/:id",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"clubs",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "73de38f7-d636-4f63-9e72-10325e4c1294"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete club",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/clubs/:id",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"clubs",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "e78162fa-2a5a-4565-88b4-5ecae4415021"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete media",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/clubs/media/:id",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"clubs",
+								"media",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "9abca5ae-4b86-4a65-b0a6-c7c18b103871"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "order",
+			"item": [
+				{
+					"name": "get order by user id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/orders/:user_id",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"orders",
+								":user_id"
+							],
+							"variable": [
+								{
+									"key": "user_id",
+									"value": "b16ea641-b463-489b-985b-90ec2116981f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "pay",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"amount\": 100000,\n  \"order_info\": \"Sport Booking - Hoa don thue 'San B' tu 07:00 den 09:00\",\n  \"user_id\": \"2602df82-2941-4cd2-9de1-4cdbaf7ecd87\",\n  \"start_time\": \"16:00\",\n  \"end_time\": \"18:00\",\n  \"booking_day\": \"2025-04-21\",\n  \"unit_id\": \"c5f116de-af4b-427f-8d71-22f1b136a7e4\",\n  \"unit_name\": \"San Nguyen Van Linh 2\",\n  \"timestamp\": \"2025-04-21T18:19:48+07:00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/orders/pay",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"orders",
+								"pay"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "zalypay callback",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_v1}}/orders/zalopay/callback",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"orders",
+								"zalopay",
+								"callback"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "media server",
+			"item": [
+				{
+					"name": "Auth Keys",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "bu",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": "postman-cloud:///1f008a19-a620-4f80-918a-e0012bf75f7a"
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9000/clubs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"clubs"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "notification",
+			"item": [
+				{
+					"name": "get notification for receiver",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/notifications/receiver/:id",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"notifications",
+								"receiver",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "b16ea641-b463-489b-985b-90ec2116981f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get notification for sender",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{api_v1}}/notifications/sender/:id",
+							"host": [
+								"{{api_v1}}"
+							],
+							"path": [
+								"notifications",
+								"sender",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}
