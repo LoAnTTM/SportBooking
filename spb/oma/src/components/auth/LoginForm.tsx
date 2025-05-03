@@ -10,20 +10,13 @@ import i18next from '@/helpers/i18n';
 import { loginValidation } from '@/helpers/validate';
 import { ILoginFormValues } from '@/screens/auth/tab/login';
 import Button from '@/ui/button/BaseButton';
-import GoogleSignIn from '@/ui/button/GoogleSignIn';
-import Line from '@/ui/Line';
 
 interface LoginFormProps {
   onSubmit: (data: { email: string; password: string }) => Promise<void>;
-  onGoogleSignIn: () => Promise<void>;
   theme: IColorScheme;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({
-  onSubmit,
-  onGoogleSignIn,
-  theme,
-}) => {
+const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, theme }) => {
   const styles = createStyles(theme);
   const initialValues: ILoginFormValues = {
     email: '',
@@ -84,8 +77,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
               onPress={handleSubmit}
               disable={!(values.email && values.password)}
             />
-            <Line title="Or" theme={theme} />
-            <GoogleSignIn onPress={onGoogleSignIn} />
           </View>
         </View>
       )}

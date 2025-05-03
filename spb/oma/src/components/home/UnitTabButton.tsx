@@ -16,9 +16,21 @@ const UnitTabButton: FC<UnitTabButtonProps> = ({
     style={[styles.tab]}
     accessibilityRole="tab"
     accessibilityState={{ selected: isActive }}
+    android_ripple={{
+      color: `${iconActiveColor}20`,
+      borderless: true,
+      radius: 35
+    }}
   >
-    <route.icon color={isActive ? iconActiveColor : iconInactiveColor} />
-    <Text style={[styles.tabText]}>{route.title}</Text>
+    {route.icon && <route.icon color={isActive ? iconActiveColor : iconInactiveColor} />}
+    <Text
+      style={[
+        styles.tabText,
+        isActive && { color: iconActiveColor, fontWeight: '500' }
+      ]}
+    >
+      {route.title}
+    </Text>
   </Pressable>
 );
 

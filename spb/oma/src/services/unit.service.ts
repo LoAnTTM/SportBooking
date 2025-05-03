@@ -1,9 +1,12 @@
-import { GET_UNIT_PATH, POPULAR_UNITS_PATH, SEARCH_UNITS_PATH } from '@/constants';
+import {
+  GET_BOOKED_TIME_PATH, GET_UNIT_PATH, POPULAR_UNITS_PATH, SEARCH_UNITS_PATH
+} from '@/constants';
 import { ResponseError } from '@/helpers/error';
 import { PARAMS } from '@/helpers/pagination';
 import { apiFactory, ApiResponse } from '@/services/http';
 import {
-  GetUnitResponse, GetUnitsResponse, PopularUnitRequest, SearchUnitQuery
+  GetBookedTimeRequest, GetBookedTimeResponse, GetUnitResponse, GetUnitsResponse,
+  PopularUnitRequest, SearchUnitQuery
 } from '@/services/types';
 
 export interface IUnitService {
@@ -18,6 +21,11 @@ export interface IUnitService {
   getDetail: (
     id: string
   ) => Promise<ApiResponse<GetUnitResponse> | ResponseError>;
+
+  bookedTime: (
+    unitId: string,
+    data: GetBookedTimeRequest
+  ) => Promise<ApiResponse<GetBookedTimeResponse> | ResponseError>;
 }
 
 class UnitService implements IUnitService {
@@ -50,6 +58,15 @@ class UnitService implements IUnitService {
     return apiFactory(GET_UNIT_PATH)
       .addPathParam(':id', id)
       .get<GetUnitResponse>();
+  }
+
+  bookedTime(
+    unitId: string,
+    data: GetBookedTimeRequest
+  ): Promise<ApiResponse<GetBookedTimeResponse> | ResponseError> {
+    return apiFactory(GET_BOOKED_TIME_PATH)
+      .addPathParam(':id', unitId)
+      .post<GetBookedTimeResponse>(data);
   }
 }
 

@@ -6,7 +6,7 @@ import UnitCardSkeleton from '@/components/home/UnitCardSkeleton';
 import { fontFamily, fontSize, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
-import { TabParamList } from '@/screens/main/tab';
+import { MainStackParamList } from '@/screens/main';
 import { UnitCard as UnitCardObject } from '@/services/types';
 import { UnitRenderTypes } from '@/zustand';
 import { useNavigation } from '@react-navigation/native';
@@ -16,25 +16,34 @@ interface UnitSectionProps {
   title: string;
   units: UnitCardObject[];
   unitRenderType: UnitRenderTypes;
+  handleSeeAll?: () => void;
 }
 
 const UnitSection: FC<UnitSectionProps> = ({
   title,
   units,
   unitRenderType,
+  handleSeeAll,
 }) => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
-  const navigation = useNavigation<NativeStackNavigationProp<TabParamList>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<MainStackParamList>>();
 
   const handleOnPress = (unitId: string) => {
-    console.log('Unit pressed:', unitId);
+    navigation.navigate('Detail', {
+      unitId: unitId,
+    });
   };
 
   const handleOnPressLocation = (id: string, unitType: UnitRenderTypes) => {
-    navigation.navigate('Map', {
-      unitId: id,
-      renderType: unitType,
+    //@ts-ignore
+    navigation.navigate('Tabs', {
+      screen: 'Map',
+      params: {
+        unitId: id,
+        renderType: unitType,
+      },
     });
   };
 
@@ -44,9 +53,11 @@ const UnitSection: FC<UnitSectionProps> = ({
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>{title}</Text>
-        <Pressable onPress={() => console.log('See all pressed')}>
-          <Text style={styles.seeAll}>See all</Text>
-        </Pressable>
+        {handleSeeAll && (
+          <Pressable onPress={handleSeeAll}>
+            <Text style={styles.seeAll}>See all</Text>
+          </Pressable>
+        )}
       </View>
 
       <ScrollView

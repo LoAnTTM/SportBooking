@@ -2,8 +2,6 @@ import React, { FC, useCallback, useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import LocationInfo from '@/components/common/LocationInfo';
-import NotificationBell from '@/components/common/NotificationBell';
-import SearchBar from '@/components/common/SearchBar';
 import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp } from '@/helpers/dimensions';
@@ -14,14 +12,11 @@ const Header: FC = () => {
   const styles = createStyles(theme);
   const address = useLocationStore((state) => state.address);
   const city = useLocationStore((state) => state.city);
+  const updateAddress = useLocationStore((state) => state.updateAddress);
 
   const handleLocationPress = useCallback(() => {
-    console.log('Location pressed');
-  }, []);
-
-  const handleNotificationPress = useCallback(() => {
-    console.log('Notifications pressed');
-  }, []);
+    updateAddress();
+  }, [updateAddress]);
 
   return (
     <View style={styles.container}>
@@ -31,13 +26,7 @@ const Header: FC = () => {
           subtitle={address as string}
           onPress={handleLocationPress}
         />
-        <NotificationBell
-          color={theme.icon}
-          hasNotifications={true}
-          onPress={handleNotificationPress}
-        />
       </View>
-      <SearchBar />
     </View>
   );
 };

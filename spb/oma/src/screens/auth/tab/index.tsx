@@ -1,22 +1,16 @@
 import React, { FC, useContext } from 'react';
 import { Image, ScrollView, StyleSheet, View } from 'react-native';
+import { ShadowedView } from 'react-native-fast-shadow';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import AuthTabView from '@/components/auth/AuthTabView';
 import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import LoginScreen from '@/screens/auth/tab/login';
-import RegisterScreen from '@/screens/auth/tab/register';
 
 const AuthScreen: FC = () => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
-
-  const AuthRoutes = [
-    { key: 'login', component: <LoginScreen />, title: 'Sign In' },
-    { key: 'register', component: <RegisterScreen />, title: 'Sign Up' },
-  ];
 
   return (
     <SafeAreaView style={styles.safeView}>
@@ -33,9 +27,9 @@ const AuthScreen: FC = () => {
             />
           </View>
         </View>
-        <View style={styles.tabView}>
-          <AuthTabView routes={AuthRoutes} theme={theme} />
-        </View>
+        <ShadowedView style={styles.tabView}>
+          <LoginScreen />
+        </ShadowedView>
       </ScrollView>
     </SafeAreaView>
   );
@@ -52,7 +46,7 @@ const createStyles = (theme: IColorScheme) => {
     },
     scrollContent: {
       flexGrow: 1,
-      justifyContent: 'space-between',
+      justifyContent: 'center', // Changed from space-between to center for vertical centering
     },
     header: {
       paddingVertical: hp(2),
@@ -77,14 +71,14 @@ const createStyles = (theme: IColorScheme) => {
     },
     tabView: {
       flex: 1,
-      borderTopLeftRadius: Radius.lg,
-      borderTopRightRadius: Radius.lg,
+	  width: '100%',
+      borderRadius: Radius.lg, // Changed to full border radius
       backgroundColor: theme.backgroundLight,
       shadowColor: theme.shadow,
-      shadowOffset: { width: 0, height: -4 },
+      shadowOffset: { width: 0, height: 0 }, // Changed to create shadow on all sides
       shadowOpacity: 0.15,
       shadowRadius: 8,
-      elevation: 10,
+      marginVertical: hp(4), // Added vertical margin
     },
   });
 };

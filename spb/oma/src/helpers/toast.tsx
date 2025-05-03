@@ -1,10 +1,7 @@
 import React from 'react';
 import { StyleSheet, TextStyle, View, ViewStyle } from 'react-native';
 import Toast, {
-  BaseToast,
-  BaseToastProps,
-  ErrorToast,
-  ToastProps,
+  BaseToast, BaseToastProps, ErrorToast, ToastProps
 } from 'react-native-toast-message';
 
 import { fontFamily, fontSize, IColorScheme } from '@/constants';
@@ -75,6 +72,7 @@ const createToastStyles = (
       borderLeftWidth: 6,
       borderRadius: 0,
       height: hp(6.6),
+      zIndex: 999999,
     },
     content: {
       paddingHorizontal: hp(2),

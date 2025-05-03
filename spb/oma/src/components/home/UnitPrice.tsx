@@ -1,7 +1,7 @@
 import React, { FC, useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { DEFAULT_ICON_SIZE, fontFamily, fontSize, IColorScheme } from '@/constants';
+import { DEFAULT_ICON_SIZE, fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import { UnitPrice as UnitPriceObject } from '@/services/types';
@@ -18,20 +18,21 @@ const UnitPrice: FC<UnitPriceProps> = ({ prices }) => {
   return (
     <View style={styles.container}>
       {prices.map((item, index) => (
-        <View key={index}>
+        <View key={index} style={styles.priceCard}>
           <View style={styles.priceRow}>
             <View style={styles.left}>
-              <TagIcon size={DEFAULT_ICON_SIZE - 8} color={theme.textLight} />
+              <View style={styles.iconContainer}>
+                <TagIcon size={DEFAULT_ICON_SIZE - 6} color={theme.icon} />
+              </View>
               <Text style={styles.time}>
                 {item.startTime} - {item.endTime}
               </Text>
             </View>
             <View style={styles.right}>
               <Text style={styles.price}>{item.price.toLocaleString()}</Text>
-              <Text style={styles.icon}>₫/h</Text>
+              <Text style={styles.unit}>₫/h</Text>
             </View>
           </View>
-          {index !== prices.length - 1 && <View style={styles.divider} />}
         </View>
       ))}
     </View>
@@ -41,7 +42,10 @@ const UnitPrice: FC<UnitPriceProps> = ({ prices }) => {
 const createStyles = (theme: IColorScheme) =>
   StyleSheet.create({
     container: {
-      marginTop: hp(1),
+      backgroundColor: theme.backgroundLight,
+    },
+    priceCard: {
+      paddingVertical: hp(0.3),
     },
     priceRow: {
       flexDirection: 'row',
@@ -51,20 +55,30 @@ const createStyles = (theme: IColorScheme) =>
     left: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap: wp(1),
+      gap: wp(2),
+    },
+    iconContainer: {
+      width: hp(3.2),
+      height: hp(3.2),
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     right: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap: wp(1),
+      backgroundColor: `${theme.primary}10`,
+      paddingVertical: hp(0.5),
+      paddingHorizontal: wp(2),
+      borderRadius: Radius.sm,
     },
-    icon: {
+    unit: {
       ...fontFamily.POPPINS_REGULAR,
       fontSize: fontSize.xs,
       color: theme.textLight,
+      marginLeft: wp(1),
     },
     time: {
-      ...fontFamily.POPPINS_REGULAR,
+      ...fontFamily.POPPINS_MEDIUM,
       fontSize: fontSize.xs,
       color: theme.textLight,
     },
@@ -72,12 +86,6 @@ const createStyles = (theme: IColorScheme) =>
       ...fontFamily.RALEWAY_BOLD,
       fontSize: fontSize.xs,
       color: theme.primary,
-    },
-    divider: {
-      height: 1,
-      backgroundColor: theme.borderDark,
-      opacity: 0.08,
-      marginVertical: hp(0.5),
     },
   });
 

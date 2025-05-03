@@ -1,44 +1,35 @@
 import React from 'react';
 
-import BookingScreen from '@/screens/main/tab/booking';
-import HomeScreen from '@/screens/main/tab/home';
-import MapScreen from '@/screens/main/tab/map';
+import BookingsScreen from '@/screens/main/tab/bookings';
+import ClubHomeScreen from '@/screens/main/tab/home';
 import ProfileScreen from '@/screens/main/tab/profile';
-import CalenderIcon from '@/ui/icon/Calender';
+import CalendarIcon from '@/ui/icon/Calendar';
+import CategoryIcon from '@/ui/icon/Category';
 import HomeIcon from '@/ui/icon/Home';
-import MapIcon from '@/ui/icon/Map';
 import UserIcon from '@/ui/icon/User';
 import TabBar from '@/ui/tabbar/TabBar';
-import { UnitRenderTypes } from '@/zustand';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-export type TabParamList = {
+export type TabStackList = {
   Home: undefined;
-  Map: {
-    unitId: string | undefined;
-    renderType: UnitRenderTypes | undefined;
-  };
-  Booking: undefined;
+  Bookings: undefined;
   Profile: undefined;
 };
 
-export const TabScreens: Record<string, keyof TabParamList> = {
+export const TabScreens: Record<string, keyof TabStackList> = {
   Home: 'Home',
-  Map: 'Map',
-  Booking: 'Booking',
+  Bookings: 'Bookings',
   Profile: 'Profile',
 };
 
-const Tab = createBottomTabNavigator<TabParamList>();
+const Tab = createBottomTabNavigator<TabStackList>();
 
 const renderTabBarIcon = (route: { name: string }, color: string) => {
   switch (route.name) {
     case TabScreens.Home:
       return <HomeIcon color={color} />;
-    case TabScreens.Map:
-      return <MapIcon color={color} />;
-    case TabScreens.Booking:
-      return <CalenderIcon color={color} />;
+    case TabScreens.Bookings:
+      return <CalendarIcon color={color} />;
     case TabScreens.Profile:
       return <UserIcon color={color} />;
   }
@@ -60,9 +51,8 @@ const TabStack: React.FC = () => {
       })}
       backBehavior="history"
     >
-      <Tab.Screen name={TabScreens.Home} component={HomeScreen} />
-      <Tab.Screen name={TabScreens.Map} component={MapScreen} />
-      <Tab.Screen name={TabScreens.Booking} component={BookingScreen} />
+      <Tab.Screen name={TabScreens.Home} component={ClubHomeScreen} />
+      <Tab.Screen name={TabScreens.Bookings} component={BookingsScreen} />
       <Tab.Screen name={TabScreens.Profile} component={ProfileScreen} />
     </Tab.Navigator>
   );

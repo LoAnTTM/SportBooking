@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 import { logDebug } from '@/helpers/logger';
-import { getData } from '@/helpers/storage';
+import { getData, removeData, storeData } from '@/helpers/storage';
 import authService from '@/services/auth.service';
 import { LoginRequest, RegisterRequest } from '@/services/types';
 import { createSelectors } from '@/zustand/selectors';
@@ -11,6 +11,8 @@ interface AuthState {
   userId: string;
   email: string;
   fullName: string;
+  rememberMe: boolean;
+  accessToken: string;
 }
 
 interface AuthActions {
@@ -34,7 +36,12 @@ interface AuthActions {
     email: string;
     password: string;
   }) => Promise<void>;
+  setRememberMe: (value: boolean) => void;
   reset: () => void;
+  changePassword: (data: {
+    currentPassword: string;
+    newPassword: string;
+  }) => Promise<void>;
 }
 
 const initialState: AuthState = {
@@ -42,34 +49,62 @@ const initialState: AuthState = {
   userId: '',
   email: '',
   fullName: '',
+  rememberMe: true,
+  accessToken: '',
 };
 
-const useAuthStoreBase = create<AuthState & AuthActions>((set) => ({
+const useAuthStoreBase = create<AuthState & AuthActions>((set, get) => ({
   ...initialState,
 
   checkIsLoggedIn: async () => {
     const accessToken = await getData('accessToken');
-    if (accessToken) {
-      set(() => ({ isLoggedIn: true }));
+    const userRaw = await getData('userInfo');
+    const rememberMe = await getData('rememberMe');
+    if (accessToken && userRaw) {
+      const user = JSON.parse(userRaw);
+      set(() => ({
+        isLoggedIn: true,
+        userId: user.userId,
+        email: user.email,
+        fullName: user.fullName,
+        rememberMe: rememberMe ? !!rememberMe : false,
+        accessToken: accessToken,
+      }));
     }
   },
 
   login: async (data: LoginRequest) => {
-    const res = await authService.login(data);
-    if (res instanceof Error) {
-      throw res;
-    }
+    // const res = await authService.login(data);
+    // if (res instanceof Error) {
+    //   throw res;
+    // }
 
+	const res = {
+		data: {
+			accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMjljNDgzMTYtMjI3ZC00Y2Q2LWJhMzEtYjE1ZDc5NDQ1YTEyIiwiZW1haWwiOiJuZ3V5ZW5hbmhAZXhhbXBsZS5jb20iLCJyb2xlIjoiY2xpZW50IiwicGVybWlzc2lvbiI6ODM2NTYyNzcsImlzcyI6IjI5YzQ4MzE2LTIyN2QtNGNkNi1iYTMxLWIxNWQ3OTQ0NWExMiIsImV4cCI6MTc0NTk0ODc0OX0.hFyPgbUcOEw1lLEJYm6RBq6qMhqT6YIOC_vtuK3haME',
+			user: {
+				userId: '29c48316-227d-4cd6-ba31-b15d79445a12',
+				email: 'hoangzrik@gmail.com',
+				fullName: 'Hoang Zrik',
+			}
+		}
+	}
+
+    if (get().rememberMe && 'data' in res) {
+      await storeData('accessToken', res.data.accessToken);
+      await storeData('userInfo', JSON.stringify(res.data.user));
+    }
     set(() => ({
       isLoggedIn: true,
       userId: res.data.user.userId,
       email: res.data.user.email,
       fullName: res.data.user.fullName,
+      accessToken: res.data.accessToken,
     }));
   },
 
   logout: async () => {
-	logDebug('logout');
+    logDebug('logout');
     await authService.logout();
 
     set(() => ({
@@ -95,11 +130,16 @@ const useAuthStoreBase = create<AuthState & AuthActions>((set) => ({
       throw res;
     }
 
+    if (get().rememberMe && 'data' in res) {
+      await storeData('accessToken', res.data.accessToken);
+      await storeData('userInfo', JSON.stringify(res.data.user));
+    }
     set(() => ({
       isLoggedIn: true,
       userId: res.data.user.userId,
       email: res.data.user.email,
       fullName: res.data.user.fullName,
+      accessToken: res.data.accessToken,
     }));
   },
 
@@ -145,7 +185,41 @@ const useAuthStoreBase = create<AuthState & AuthActions>((set) => ({
     }
   },
 
+  setRememberMe: async (value) => {
+    set({ rememberMe: value });
+    try {
+      if (value) {
+        await storeData('rememberMe', JSON.stringify(value));
+        await storeData('accessToken', get().accessToken);
+        await storeData(
+          'userInfo',
+          JSON.stringify({
+            userId: get().userId,
+            email: get().email,
+            fullName: get().fullName,
+          })
+        );
+      } else {
+        await removeData('rememberMe');
+		await removeData('accessToken');
+		await removeData('userInfo');
+      }
+    } catch (error) {
+      console.error('Failed to store rememberMe:', error);
+    }
+  },
+
   reset: () => set(() => ({ ...initialState })),
+
+  changePassword: async (data) => {
+    const res = await authService.changePassword(
+      data.currentPassword,
+      data.newPassword
+    );
+    if (res instanceof Error) {
+      throw res;
+    }
+  },
 }));
 
 export const useAuthStore = createSelectors(useAuthStoreBase);

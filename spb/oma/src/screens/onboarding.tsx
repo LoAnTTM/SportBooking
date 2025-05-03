@@ -31,7 +31,7 @@ const OnBoarding: React.FC = () => {
         <View style={styles.footer}>
           <Button
             buttonStyle={styles.button}
-            textStyles={styles.buttonText}
+            textStyle={styles.buttonText}
             title={i18next.t('onboarding.get_started')}
             onPress={handleSubmit}
           />

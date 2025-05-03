@@ -6,12 +6,10 @@ import ForgotPasswordScreen from '@/screens/auth/forgot_password';
 import ResetPasswordScreen from '@/screens/auth/reset_password';
 import AuthScreen from '@/screens/auth/tab';
 import VerifyForgotPasswordScreen from '@/screens/auth/verify_forgot_password';
-import VerifyRegisterScreen from '@/screens/auth/verify_register';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 export type AuthStackParamList = {
   Login: undefined;
-  VerifyRegister: { email: string };
   ForgotPassword: undefined;
   VerifyForgotPassword: { email: string };
   ConfirmForgotPassword: { email: string; token: number };
@@ -21,7 +19,6 @@ export type AuthStackParamList = {
 
 export const RootScreens: Record<string, keyof AuthStackParamList> = {
   Login: 'Login',
-  VerifyRegister: 'VerifyRegister',
   ForgotPassword: 'ForgotPassword',
   VerifyForgotPassword: 'VerifyForgotPassword',
   ConfirmForgotPassword: 'ConfirmForgotPassword',
@@ -41,11 +38,6 @@ const AuthStack: FC = () => {
         name={RootScreens.Login}
         component={AuthScreen}
         options={{ animation: 'slide_from_right' }}
-      />
-      <Stack.Screen
-        name={RootScreens.VerifyRegister}
-        component={VerifyRegisterScreen}
-        options={{ animation: 'slide_from_bottom' }}
       />
       <Stack.Screen
         name={RootScreens.ForgotPassword}

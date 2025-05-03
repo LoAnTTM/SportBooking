@@ -54,7 +54,7 @@ const createStyles = (theme: IColorScheme) =>
       fontSize: fontSize.xs,
       color: theme.textLight,
       lineHeight: 18,
-      maxWidth: wp(50),
+      maxWidth: wp(90),
       marginTop: 2,
     },
   });

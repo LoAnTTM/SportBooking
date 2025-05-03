@@ -54,7 +54,7 @@ function Slider<T>({
         data={data}
         renderItem={({ item, index }) => (
           <SliderItem index={index} scrollX={scrollX} width={width}>
-            {renderItem({ item, index })}
+            {React.createElement(renderItem, { item, index })}
           </SliderItem>
         )}
         keyExtractor={(_, index) => index.toString()}

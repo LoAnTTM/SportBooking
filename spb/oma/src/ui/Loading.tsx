@@ -1,63 +1,56 @@
-import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import React, { FC, useContext } from 'react';
+import { ActivityIndicator, StyleSheet, View, ViewStyle } from 'react-native';
 
-interface LoadingProps {
-  size?: number;
-  color?: string;
-}
+import { IColorScheme, Radius } from '@/constants';
+import { ThemeContext } from '@/contexts/theme';
+import { hp } from '@/helpers/dimensions';
 
-const Loading: React.FC<LoadingProps> = ({ size = 40, color = '#007AFF' }) => {
-  const rotateAnim = useRef(new Animated.Value(0)).current;
+type LoadingProps = {
+  isLoading?: boolean;
+  color: string;
+  size?: 'small' | 'large' | number;
+  style?: ViewStyle;
+  overlay?: boolean;
+};
 
-  useEffect(() => {
-    const animation = Animated.loop(
-      Animated.timing(rotateAnim, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true,
-      })
-    );
+const Loading: FC<LoadingProps> = ({
+  isLoading = true,
+  color,
+  size = 'large',
+  style,
+  overlay = false,
+}) => {
+  const { theme } = useContext(ThemeContext);
+  const styles = createStyles(theme);
 
-    animation.start();
-
-    return () => {
-      animation.stop();
-    };
-  }, [rotateAnim]);
-
-  const spin = rotateAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  });
+  if (!isLoading) return null;
 
   return (
-    <View style={styles.container}>
-      <Animated.View
-        style={[
-          styles.spinner,
-          {
-            width: size,
-            height: size,
-            borderColor: color,
-            transform: [{ rotate: spin }],
-          },
-        ]}
-      />
+    <View style={[styles.container, overlay ? styles.overlay : {}, style]}>
+      <View style={styles.content}>
+        <ActivityIndicator size={size} color={color} />
+      </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  spinner: {
-    borderWidth: 3,
-    borderRadius: 50,
-    borderTopColor: 'transparent',
-    borderRightColor: 'transparent',
-  },
-});
+const createStyles = (theme: IColorScheme) =>
+  StyleSheet.create({
+    container: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: hp(2),
+    },
+    overlay: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: theme.backgroundDark,
+      zIndex: 999,
+    },
+    content: {
+      alignItems: 'center',
+      padding: hp(2),
+      borderRadius: Radius.md,
+    },
+  });
 
 export default Loading;

@@ -2,13 +2,13 @@ import { useCallback, useEffect, useState } from 'react';
 import { BackHandler, ToastAndroid } from 'react-native';
 
 import { RootParamList, RootScreens } from '@/screens';
-import { TabParamList } from '@/screens/main/tab';
+import { TabStackList } from '@/screens/main/tab';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const useBackHandler = () => {
   const navigation =
-    useNavigation<NativeStackNavigationProp<RootParamList & TabParamList>>();
+    useNavigation<NativeStackNavigationProp<RootParamList & TabStackList>>();
   const [doubleBackToExitPressedOnce, setDoubleBackToExitPressedOnce] =
     useState(false);
 

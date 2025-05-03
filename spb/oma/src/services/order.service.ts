@@ -17,7 +17,7 @@ class OrderService implements IOrderService {
     id: string
   ): Promise<ApiResponse<ListOrderResponse> | ResponseError> {
     return apiFactory(GET_ORDERS_BY_USER_ID_PATH)
-      .addPathParam('userId', id)
+      .addPathParam(':userId', id)
       .get<ListOrderResponse>();
   }
 

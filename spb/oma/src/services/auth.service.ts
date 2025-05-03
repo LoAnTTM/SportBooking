@@ -1,6 +1,6 @@
 import {
-  FORGOT_PASSWORD_PATH, GOOGLE_SIGNIN_CALLBACK_PATH, LOGIN_PATH, LOGOUT_PATH, REFRESH_TOKEN_PATH,
-  REGISTER_PATH, RESEND_VERIFY_REGISTER_TOKEN_PATH, RESET_PASSWORD_PATH,
+  CHANGE_PASSWORD_PATH, FORGOT_PASSWORD_PATH, GOOGLE_SIGNIN_CALLBACK_PATH, LOGIN_PATH, LOGOUT_PATH,
+  REFRESH_TOKEN_PATH, REGISTER_PATH, RESEND_VERIFY_REGISTER_TOKEN_PATH, RESET_PASSWORD_PATH,
   VERIFY_FORGOT_PASSWORD_TOKEN_PATH, VERIFY_REGISTER_TOKEN_PATH
 } from '@/constants';
 import { ResponseError } from '@/helpers/error';
@@ -28,6 +28,10 @@ export interface IAuthService {
   resendVerifyEmailOtp(
     email: string
   ): Promise<ApiResponse<null> | ResponseError>;
+  changePassword(
+    currentPassword: string,
+    newPassword: string
+  ): Promise<ApiResponse<null> | ResponseError>;
 }
 
 class AuthService {
@@ -38,9 +42,6 @@ class AuthService {
       data
     );
 
-    if ('data' in response) {
-      await storeData('accessToken', response.data.accessToken);
-    }
     return response;
   }
 
@@ -53,6 +54,7 @@ class AuthService {
       }
     }
     removeData('accessToken');
+    removeData('userInfo');
   }
 
   public register(
@@ -85,9 +87,6 @@ class AuthService {
       false
     ).post<LoginResponse>(data);
 
-    if ('data' in response) {
-      await storeData('accessToken', response.data.accessToken);
-    }
     return response;
   }
 
@@ -134,6 +133,16 @@ class AuthService {
       token,
       email,
       password,
+    });
+  }
+
+  public changePassword(
+    currentPassword: string,
+    newPassword: string
+  ): Promise<ApiResponse<null> | ResponseError> {
+    return apiFactory(CHANGE_PASSWORD_PATH).post({
+      currentPassword,
+      newPassword,
     });
   }
 }

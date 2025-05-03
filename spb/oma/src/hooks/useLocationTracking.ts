@@ -7,6 +7,45 @@ import { logError } from '@/helpers/logger';
 import { useLocationStore } from '@/zustand';
 import { OPENCAGE_API_KEY } from '@env';
 
+export const reverseGeocode = async (lat: number, lon: number) => {
+  try {
+    const res = await fetch(
+      `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${OPENCAGE_API_KEY}`
+    );
+    const data = await res.json();
+    const address = data.results?.[0]?.formatted ?? 'Unknown address';
+    const city = data.results?.[0]?.components?.city ?? 'Unknown city';
+
+    return { address, city };
+  } catch (err) {
+    if (err instanceof Error) {
+      logError(err, 'Reverse geocoding error');
+    }
+    return { address: 'Unknown address', city: 'Unknown city' };
+  }
+};
+
+export const getPosition = () => {
+  return new Promise<{ latitude: number; longitude: number }>(
+    (resolve, reject) => {
+      Geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          resolve({ latitude, longitude });
+        },
+        (error) => {
+          reject(error);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 10000,
+        }
+      );
+    }
+  );
+};
+
 export const useLocationTracking = () => {
   const setLocation = useLocationStore((state) => state.setLocation);
   const setAddress = useLocationStore((state) => state.setAddress);
@@ -19,21 +58,9 @@ export const useLocationTracking = () => {
     let hasInitialLocation = false;
     let intervalId: ReturnType<typeof setInterval> | null;
 
-    const reverseGeocode = async (lat: number, lon: number) => {
-      try {
-        const res = await fetch(
-          `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${OPENCAGE_API_KEY}`
-        );
-        const data = await res.json();
-        const address = data.results?.[0]?.formatted ?? 'Unknown address';
-        const city = data.results?.[0]?.components?.city ?? 'Unknown city';
-
-        setAddress(address, city);
-      } catch (err) {
-        if (err instanceof Error) {
-          logError(err, 'Reverse geocoding error');
-        }
-      }
+    const updateAddress = async (lat: number, lon: number) => {
+      const { address, city } = await reverseGeocode(lat, lon);
+      setAddress(address, city);
     };
 
     const start = async () => {
@@ -49,7 +76,7 @@ export const useLocationTracking = () => {
 
           if (!hasInitialLocation) {
             hasInitialLocation = true;
-            reverseGeocode(latitude, longitude);
+            updateAddress(latitude, longitude);
           }
         },
         (error) => {
@@ -65,15 +92,15 @@ export const useLocationTracking = () => {
         }
       );
 
-      // Reverse geocode every 15 mins
+      // Reverse geocode every 1 hour
       intervalId = setInterval(() => {
         if (latestCoords.current) {
-          reverseGeocode(
+          updateAddress(
             latestCoords.current.latitude,
             latestCoords.current.longitude
           );
         }
-      }, DEFAULT_REVERSE_GEOCODE); // 15 minutes
+      }, DEFAULT_REVERSE_GEOCODE); // 1 hour
     };
 
     start();

@@ -1,19 +1,23 @@
 import React, { useEffect } from 'react';
+import { LogBox } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 
 import { useLocationTracking } from '@/hooks/useLocationTracking';
 import AppProvider from '@/providers';
 import RootStack from '@/screens';
-import { useAuthStore, useLocationStore } from '@/zustand';
-import { MAPBOX_ACCESS_TOKEN } from '@env';
+import { useAuthStore, useLanguageStore, useLocationStore } from '@/zustand';
 import { NavigationContainer } from '@react-navigation/native';
-import Mapbox from '@rnmapbox/maps';
 
 const App: React.FC = () => {
-  const checkIsLoggedIn = useAuthStore(state => state.checkIsLoggedIn);
-  const loadPreviousAddress = useLocationStore(state => state.loadPreviousAddress);
+  const checkIsLoggedIn = useAuthStore((state) => state.checkIsLoggedIn);
+  const loadPreviousAddress = useLocationStore(
+    (state) => state.loadPreviousAddress
+  );
+  const initializeLanguage = useLanguageStore(
+    (state) => state.initializeLanguage
+  );
 
-  Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
+  LogBox.ignoreAllLogs()
 
   // Location tracking hook
   useLocationTracking();
@@ -21,7 +25,8 @@ const App: React.FC = () => {
   useEffect(() => {
     checkIsLoggedIn();
     loadPreviousAddress();
-  }, [checkIsLoggedIn, loadPreviousAddress]);
+    initializeLanguage();
+  }, [checkIsLoggedIn, loadPreviousAddress, initializeLanguage]);
 
   useEffect(() => {
     SplashScreen.hide();

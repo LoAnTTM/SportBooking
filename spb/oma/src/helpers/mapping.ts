@@ -1,5 +1,9 @@
-import { UnitCard, UnitPrice } from '@/services/types';
-import { AddressModel, GeographyModel, MediaModel, UnitModel, UnitPriceModel } from '@/types/model';
+import { stringTimeToDateTime } from '@/helpers/function';
+import { UnitCard, UnitPrice, UnitService } from '@/services/types';
+import {
+  AddressModel, GeographyModel, MediaModel, SportTypeModel, UnitModel, UnitPriceModel,
+  UnitServiceModel
+} from '@/types/model';
 
 export const mappingAddressModelToString = (
   address: AddressModel | null
@@ -30,10 +34,30 @@ export const mappingUnitPriceModelToUnitPrice = (
   } as UnitPrice;
 };
 
+export const mappingUnitServiceModelToUnitService = (
+  service: UnitServiceModel[]
+): UnitService[] => {
+  return service.map((item) => ({
+    title: item.name,
+    price: item.price,
+    description: item.description,
+  }));
+};
+
+export const mappingSportTypesToString = (
+  sportTypes: SportTypeModel[]
+): string[] => {
+  return sportTypes.map((item) => item.name);
+};
+
 export const mappingUnitModelToUnitCard = (unit: UnitModel): UnitCard => {
   return {
     id: unit.id,
     title: unit.name,
+    phone: unit.phone,
+    openTime: stringTimeToDateTime(unit.openTime),
+    closeTime: stringTimeToDateTime(unit.closeTime),
+    description: unit.description,
     address: mappingAddressModelToString(unit.address),
     image: mappingMediaModelToString(unit.media),
     price: unit.unitPrices?.map(mappingUnitPriceModelToUnitPrice) || [],
@@ -41,5 +65,7 @@ export const mappingUnitModelToUnitCard = (unit: UnitModel): UnitCard => {
       latitude: unit.address.locationGeography.latitude,
       longitude: unit.address.locationGeography.longitude,
     } as GeographyModel,
+    services: mappingUnitServiceModelToUnitService(unit.unitServices || []),
+    sportTypes: mappingSportTypesToString(unit.sportTypes || []),
   } as UnitCard;
 };

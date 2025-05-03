@@ -1,4 +1,4 @@
-export const CARD_LIST_SIZE = 3;
+export const CARD_LIST_SIZE = 10;
 
 export const POPULAR_RANGE_DAYS = 30; // 30 days
 
