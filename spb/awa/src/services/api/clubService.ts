@@ -1,9 +1,11 @@
 import apiClient from './apiClient';
-import { ApiResponse, Club, CreateClubRequest, CreateMediaRequest, UpdateClubRequest } from './types';
+import {
+  ApiResponse, Club, Clubs, CreateClubRequest, CreateMediaRequest, UpdateClubRequest
+} from './types';
 
 export const clubService = {
-  getClubs: async (): Promise<ApiResponse<Club[]>> => {
-    return apiClient.get<Club[]>('/clubs');
+  getClubs: async (): Promise<ApiResponse<Clubs>> => {
+    return apiClient.get<Clubs>('/clubs');
   },
 
   getClubById: async (id: string): Promise<ApiResponse<Club>> => {

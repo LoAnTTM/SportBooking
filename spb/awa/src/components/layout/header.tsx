@@ -1,9 +1,13 @@
 "use client";
 
-import React from "react";
-import { Bell, MoreVertical, Search } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
+import { Bell, LogOut, MoreVertical, Search } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Input } from '@/components/ui/input';
+import { authService } from '@/services/api';
+import { clearAuthState } from '@/utils/auth-utils';
 
 interface HeaderProps {
   title: string;
@@ -11,6 +15,57 @@ interface HeaderProps {
 }
 
 const Header = ({ title, showSearch = false }: HeaderProps) => {
+  const router = useRouter();
+  const [userName, setUserName] = useState("Admin");
+  const [userInitials, setUserInitials] = useState("AD");
+
+  useEffect(() => {
+    // Get user data from localStorage
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        const userData = JSON.parse(userStr);
+        if (userData.full_name) {
+          setUserName(userData.full_name);
+          // Get initials from full name
+          const nameParts = userData.full_name.split(' ');
+          if (nameParts.length >= 2) {
+            setUserInitials(`${nameParts[0][0]}${nameParts[1][0]}`);
+          } else {
+            setUserInitials(userData.full_name.substring(0, 2).toUpperCase());
+          }
+        } else if (userData.email) {
+          // Use email username as fallback
+          const emailName = userData.email.split('@')[0];
+          setUserName(emailName);
+          setUserInitials(emailName.substring(0, 2).toUpperCase());
+        }
+      } catch (err) {
+        console.error('Failed to parse user data:', err);
+      }
+    }
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      // Call the logout API endpoint
+      const response = await authService.logout();
+
+      console.log('Logout response:', response);
+
+      clearAuthState();
+
+      // Redirect to login page
+      router.push('/auth/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+
+      // Even if the API call fails, clear local auth state and redirect
+      clearAuthState();
+      router.push('/auth/login');
+    }
+  };
+
   return (
     <header className="flex items-center justify-between border-b px-6 py-4">
       <h1 className="text-2xl font-semibold">{title}</h1>
@@ -30,15 +85,19 @@ const Header = ({ title, showSearch = false }: HeaderProps) => {
         </button>
         <div className="flex items-center space-x-2">
           <Avatar>
-            <AvatarImage src="/avatar.png" alt="Judy Stevenson" />
-            <AvatarFallback>JS</AvatarFallback>
+            <AvatarImage src="/avatar.png" alt={userName} />
+            <AvatarFallback>{userInitials}</AvatarFallback>
           </Avatar>
           <div className="hidden md:block">
-            <p className="text-sm font-medium">Judy Stevenson</p>
+            <p className="text-sm font-medium">{userName}</p>
           </div>
         </div>
-        <button className="rounded-full p-1 hover:bg-gray-100">
-          <MoreVertical className="h-5 w-5 text-gray-600" />
+        <button
+          className="rounded-full p-1 hover:bg-gray-100 flex items-center"
+          onClick={handleLogout}
+          title="Logout"
+        >
+          <LogOut className="h-5 w-5 text-gray-600" />
         </button>
       </div>
     </header>

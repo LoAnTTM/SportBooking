@@ -2,7 +2,7 @@
 export interface ApiResponse<T> {
   success: boolean;
   data?: T;
-  message?: string;
+  code?: string;
   error?: string;
 }
 
@@ -19,10 +19,6 @@ export interface PaginationParams {
   dt?: string; // district
 }
 
-export interface PaginatedResponse<T> {
-  items: T[];
-  total: number;
-}
 
 // Auth Types
 export interface LoginRequest {
@@ -35,15 +31,29 @@ export interface AuthResponse {
   user: User;
 }
 
+export interface RefreshResponse {
+  access_token: string;
+}
+
 // User Types
 export interface User {
-  id: string;
+  user_id: string;
   email: string;
   full_name?: string;
   phone?: string;
-  role: string;
-  created_at: string;
-  updated_at: string;
+  role: Role;
+  is_email_verified?: boolean;
+}
+
+export interface Role {
+	role_id: string;
+	role_name: string;
+	permissions: number;
+}
+
+export interface Users {
+	users: User[];
+	total: number;
 }
 
 // Club Types
@@ -58,6 +68,11 @@ export interface Club {
   address?: Address;
   media?: Media[];
   sport_types?: SportType[];
+}
+
+export interface Clubs {
+	clubs: Club[];
+	total: number;
 }
 
 export interface CreateClubRequest {
@@ -195,13 +210,18 @@ export interface UpdateUnitRequest {
 
 // Address Types
 export interface Address {
-  id: string;
+  address_id: string;
   address: string;
-  ward_id: string;
   location_geography?: {
-    longitude: number;
-    latitude: number;
-  };
+	  longitude: number;
+	  latitude: number;
+	};
+	ward: string;
+	ward_code: string;
+	district: string;
+	district_code: string;
+	province: string;
+	province_code: string;
 }
 
 export interface Province {
@@ -226,7 +246,7 @@ export interface Ward {
 
 // Media Types
 export interface Media {
-  id: string;
+  media_id: string;
   file_path: string;
   file_type: string;
   hash: string;
@@ -242,8 +262,6 @@ export interface CreateMediaRequest {
 export interface SportType {
   id: string;
   name: string;
-  created_at: string;
-  updated_at: string;
 }
 
 export interface CreateSportTypeRequest {

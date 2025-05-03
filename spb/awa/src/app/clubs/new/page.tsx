@@ -32,12 +32,19 @@ interface SportType {
   updated_at: string;
 }
 
+interface UserRole {
+  role_id: string;
+  role_name: string;
+  permissions: number;
+}
+
 interface User {
-  id: string;
+  user_id: string;
   email: string;
   full_name?: string;
   phone?: string;
-  role: string;
+  role: UserRole;
+  is_email_verified: boolean;
 }
 
 interface CreateClubForm {
@@ -65,25 +72,40 @@ interface CreateClubForm {
 const getDummyUsers = (): User[] => {
   return [
     {
-      id: '78574593-757c-49bc-aad1-3a8dd5c03970', // Default owner ID
-      email: 'default@example.com',
-      full_name: 'Default Owner',
+      user_id: '78574593-757c-49bc-aad1-3a8dd5c03970', // Default owner ID
+      email: 'admin@gmail.com',
+      full_name: 'Admin User',
       phone: '1234567890',
-      role: 'owner'
+      role: {
+        role_id: 'cc203bb9-7b33-4391-8917-0089588356f2',
+        role_name: 'admin',
+        permissions: 536870911
+      },
+      is_email_verified: true
     },
     {
-      id: 'b9a0db88-35d0-4e4a-9378-8d7f9d7d1c6a',
-      email: 'user1@example.com',
-      full_name: 'User One',
+      user_id: '6c8647dc-091f-4249-b9f7-12bed594d124',
+      email: 'client@gmail.com',
+      full_name: 'Client User',
       phone: '1234567891',
-      role: 'user'
+      role: {
+        role_id: '6c8647dc-091f-4249-b9f7-12bed594d124',
+        role_name: 'client',
+        permissions: 83656277
+      },
+      is_email_verified: true
     },
     {
-      id: 'c8b1ec77-46e1-4f5b-a489-9e8e8e8e8e8e',
-      email: 'user2@example.com',
-      full_name: 'User Two',
+      user_id: '9666740a-4ff5-4d22-830f-ab3361ba5ef4',
+      email: 'user@gmail.com',
+      full_name: 'Regular User',
       phone: '1234567892',
-      role: 'user'
+      role: {
+        role_id: '9666740a-4ff5-4d22-830f-ab3361ba5ef4',
+        role_name: 'user',
+        permissions: 79973893
+      },
+      is_email_verified: true
     }
   ];
 };
@@ -190,8 +212,10 @@ export default function NewClubPage() {
             const usersData = await usersResponse.json();
             console.log('Users API Response:', usersData);
 
-            // Handle different response structures
-            if (Array.isArray(usersData)) {
+            // Handle the specific response structure from the API
+            if (usersData.data && Array.isArray(usersData.data.users)) {
+              setUsers(usersData.data.users);
+            } else if (Array.isArray(usersData)) {
               setUsers(usersData);
             } else if (usersData.data && Array.isArray(usersData.data)) {
               setUsers(usersData.data);
@@ -520,7 +544,7 @@ export default function NewClubPage() {
           >
             <option value="">Select an owner</option>
             {users.map((user) => (
-              <option key={user.id} value={user.id}>
+              <option key={user.user_id} value={user.user_id}>
                 {user.full_name || user.email}
               </option>
             ))}

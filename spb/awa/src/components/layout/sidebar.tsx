@@ -1,18 +1,12 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
-import {
-  LayoutDashboard,
-  Users,
-  ClipboardList,
-  BarChart3,
-  Search,
-  UserCircle
-} from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { BarChart3, LayoutDashboard, Search, UserCircle, Users } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import React from 'react';
+
+import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -23,11 +17,11 @@ const Sidebar = () => {
       href: "/",
       icon: <LayoutDashboard className="h-5 w-5" />,
     },
-    {
-      name: "Order",
-      href: "/order",
-      icon: <ClipboardList className="h-5 w-5" />,
-    },
+    // {
+    //   name: "Order",
+    //   href: "/order",
+    //   icon: <ClipboardList className="h-5 w-5" />,
+    // },
     {
       name: "Clubs",
       href: "/clubs",
@@ -38,11 +32,11 @@ const Sidebar = () => {
       href: "/users",
       icon: <UserCircle className="h-5 w-5" />,
     },
-    {
-      name: "Analyze",
-      href: "/analyze",
-      icon: <BarChart3 className="h-5 w-5" />,
-    },
+    // {
+    //   name: "Analyze",
+    //   href: "/analyze",
+    //   icon: <BarChart3 className="h-5 w-5" />,
+    // },
   ];
 
   return (
@@ -84,8 +78,10 @@ const Sidebar = () => {
             href={item.href}
             className={cn(
               "flex items-center rounded-md px-3 py-2 text-sm font-medium",
-              pathname === item.href ||
-              (pathname.startsWith(item.href + "/") && item.href !== "/")
+              pathname && (
+                pathname === item.href ||
+                (pathname.startsWith(item.href + "/") && item.href !== "/")
+              )
                 ? "bg-gray-100 text-gray-900"
                 : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
             )}

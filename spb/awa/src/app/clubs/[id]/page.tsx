@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { clubsData } from '@/data/mock-data';
+import React, { useEffect, useState } from 'react';
+
 import MainLayout from '@/components/layout/main-layout';
+import { clubsData } from '@/data/mock-data';
 
 interface Media {
   id: string;
@@ -280,7 +281,6 @@ export default function ClubDetailsPage({ params }: { params: { id: string } }) 
 
   return (
     <MainLayout title={club.name || 'Club Details'}>
-      <div className="container mx-auto px-4 py-6">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">{club.name}</h1>
         <div className="flex space-x-2">

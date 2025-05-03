@@ -249,7 +249,7 @@ export const overviewStats = {
     },
   },
   clubs: {
-    count: "10",
+    count: "2",
     change: {
       value: "5",
       positive: false,

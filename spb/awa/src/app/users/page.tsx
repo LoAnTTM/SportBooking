@@ -7,23 +7,13 @@ import ClubIcon from "@/components/ui/club-icon";
 import { usersData } from "@/data/mock-data";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { PlusIcon, Trash2Icon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-  DialogDescription
-} from "@/components/ui/dialog";
+
 
 export default function UsersPage() {
   const [users, setUsers] = useState(usersData);
   const [loading, setLoading] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<any>(null);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -47,9 +37,23 @@ export default function UsersPage() {
             const data = await response.json();
             console.log('Users API response:', data);
 
-            // Handle different response structures
-            if (Array.isArray(data)) {
-              setUsers(data);
+            // Handle the specific response structure from the API
+            if (data.data && Array.isArray(data.data.users)) {
+              // Transform the API response to match our UI structure
+              const transformedUsers = data.data.users.map((user: any) => ({
+                id: user.user_id,
+                name: user.full_name || user.email.split('@')[0], // Use full_name if available, otherwise use email username
+                email: user.email,
+                type: user.role.role_name === 'admin' ? 'product' :
+                      user.role.role_name === 'client' ? 'website' : 'icon',
+                dateAdded: new Date().toLocaleDateString(), // API doesn't provide this, using current date
+                role: user.role.role_name.charAt(0).toUpperCase() + user.role.role_name.slice(1), // Capitalize role name
+                status: user.is_email_verified ? "Active" : "Inactive",
+                lastLogin: "Recently", // API doesn't provide this
+                roleId: user.role.role_id,
+                permissions: user.role.permissions
+              }));
+              setUsers(transformedUsers);
             } else if (data.data && Array.isArray(data.data)) {
               setUsers(data.data);
             } else if (data.data && data.data.items && Array.isArray(data.data.items)) {
@@ -74,45 +78,7 @@ export default function UsersPage() {
     fetchUsers();
   }, [router]);
 
-  const handleDeleteUser = async () => {
-    if (!selectedUser) return;
 
-    setLoading(true);
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        router.push('/auth/login');
-        return;
-      }
-
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${selectedUser.id}`, {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        if (response.ok) {
-          console.log('User deleted successfully');
-          // Remove user from the list
-          setUsers(users.filter((user: any) => user.id !== selectedUser.id));
-        } else {
-          console.error('Failed to delete user, but removing from UI anyway');
-          // Still remove from UI for demo purposes
-          setUsers(users.filter((user: any) => user.id !== selectedUser.id));
-        }
-      } catch (err) {
-        console.error('Error deleting user:', err);
-        // Still remove from UI for demo purposes
-        setUsers(users.filter((user: any) => user.id !== selectedUser.id));
-      }
-    } finally {
-      setLoading(false);
-      setDeleteDialogOpen(false);
-      setSelectedUser(null);
-    }
-  };
 
   const columns = [
     {
@@ -161,17 +127,6 @@ export default function UsersPage() {
               <span className="text-sm">View</span>
             </Link>
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-red-500 hover:text-red-700"
-            onClick={() => {
-              setSelectedUser(row);
-              setDeleteDialogOpen(true);
-            }}
-          >
-            <Trash2Icon className="h-4 w-4" />
-          </Button>
         </div>
       ),
     },
@@ -201,30 +156,6 @@ export default function UsersPage() {
           <DataTable data={users} columns={columns} />
         </div>
       )}
-
-      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete User</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete {selectedUser?.name}? This action cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteDialogOpen(false)} disabled={loading}>
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={handleDeleteUser}
-              disabled={loading}
-              className="bg-red-600 hover:bg-red-700"
-            >
-              {loading ? 'Deleting...' : 'Delete'}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </MainLayout>
   );
 }

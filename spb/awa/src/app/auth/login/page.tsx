@@ -1,8 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+
+import { authService } from '@/services/api';
+import { clearAuthState, validateUserRole } from '@/utils/auth-utils';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -11,31 +14,39 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
+  useEffect(() => {
+    // Clear any existing auth state when the login page loads
+    clearAuthState();
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      // Use authService with axios instead of fetch
+      const response = await authService.login({ email, password });
 
-      const data = await response.json();
+      console.log('Login response:', response);
 
-      if (response.ok && data.data) {
-        // Save token and user data
-        localStorage.setItem('token', data.data.access_token);
-        localStorage.setItem('user', JSON.stringify(data.data.user));
-        
-        // Redirect to dashboard
-        router.push('/');
+      if (response.success && response.data) {
+        // Check if user has admin role
+        if (response.data.user && response.data.user.role === 'admin') {
+          // Save token and user data
+          localStorage.setItem('token', response.data.access_token);
+          localStorage.setItem('user', JSON.stringify(response.data.user));
+
+          // Validate user role
+          validateUserRole();
+
+          // Redirect to dashboard
+          router.push('/');
+        } else {
+          setError('Access denied. Only admin users are allowed to log in.');
+        }
       } else {
-        setError(data.message || 'Invalid email or password');
+        setError(response.error || 'Invalid email or password');
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
@@ -69,13 +80,13 @@ export default function LoginPage() {
           </div>
         </div>
         <h1 className="mb-6 text-center text-2xl font-bold">Sport Booking</h1>
-        
+
         {error && (
           <div className="mb-4 rounded-md bg-red-50 p-4 text-sm text-red-500">
             {error}
           </div>
         )}
-        
+
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
@@ -94,7 +105,7 @@ export default function LoginPage() {
               className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
             />
           </div>
-          
+
           <div className="mb-6">
             <div className="flex items-center justify-between">
               <label
@@ -103,8 +114,8 @@ export default function LoginPage() {
               >
                 Password
               </label>
-              <Link 
-                href="/auth/forgot-password" 
+              <Link
+                href="/auth/forgot-password"
                 className="text-xs text-indigo-600 hover:text-indigo-500"
               >
                 Forgot Password?
@@ -120,7 +131,7 @@ export default function LoginPage() {
               className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
             />
           </div>
-          
+
           <button
             type="submit"
             className="w-full rounded-md bg-indigo-900 py-2 px-4 font-medium text-white hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -129,7 +140,7 @@ export default function LoginPage() {
             {isSubmitting ? "Logging in..." : "Login"}
           </button>
         </form>
-        
+
         <div className="mt-4 text-center text-sm">
           Don't have an account?{' '}
           <Link href="/auth/register" className="text-indigo-600 hover:text-indigo-500">

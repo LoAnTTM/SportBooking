@@ -1,9 +1,9 @@
 import apiClient from './apiClient';
-import { ApiResponse, PaginatedResponse, PaginationParams, User } from './types';
+import { ApiResponse, PaginationParams, User, Users } from './types';
 
 export const userService = {
-  getUsers: async (params: PaginationParams): Promise<ApiResponse<PaginatedResponse<User>>> => {
-    return apiClient.get<PaginatedResponse<User>>('/users', params);
+  getUsers: async (params?: PaginationParams): Promise<ApiResponse<Users>> => {
+    return apiClient.get<Users>('/users', params);
   },
 
   getUserById: async (id: string): Promise<ApiResponse<User>> => {
