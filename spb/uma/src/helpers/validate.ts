@@ -40,3 +40,16 @@ export const resetPasswordValidation = Yup.object().shape({
   password: passwordValidate,
   confirmPassword: confirmPasswordValidate,
 });
+
+export const changePasswordValidation = Yup.object().shape({
+  currentPassword: Yup.string()
+    .required('Password is required')
+    .min(8, 'Min 8 character'),
+  newPassword: Yup.string()
+    .required('Password is required')
+    .min(8, 'Min 8 character')
+    .notOneOf([Yup.ref('currentPassword')], 'New password must be different'),
+  confirmPassword: Yup.string()
+    .required('validation.confirm_password_required')
+    .oneOf([Yup.ref('newPassword')], 'Passwords must match'),
+});

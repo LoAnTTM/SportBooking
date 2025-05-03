@@ -8,9 +8,11 @@ import ConcurrencyHandler from '@/helpers/concurrency';
 import { ResponseError } from '@/helpers/error';
 import i18next from '@/helpers/i18n';
 import { logDebug, logError } from '@/helpers/logger';
+import { navigationRef } from '@/helpers/navigation';
 import { getData } from '@/helpers/storage';
 import { toastError } from '@/helpers/toast';
 import authService from '@/services/auth.service';
+import { useAuthStore } from '@/zustand';
 import { API_URL } from '@env';
 
 class AxiosConfig {
@@ -133,12 +135,20 @@ class AxiosConfig {
                   config as InternalAxiosRequestConfig
                 ) as Promise<void | AxiosError>;
               })
-              .catch((refreshError) => {
+              .catch(async (refreshError) => {
                 if (refreshError === AxiosError.ERR_NETWORK) {
                   logError(refreshError, 'Network error in onErrorResponse:');
                   toastError(i18next.t('error.ERS000'));
                 }
-                authService.logout();
+                const logout = useAuthStore((state) => state.logout);
+                const navigation = navigationRef;
+                await logout();
+                if (navigation?.isReady()) {
+                  navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Auth' }],
+                  });
+                }
                 return Promise.reject(refreshError);
               });
         }

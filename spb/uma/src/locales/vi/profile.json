@@ -1,0 +1,80 @@
+{
+    "privacy_policy": "Chính sách bảo mật",
+    "terms_conditions": "Điều khoản & Điều kiện",
+    "language": {
+        "english": "Tiếng Anh",
+        "vietnamese": "Tiếng Việt"
+    },
+    "security": {
+        "remember_me": "Ghi nhớ đăng nhập",
+        "remember_description": "Duy trì đăng nhập cho đến khi bạn đăng xuất thủ công",
+        "change_password": "Đổi mật khẩu"
+    },
+    "about": {
+        "app_name": "Ứng dụng UMA",
+        "version": "Phiên bản 1.0.0",
+        "developer": "Nhà phát triển",
+        "developer_value": "Đội ngũ UMA",
+        "contact": "Liên hệ",
+        "contact_value": "support@uma-app.com",
+        "website": "Trang web",
+        "website_value": "www.uma-app.com",
+        "about_title": "Giới thiệu về UMA",
+        "about_description": "UMA là ứng dụng đặt sân thể thao giúp người dùng tìm và đặt sân thể thao một cách dễ dàng. Sứ mệnh của chúng tôi là làm cho thể thao trở nên dễ tiếp cận với mọi người bằng cách đơn giản hóa quy trình đặt sân."
+    },
+    "change_password": {
+        "password_changed_success": "Đổi mật khẩu thành công",
+        "password_changed_error": "Đổi mật khẩu thất bại",
+        "change_password": "Đổi mật khẩu",
+        "change_password_description": "Để đổi mật khẩu của bạn, vui lòng nhập mật khẩu hiện tại của bạn và mật khẩu mới bên dưới.",
+        "enter_current_password": "Enter current password",
+        "enter_new_password": "Enter new password",
+        "enter_confirm_password": "Enter confirm password"
+    },
+    "terms": {
+        "last_updated": "Cập nhật lần cuối: Ngày 1 tháng 6 năm 2023",
+        "section1_title": "1. Chấp nhận Điều khoản",
+        "section1_content": "Bằng cách truy cập và sử dụng ứng dụng UMA, bạn xác nhận rằng bạn đã đọc, hiểu và đồng ý bị ràng buộc bởi các Điều khoản và Điều kiện này. Nếu bạn không đồng ý với các điều khoản này, vui lòng không sử dụng ứng dụng của chúng tôi.",
+        "section2_title": "2. Tài khoản người dùng",
+        "section2_content": "Để sử dụng một số tính năng của ứng dụng, bạn có thể được yêu cầu tạo tài khoản. Bạn có trách nhiệm duy trì tính bảo mật của thông tin tài khoản và chịu trách nhiệm cho tất cả các hoạt động diễn ra dưới tài khoản của bạn.",
+        "section3_title": "3. Đặt sân và Thanh toán",
+        "section3_content": "Khi đặt sân thông qua ứng dụng của chúng tôi, bạn đồng ý thanh toán số tiền quy định cho dịch vụ. Phương thức thanh toán và xử lý tuân theo Chính sách Thanh toán của chúng tôi.",
+        "section4_title": "4. Chính sách Hủy đặt sân",
+        "section4_content": "Việc hủy đặt sân phải được thực hiện ít nhất 24 giờ trước thời gian đặt sân đã lên lịch để đủ điều kiện nhận hoàn tiền. Hoàn tiền được xử lý theo Chính sách Hoàn tiền của chúng tôi.",
+        "section5_title": "5. Hành vi của Người dùng",
+        "section5_content": "Bạn đồng ý chỉ sử dụng ứng dụng của chúng tôi cho các mục đích hợp pháp và theo cách không vi phạm quyền của người khác hoặc hạn chế việc sử dụng ứng dụng của họ.",
+        "section6_title": "6. Sở hữu Trí tuệ",
+        "section6_content": "Tất cả nội dung, tính năng và chức năng của ứng dụng UMA thuộc sở hữu của UMA và được bảo vệ bởi luật bản quyền, thương hiệu và sở hữu trí tuệ quốc tế khác.",
+        "section7_title": "7. Giới hạn Trách nhiệm",
+        "section7_content": "UMA sẽ không chịu trách nhiệm cho bất kỳ thiệt hại gián tiếp, ngẫu nhiên, đặc biệt, hậu quả hoặc trừng phạt nào phát sinh từ việc bạn sử dụng hoặc không thể sử dụng ứng dụng.",
+        "section8_title": "8. Thay đổi Điều khoản",
+        "section8_content": "UMA có quyền sửa đổi các Điều khoản và Điều kiện này bất cứ lúc nào. Việc tiếp tục sử dụng ứng dụng sau những thay đổi đó đồng nghĩa với việc bạn chấp nhận các điều khoản mới.",
+        "section9_title": "9. Luật Điều chỉnh",
+        "section9_content": "Các Điều khoản và Điều kiện này được điều chỉnh và giải thích theo luật pháp của khu vực tài phán nơi UMA hoạt động.",
+        "section10_title": "10. Thông tin Liên hệ",
+        "section10_content": "Nếu bạn có bất kỳ câu hỏi nào về các Điều khoản và Điều kiện này, vui lòng liên hệ với chúng tôi tại support@uma-app.com."
+    },
+    "privacy": {
+        "last_updated": "Cập nhật lần cuối: Ngày 1 tháng 6 năm 2023",
+        "section1_title": "1. Thông tin Chúng tôi Thu thập",
+        "section1_content": "Chúng tôi thu thập thông tin cá nhân mà bạn cung cấp cho chúng tôi, chẳng hạn như tên, địa chỉ email, số điện thoại và thông tin thanh toán khi bạn đăng ký tài khoản hoặc đặt sân. Chúng tôi cũng thu thập thông tin về thiết bị của bạn và cách bạn sử dụng ứng dụng của chúng tôi.",
+        "section2_title": "2. Cách Chúng tôi Sử dụng Thông tin của Bạn",
+        "section2_content": "Chúng tôi sử dụng thông tin của bạn để cung cấp và cải thiện dịch vụ của chúng tôi, xử lý đặt sân và thanh toán của bạn, liên lạc với bạn về tài khoản và đặt sân của bạn, và cá nhân hóa trải nghiệm của bạn với ứng dụng của chúng tôi.",
+        "section3_title": "3. Chia sẻ Thông tin",
+        "section3_content": "Chúng tôi có thể chia sẻ thông tin của bạn với các nhà cung cấp cơ sở thể thao để tạo điều kiện cho việc đặt sân của bạn. Chúng tôi cũng có thể chia sẻ thông tin của bạn với các nhà cung cấp dịch vụ giúp chúng tôi vận hành ứng dụng của mình, chẳng hạn như bộ xử lý thanh toán và nhà cung cấp phân tích.",
+        "section4_title": "4. Bảo mật Dữ liệu",
+        "section4_content": "Chúng tôi thực hiện các biện pháp bảo mật thích hợp để bảo vệ thông tin cá nhân của bạn khỏi truy cập, thay đổi, tiết lộ hoặc phá hủy trái phép. Tuy nhiên, không có phương thức truyền qua Internet hoặc lưu trữ điện tử nào là an toàn 100%.",
+        "section5_title": "5. Quyền của Bạn",
+        "section5_content": "Bạn có quyền truy cập, sửa chữa hoặc xóa thông tin cá nhân của mình. Bạn có thể quản lý thông tin của mình thông qua cài đặt tài khoản hoặc bằng cách liên hệ trực tiếp với chúng tôi.",
+        "section6_title": "6. Cookie và Công nghệ Tương tự",
+        "section6_content": "Chúng tôi sử dụng cookie và các công nghệ tương tự để thu thập thông tin về cách bạn sử dụng ứng dụng của chúng tôi và để ghi nhớ tùy chọn của bạn. Bạn có thể quản lý tùy chọn cookie của mình thông qua cài đặt trình duyệt.",
+        "section7_title": "7. Liên kết Bên thứ ba",
+        "section7_content": "Ứng dụng của chúng tôi có thể chứa các liên kết đến trang web hoặc dịch vụ của bên thứ ba. Chúng tôi không chịu trách nhiệm về các thực tiễn bảo mật của các bên thứ ba này và khuyến khích bạn đọc chính sách bảo mật của họ.",
+        "section8_title": "8. Quyền riêng tư của Trẻ em",
+        "section8_content": "Ứng dụng của chúng tôi không dành cho trẻ em dưới 13 tuổi. Chúng tôi không cố ý thu thập thông tin cá nhân từ trẻ em dưới 13 tuổi. Nếu bạn tin rằng chúng tôi đã thu thập thông tin từ một đứa trẻ dưới 13 tuổi, vui lòng liên hệ với chúng tôi.",
+        "section9_title": "9. Thay đổi đối với Chính sách Bảo mật này",
+        "section9_content": "Chúng tôi có thể cập nhật Chính sách Bảo mật của mình theo thời gian. Chúng tôi sẽ thông báo cho bạn về bất kỳ thay đổi nào bằng cách đăng Chính sách Bảo mật mới trên trang này và cập nhật ngày \"Cập nhật lần cuối\".",
+        "section10_title": "10. Liên hệ với Chúng tôi",
+        "section10_content": "Nếu bạn có bất kỳ câu hỏi nào về Chính sách Bảo mật này, vui lòng liên hệ với chúng tôi tại privacy@uma-app.com."
+    }
+}

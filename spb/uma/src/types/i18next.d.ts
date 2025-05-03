@@ -4,7 +4,8 @@ declare module 'i18next' {
   interface I18nTypeOptions {
     defaultNS: 'data';
     resources: {
-      data: typeof resources;
+      data: typeof resources.data;
+	  profile: typeof resources.profile;
     };
   }
 }

@@ -21,6 +21,8 @@ export const VERIFY_FORGOT_PASSWORD_TOKEN_PATH = `${V1_PREFIX}/auth/verify-forgo
 
 export const RESET_PASSWORD_PATH = `${V1_PREFIX}/auth/reset-password`;
 
+export const CHANGE_PASSWORD_PATH = `${V1_PREFIX}/auth/change-password`;
+
 // Unit API paths
 export const POPULAR_UNITS_PATH = `${V1_PREFIX}/units/popularity`;
 

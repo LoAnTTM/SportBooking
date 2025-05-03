@@ -1,211 +1,177 @@
 {
     "onboarding": {
-        "get_started": "Get Started"
+        "get_started": "Bắt đầu"
     },
     "login": {
-        "title": "Sign In",
-        "forgot": "Forgot password?",
-        "submit": "Sign In",
-        "email": "Email Address",
-        "password": "Password",
-        "google": "Continue with Google"
+        "title": "Đăng nhập",
+        "forgot": "Quên mật khẩu?",
+        "submit": "Đăng nhập",
+        "email": "Địa chỉ email",
+        "password": "Mật khẩu",
+        "google": "Tiếp tục với Google"
     },
     "register": {
-        "title": "Create Account",
-        "email": "Email Address",
-        "password": "Password",
-        "confirm_password": "Confirm Password",
-        "submit": "Sign Up",
-        "google": "Continue with Google"
+        "title": "Tạo tài khoản",
+        "email": "Địa chỉ email",
+        "password": "Mật khẩu",
+        "confirm_password": "Xác nhận mật khẩu",
+        "submit": "Đăng ký",
+        "google": "Tiếp tục với Google"
     },
     "forgot": {
-        "title": "Forgot Password",
-        "description": "Enter your email address to reset your password",
-        "submit": "Reset Password",
-        "email": "Enter your email",
+        "title": "Quên mật khẩu",
+        "description": "Nhập địa chỉ email của bạn để đặt lại mật khẩu",
+        "submit": "Đặt lại mật khẩu",
+        "email": "Nhập email của bạn",
         "verification": {
-            "title": "OTP Verification",
-            "description": "Please check your email to see the verification code",
-            "submit": "Reset Password"
+            "title": "Xác thực OTP",
+            "description": "Vui lòng kiểm tra email của bạn để xem mã xác thực",
+            "submit": "Đặt lại mật khẩu"
         },
         "confirm": {
-            "submit": "Confirm",
-            "title": "Password Reset",
-            "description": "Your password has been successfully reset. Click the button below to set a new password."
+            "submit": "Xác nhận",
+            "title": "Đặt lại mật khẩu",
+            "description": "Mật khẩu của bạn đã được đặt lại thành công. Nhấn nút bên dưới để đặt mật khẩu mới."
         },
         "reset": {
-            "title": "Set New Password",
-            "description": "Enter your new password below",
-            "password": "Enter your new password",
-            "confirm_password": "Re-enter password",
-            "submit": "Update Password",
+            "title": "Đặt mật khẩu mới",
+            "description": "Nhập mật khẩu mới của bạn bên dưới",
+            "password": "Nhập mật khẩu mới",
+            "confirm_password": "Nhập lại mật khẩu",
+            "submit": "Cập nhật mật khẩu",
             "confirm": {
-                "title": "Successful",
-                "submit": "Continue",
-                "description": "Congratulations! Your password has been successfully updated. Click continue to login."
+                "title": "Thành công",
+                "submit": "Tiếp tục",
+                "description": "Chúc mừng! Mật khẩu của bạn đã được cập nhật thành công. Nhấn tiếp tục để đăng nhập."
             }
         }
     },
     "verification": {
-        "title": "OTP Verification",
-        "description": "Please check your email to see the verification code",
-        "submit": "Verify Code",
-        "resend_ask": "Haven't received the code?",
-        "resend": "Resend Email",
-        "otp_invalid": "OTP Code is invalid"
+        "title": "Xác thực OTP",
+        "description": "Vui lòng kiểm tra email của bạn để xem mã xác thực",
+        "submit": "Xác thực mã",
+        "resend_ask": "Chưa nhận được mã?",
+        "resend": "Gửi lại email",
+        "otp_invalid": "Mã OTP không hợp lệ"
     },
     "notification": {
-        "login_success": "Login successful!",
-        "register_success": "Register successful!",
-        "login_failed": "Login failed!",
-        "register_failed": "Register failed!"
+        "login_success": "Đăng nhập thành công!",
+        "register_success": "Đăng ký thành công!",
+        "login_failed": "Đăng nhập thất bại!",
+        "register_failed": "Đăng ký thất bại!"
     },
     "search": {
-        "placeholder": "Search here",
-        "placeholder_description": "Choose the best Football Field"
+        "placeholder": "Tìm kiếm tại đây",
+        "placeholder_description": "Chọn sân bóng đá tốt nhất"
     },
     "home": {
-        "popularity": "Popular Units",
-        "nearby": "Nearby Units",
-        "see_all": "See All"
+        "popularity": "Sân phổ biến",
+        "nearby": "Sân gần đây",
+        "see_all": "Xem tất cả"
     },
     "common": {
-        "back_to_home": "Back to Home",
-        "loading": "Loading...",
-        "refresh": "Refresh"
+        "back_to_home": "Trở về trang chủ",
+        "loading": "Đang tải...",
+        "refresh": "Làm mới",
+        "submit": "Gửi"
     },
     "filter": {
-        "title": "Filter",
-        "reset": "Reset",
-        "apply": "Apply",
+        "title": "Bộ lọc",
+        "reset": "Đặt lại",
+        "apply": "Áp dụng",
         "dropdown": {
-            "province": "Select Province",
-            "district": "Select District",
-            "ward": "Select Ward",
-            "sport_type": "Select Sport",
-            "order_by": "Order By",
-            "order_type": "Order Type"
+            "province": "Chọn Tỉnh/Thành phố",
+            "district": "Chọn Quận/Huyện",
+            "ward": "Chọn Phường/Xã",
+            "sport_type": "Chọn môn thể thao",
+            "order_by": "Sắp xếp theo",
+            "order_type": "Kiểu sắp xếp"
         }
     },
     "detail": {
-        "service": "Services & Amenities",
-        "price": "Price",
-        "book_now": "Book Now"
+        "service": "Dịch vụ & Tiện ích",
+        "price": "Giá",
+        "book_now": "Đặt ngay"
     },
     "booking": {
-        "title": "Booking",
-        "submit": "Book Now",
+        "title": "Đặt sân",
+        "submit": "Đặt ngay",
         "select_date": {
-            "title": "Select Date & Time",
-            "description": "Choose the date and time for your booking",
-            "submit": "Next",
-            "select_in_past": "Choose a date/time in the future",
-            "change_time": "Change Time"
+            "title": "Chọn ngày & giờ",
+            "description": "Chọn ngày và giờ cho lịch đặt sân của bạn",
+            "submit": "Tiếp theo",
+            "select_in_past": "Vui lòng chọn ngày/giờ trong tương lai",
+            "change_time": "Thay đổi thời gian"
         },
         "error": {
-            "title": "Booking Error",
-            "description": "An error occurred while booking. Please try again later."
+            "title": "Lỗi đặt sân",
+            "description": "Đã xảy ra lỗi khi đặt sân. Vui lòng thử lại sau."
         },
-        "details_not_found": "Booking details not found. Please check your booking ID and try again.",
-        "success_title": "Your booking has been successfully completed.",
-        "success_subtitle": "Your booking was successful!",
-        "venue_details": "Venue Details",
-        "booking_details": "Booking Details",
-        "payment_details": "Payment Details",
-        "total_amount": "Total Amount",
-        "payment_method": "Payment Method",
-        "order_info": "Order Info",
-        "important_notes": "Important Notes",
-        "notes_content": "Please arrive 10 minutes early. Bring your confirmation code for verification.",
-        "view_my_bookings": "View My Bookings",
-        "back_to_home": "Back to Home"
+        "details_not_found": "Không tìm thấy chi tiết đặt sân. Vui lòng kiểm tra mã đặt sân và thử lại.",
+        "success_title": "Đặt sân thành công.",
+        "success_subtitle": "Bạn đã đặt sân thành công!",
+        "venue_details": "Chi tiết sân",
+        "booking_details": "Chi tiết đặt sân",
+        "payment_details": "Chi tiết thanh toán",
+        "total_amount": "Tổng tiền",
+        "payment_method": "Phương thức thanh toán",
+        "order_info": "Thông tin đơn hàng",
+        "important_notes": "Lưu ý quan trọng",
+        "notes_content": "Vui lòng đến sớm 10 phút. Mang theo mã xác nhận để kiểm tra.",
+        "view_my_bookings": "Xem lịch đặt sân của tôi",
+        "back_to_home": "Trở về trang chủ"
     },
     "payment": {
-        "error_invalid_url": "Invalid URL",
-        "error_cannot_open_url": "Cannot open URL",
-        "error_redirect": "Payment Error",
-        "redirect_title": "Redirecting",
-        "redirect_description": "You will be redirected to the payment page. Please wait.",
-        "opening_browser": "Opening browser",
-        "proceed_to_payment": "Proceed to Payment",
-        "i_already_paid": "I already paid",
-        "redirect_note": "If you are not redirected, please click the button below."
+        "error_invalid_url": "URL không hợp lệ",
+        "error_cannot_open_url": "Không thể mở URL",
+        "error_redirect": "Lỗi thanh toán",
+        "redirect_title": "Đang chuyển hướng",
+        "redirect_description": "Bạn sẽ được chuyển hướng đến trang thanh toán. Vui lòng đợi.",
+        "opening_browser": "Đang mở trình duyệt",
+        "proceed_to_payment": "Tiến hành thanh toán",
+        "i_already_paid": "Tôi đã thanh toán",
+        "redirect_note": "Nếu bạn không được chuyển hướng, vui lòng nhấn nút bên dưới."
     },
     "schedule": {
-        "my_bookings": "My Bookings",
-        "no_bookings_title": "No bookings found",
-        "no_bookings_description": "You have no bookings yet. Book a field to see it here.",
-        "month_view": "Month View",
-        "week_view": "Week View"
+        "my_bookings": "Lịch đặt sân của tôi",
+        "no_bookings_title": "Không tìm thấy lịch đặt sân",
+        "no_bookings_description": "Bạn chưa có lịch đặt sân nào. Hãy đặt sân để xem tại đây.",
+        "month_view": "Xem theo tháng",
+        "week_view": "Xem theo tuần"
     },
     "profile": {
-        "edit_profile": "Edit Profile",
-        "app_settings": "App Settings",
-        "language": "Language",
-        "notifications": "Notifications",
-        "security": "Security",
-        "app_preferences": "App Preferences",
-        "about": "About",
-        "terms_conditions": "Terms & Conditions",
-        "privacy_policy": "Privacy Policy",
-        "logout": "Log Out"
+        "edit_profile": "Chỉnh sửa hồ sơ",
+        "app_settings": "Cài đặt ứng dụng",
+        "language": "Ngôn ngữ",
+        "notifications": "Thông báo",
+        "security": "Bảo mật",
+        "app_preferences": "Tùy chọn ứng dụng",
+        "about": "Giới thiệu",
+        "terms_conditions": "Điều khoản & Điều kiện",
+        "privacy_policy": "Chính sách bảo mật",
+        "logout": "Đăng xuất"
     },
     "error": {
-        "ERS000": "Network error, please try again later.",
-        "ERS001": "ERS001",
-        "ERS002": "ERS002",
-        "ERA001": "ERA001",
-        "ERA002": "ERA002",
-        "ERA003": "ERA003",
-        "ERA004": "ERA004",
-        "ERA005": "ERA005",
-        "ERA006": "ERA006",
-        "ERA007": "ERA007",
-        "ERA008": "ERA008",
-        "ERA009": "ERA009",
-        "ERA010": "ERA010",
-        "ERL001": "ERL001",
-        "ERL002": "ERL002",
-        "ERL003": "ERL003",
-        "ERL004": "ERL004",
-        "ERMT001": "ERMT001",
-        "ERMT002": "ERMT002",
-        "ERMT003": "ERMT003",
-        "ERUN001": "ERUN001",
-        "ERUN002": "ERUN002",
-        "ERUN003": "ERUN003",
-        "ERUN004": "ERUN004",
-        "ERUN005": "ERUN005",
-        "ERUP001": "ERUP001",
-        "ERUP002": "ERUP002",
-        "ERUP003": "ERUP003",
-        "ERUP004": "ERUP004",
-        "ERUP005": "ERUP005",
-        "ERUS001": "ERUS001",
-        "ERUS002": "ERUS002",
-        "ERUS003": "ERUS003",
-        "ERUS004": "ERUS004",
-        "ERUS005": "ERUS005",
-        "ERST001": "ERST001",
-        "ERST002": "ERST002",
-        "ERST003": "ERST003",
-        "ERST004": "ERST004",
-        "ERST005": "ERST005",
-        "ERST006": "ERST006",
-        "ERM001": "ERM001",
-        "ERM002": "ERM002",
-        "ERM003": "ERM003",
-        "ERM004": "ERM004",
-        "ERM005": "ERM005",
-        "ERPI001": "ERPI001",
-        "ERPI002": "ERPI002",
-        "ERPI003": "ERPI003",
-        "ERPI004": "ERPI004",
-        "ERPI005": "ERPI005",
-        "ERU001": "ERU001",
-        "ERU002": "ERU002",
-        "ERU003": "ERU003",
-        "ERU004": "ERU004",
-        "ERU005": "ERU005"
+        "ERS000": "Lỗi kết nối mạng, vui lòng thử lại sau.",
+        "ERS001": "Lỗi hệ thống 001",
+        "ERS002": "Lỗi hệ thống 002",
+        "ERS003": "Lỗi hệ thống 003",
+        "ERS004": "Lỗi hệ thống 004",
+        "ERA001": "Lỗi xác thực 001",
+        "ERA002": "Lỗi xác thực 002",
+        "ERA003": "Lỗi xác thực 003",
+        "ERA004": "Lỗi xác thực 004",
+        "ERA005": "Lỗi xác thực 005",
+        "ERA006": "Lỗi xác thực 006",
+        "ERA007": "Lỗi xác thực 007",
+        "ERPA001": "Lỗi thanh toán 001",
+        "ERPA002": "Lỗi thanh toán 002",
+        "ECL001": "Lỗi khách hàng 001",
+        "ECL002": "Lỗi khách hàng 002",
+        "ECL003": "Lỗi khách hàng 003",
+        "ERU001": "Lỗi người dùng 001",
+        "ERU002": "Lỗi người dùng 002",
+        "ERU003": "Lỗi người dùng 003",
+        "ERM001": "Lỗi tin nhắn 001"
     }
 }

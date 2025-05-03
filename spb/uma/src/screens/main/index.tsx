@@ -3,6 +3,12 @@ import React, { FC } from 'react';
 import Booking from '@/screens/main/booking';
 import BookingSuccess from '@/screens/main/booking_success';
 import Detail from '@/screens/main/detail';
+import AboutScreen from '@/screens/main/profile/about';
+import ChangePasswordScreen from '@/screens/main/profile/change_password';
+import LanguageScreen from '@/screens/main/profile/language';
+import PrivacyPolicyScreen from '@/screens/main/profile/privacy';
+import SecurityScreen from '@/screens/main/profile/security';
+import TermsConditionsScreen from '@/screens/main/profile/terms';
 import SearchScreen from '@/screens/main/search';
 import TabScreens from '@/screens/main/tab';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -17,6 +23,12 @@ export type MainStackParamList = {
   };
   Booking: undefined;
   BookingSuccess: undefined;
+  Language: undefined;
+  Security: undefined;
+  About: undefined;
+  TermsConditions: undefined;
+  PrivacyPolicy: undefined;
+  ChangePassword: undefined;
 };
 
 export const MainScreens: Record<string, keyof MainStackParamList> = {
@@ -25,6 +37,12 @@ export const MainScreens: Record<string, keyof MainStackParamList> = {
   Detail: 'Detail',
   Booking: 'Booking',
   BookingSuccess: 'BookingSuccess',
+  Language: 'Language',
+  Security: 'Security',
+  About: 'About',
+  TermsConditions: 'TermsConditions',
+  PrivacyPolicy: 'PrivacyPolicy',
+  ChangePassword: 'ChangePassword',
 };
 const Stack = createNativeStackNavigator<MainStackParamList>();
 
@@ -56,6 +74,36 @@ const MainStack: FC = () => {
         name={MainScreens.BookingSuccess}
         component={BookingSuccess}
         options={{ animation: 'slide_from_right', gestureEnabled: false }}
+      />
+      <Stack.Screen
+        name={MainScreens.Language}
+        component={LanguageScreen}
+        options={{ animation: 'slide_from_right' }}
+      />
+      <Stack.Screen
+        name={MainScreens.Security}
+        component={SecurityScreen}
+        options={{ animation: 'slide_from_right' }}
+      />
+      <Stack.Screen
+        name={MainScreens.About}
+        component={AboutScreen}
+        options={{ animation: 'slide_from_right' }}
+      />
+      <Stack.Screen
+        name={MainScreens.TermsConditions}
+        component={TermsConditionsScreen}
+        options={{ animation: 'slide_from_right' }}
+      />
+      <Stack.Screen
+        name={MainScreens.PrivacyPolicy}
+        component={PrivacyPolicyScreen}
+        options={{ animation: 'slide_from_right' }}
+      />
+      <Stack.Screen
+        name={MainScreens.ChangePassword}
+        component={ChangePasswordScreen}
+        options={{ animation: 'slide_from_right' }}
       />
     </Stack.Navigator>
   );

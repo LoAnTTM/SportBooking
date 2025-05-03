@@ -32,11 +32,11 @@ const Header: FC = () => {
           subtitle={address as string}
           onPress={handleLocationPress}
         />
-        <NotificationBell
+        {/* <NotificationBell
           color={theme.icon}
           hasNotifications={true}
           onPress={handleNotificationPress}
-        />
+        /> */}
       </View>
       <SearchBar />
     </View>

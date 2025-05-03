@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 import { logDebug } from '@/helpers/logger';
-import { getData } from '@/helpers/storage';
+import { getData, removeData, storeData } from '@/helpers/storage';
 import authService from '@/services/auth.service';
 import { LoginRequest, RegisterRequest } from '@/services/types';
 import { createSelectors } from '@/zustand/selectors';
@@ -11,6 +11,8 @@ interface AuthState {
   userId: string;
   email: string;
   fullName: string;
+  rememberMe: boolean;
+  accessToken: string;
 }
 
 interface AuthActions {
@@ -34,7 +36,12 @@ interface AuthActions {
     email: string;
     password: string;
   }) => Promise<void>;
+  setRememberMe: (value: boolean) => void;
   reset: () => void;
+  changePassword: (data: {
+    currentPassword: string;
+    newPassword: string;
+  }) => Promise<void>;
 }
 
 const initialState: AuthState = {
@@ -42,14 +49,17 @@ const initialState: AuthState = {
   userId: '',
   email: '',
   fullName: '',
+  rememberMe: false,
+  accessToken: '',
 };
 
-const useAuthStoreBase = create<AuthState & AuthActions>((set) => ({
+const useAuthStoreBase = create<AuthState & AuthActions>((set, get) => ({
   ...initialState,
 
   checkIsLoggedIn: async () => {
     const accessToken = await getData('accessToken');
     const userRaw = await getData('userInfo');
+    const rememberMe = await getData('rememberMe');
     if (accessToken && userRaw) {
       const user = JSON.parse(userRaw);
       set(() => ({
@@ -57,6 +67,8 @@ const useAuthStoreBase = create<AuthState & AuthActions>((set) => ({
         userId: user.userId,
         email: user.email,
         fullName: user.fullName,
+        rememberMe: rememberMe ? !!rememberMe : false,
+        accessToken: accessToken,
       }));
     }
   },
@@ -67,11 +79,16 @@ const useAuthStoreBase = create<AuthState & AuthActions>((set) => ({
       throw res;
     }
 
+    if (get().rememberMe && 'data' in res) {
+      await storeData('accessToken', res.data.accessToken);
+      await storeData('userInfo', JSON.stringify(res.data.user));
+    }
     set(() => ({
       isLoggedIn: true,
       userId: res.data.user.userId,
       email: res.data.user.email,
       fullName: res.data.user.fullName,
+      accessToken: res.data.accessToken,
     }));
   },
 
@@ -102,11 +119,16 @@ const useAuthStoreBase = create<AuthState & AuthActions>((set) => ({
       throw res;
     }
 
+    if (get().rememberMe && 'data' in res) {
+      await storeData('accessToken', res.data.accessToken);
+      await storeData('userInfo', JSON.stringify(res.data.user));
+    }
     set(() => ({
       isLoggedIn: true,
       userId: res.data.user.userId,
       email: res.data.user.email,
       fullName: res.data.user.fullName,
+      accessToken: res.data.accessToken,
     }));
   },
 
@@ -152,7 +174,41 @@ const useAuthStoreBase = create<AuthState & AuthActions>((set) => ({
     }
   },
 
+  setRememberMe: async (value) => {
+    set({ rememberMe: value });
+    try {
+      if (value) {
+        await storeData('rememberMe', JSON.stringify(value));
+        await storeData('accessToken', get().accessToken);
+        await storeData(
+          'userInfo',
+          JSON.stringify({
+            userId: get().userId,
+            email: get().email,
+            fullName: get().fullName,
+          })
+        );
+      } else {
+        await removeData('rememberMe');
+		await removeData('accessToken');
+		await removeData('userInfo');
+      }
+    } catch (error) {
+      console.error('Failed to store rememberMe:', error);
+    }
+  },
+
   reset: () => set(() => ({ ...initialState })),
+
+  changePassword: async (data) => {
+    const res = await authService.changePassword(
+      data.currentPassword,
+      data.newPassword
+    );
+    if (res instanceof Error) {
+      throw res;
+    }
+  },
 }));
 
 export const useAuthStore = createSelectors(useAuthStoreBase);
