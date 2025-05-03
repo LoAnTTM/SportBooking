@@ -13,7 +13,7 @@ type IService interface {
 	GetProvinceDistricts(provinceID string) ([]*tb.District, error)
 	GetDistrictWards(districtID string) ([]*tb.Ward, error)
 	SearchByIDs(reqBody *model.SearchByIDRequest) ([]*tb.Ward, error)
-	SearchByGeography(longitude, latitude float64, radius int) ([]*tb.Address, error)
+	SearchByGeography(longitude, latitude float64, radius int) ([]*model.AddressWithDistance, error)
 	GetAddressByID(addressID string) (*tb.Address, error)
 	GetProvinceByID(id string) (*tb.Province, error)
 	GetDistrictByID(id string) (*tb.District, error)

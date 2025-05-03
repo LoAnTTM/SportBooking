@@ -140,7 +140,7 @@ func MapWardEntityToResponse(ward *tb.Ward) *model.LocationResponse {
 	}
 }
 
-func MapAddressEntitiesToIDs(addresses []*tb.Address) []string {
+func MapAddressEntitiesToIDs(addresses []*model.AddressWithDistance) []string {
 	addressIDs := make([]string, len(addresses))
 
 	for id := range addresses {

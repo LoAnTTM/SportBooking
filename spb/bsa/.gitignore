@@ -10,8 +10,3 @@ build/
 .VSCodeCounter/
 cover.out
 aws.cert
-
-data/
-migrates/
-
-scripts/

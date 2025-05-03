@@ -12,6 +12,7 @@ var ORDER_BY = []string{
 	"name",
 	"open_time",
 	"created_at",
+	"radius",
 }
 
 type CreateUnitRequest struct {

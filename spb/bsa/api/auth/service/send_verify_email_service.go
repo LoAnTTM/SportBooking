@@ -109,14 +109,3 @@ func RegisterMessage(otpCode, email string, oEmailTemplate *tb.NotificationType)
 	temp := oEmailTemplate.MapTemplate(oEmailTemplateData)
 	return temp, nil
 }
-
-// @author: LoanTT
-// @function: VerificationUrl
-// @description: Get verification url with token
-// @param: token string
-// @param: uri string
-// @return: string
-func VerificationUrl(token, uri string) string {
-	address := global.SPB_CONFIG.Server.ClientAddr
-	return address + uri + "?token=" + token
-}

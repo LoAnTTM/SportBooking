@@ -34,6 +34,7 @@ var (
 	ErrSendOTPFailed           = NewErrorArgs("Send OTP failed: %+v")
 	ErrResendOTPFailed         = NewErrorArgs("resend OTP failed: %+v")
 	ErrResetPasswordFailed     = NewErrorArgs("reset password failed: %+v")
+	ErrChangePasswordFailed    = NewErrorArgs("change password failed: %+v")
 
 	// payment
 	ErrPaymentFailed             = NewErrorArgs("payment failed: %+v")

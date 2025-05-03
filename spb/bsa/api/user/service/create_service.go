@@ -49,6 +49,8 @@ func mapCreateRequestToEntity(reqBody *model.CreateUserRequest, role *tb.Role) *
 		Password:        utils.BcryptHash(reqBody.Password),
 		Role:            *role,
 		RoleID:          role.ID,
-		IsEmailVerified: false,
+		IsEmailVerified: true,
+		FullName:        utils.ToPtr(reqBody.FullName),
+		Phone:           utils.ToPtr(reqBody.Phone),
 	}
 }

@@ -2,28 +2,31 @@ project_name: "Sport booking"
 
 server:
     env: development # development, production
-    host: "127.0.0.1"
+    host: "0.0.0.0"
     port: 3000
-    client_addr: "http://127.0.0.1"
-    debug: true
+    cert_file: "./certs/cert.pem"
+    key_file: "./certs/key.pem"
+    debug: false
 
 cors:
     allow_origin:
-        - "http://127.0.0.1"
+        - "https://127.0.0.1:3001"
     allow_headers:
         - "Content-Type"
         - "Origin"
         - "Accept"
+        - "Authorization"
     allow_methods:
         - "GET"
         - "POST"
         - "PUT"
         - "DELETE"
+        - "OPTIONS"
     allow_credentials: true
 
 jwt:
     secret: "1234balhblahblah"
-    access_token_exp: 1 # minutes
+    access_token_exp: 150 # minutes
     refresh_token_exp: 43200 # minutes
     expire_cache: 43200 # minutes
 
@@ -35,12 +38,12 @@ oauth:
 database:
     engine: "postgres"
     postgres:
-        host: "localhost"
+        host: "spb-booking.ctcu6o22mk8d.ap-southeast-1.rds.amazonaws.com"
         port: "5432"
         user: "spb_user"
         password: "spb_password"
         dbname: "spb_database"
-        ssl_mode: "disable"
+        ssl_mode: "require"
 
 redis:
     addrs:
@@ -59,7 +62,7 @@ logging:
     filename: "requests.log"
 
 aws:
-    region: "us-east-1"
+    region: "ap-southeast-1"
     max_retries: 3
 
 notification:

@@ -20,6 +20,7 @@ type IService interface {
 	VerifyEmailNotification(otpToken string, user *tb.User, tx *gorm.DB) error
 	VerifyRegisterToken(reqBody *model.VerifyRegisterTokenRequest) (err error)
 	VerifyForgotPasswordToken(reqBody *model.VerifyForgotPasswordTokenRequest) (err error)
+	ChangePassword(userID string, reqBody *model.ChangePasswordRequest) (err error)
 }
 
 type Service struct {

@@ -4,6 +4,7 @@ import (
 	roleUtils "spb/bsa/api/role/utility"
 	"spb/bsa/api/user/model"
 	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/utils"
 
 	"gorm.io/gorm"
 )
@@ -29,16 +30,15 @@ func MapUserEntityToResponse(user *tb.User) *model.UserResponse {
 // @description: Map users entity to response
 // @param: users []*tb.User
 // @return: *model.GetUsersResponse
-func MapUsersEntityToResponse(users []*tb.User, reqBody *model.GetUsersRequest) *model.GetUsersResponse {
+func MapUsersEntityToResponse(users []*tb.User, total int64, reqBody *model.GetUsersRequest) *model.GetUsersResponse {
 	res := new(model.GetUsersResponse)
 	for id := range users {
 		res.Users = append(res.Users, MapUserEntityToResponse(users[id]))
 	}
 
-	userNum := len(res.Users)
-	res.Total = uint(userNum)
+	res.Total = uint(total)
 	res.Pagination = &reqBody.Pagination
-	res.Pagination.SetNewPagination(userNum)
+	res.Pagination.SetNewPagination(utils.SafeInt64ToInt(total))
 	return res
 }
 

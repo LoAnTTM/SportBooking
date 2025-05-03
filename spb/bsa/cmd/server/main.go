@@ -190,8 +190,16 @@ func (f *Fiber) Start() {
 	defer database.CloseDB(global.SPB_DB)
 	defer redis.CloseRedisClient(global.SPB_REDIS)
 	defer notify.Shutdown(global.SPB_NOTIFY)
+	addr := fmt.Sprintf("%s:%s", global.SPB_CONFIG.Server.Host, global.SPB_CONFIG.Server.Port)
 
-	err := f.App.Listen(fmt.Sprintf(":%s", global.SPB_CONFIG.Server.Port))
+	fmt.Printf("Server started at %s\n", addr)
+	err := f.App.Listen(
+		addr,
+		// fiber.ListenConfig{
+		// 	CertFile:    global.SPB_CONFIG.Server.CertFile,
+		// 	CertKeyFile: global.SPB_CONFIG.Server.KeyFile,
+		// },
+	)
 	if err != nil {
 		zaplog.Errorf(msg.ErrServerStartFailed(err))
 	}

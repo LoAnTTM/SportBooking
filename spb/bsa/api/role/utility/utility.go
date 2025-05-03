@@ -47,3 +47,11 @@ func FlattenAndGetRoleNames(roles []tb.Role) []string {
 	}
 	return children
 }
+
+func MapRoleEntitiesToResponse(roles []tb.Role) []model.RoleResponse {
+	roleResponses := make([]model.RoleResponse, len(roles))
+	for id := range roles {
+		roleResponses[id] = MapRoleEntityToResponse(&roles[id])
+	}
+	return roleResponses
+}

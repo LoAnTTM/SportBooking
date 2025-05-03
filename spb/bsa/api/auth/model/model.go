@@ -17,6 +17,7 @@ type UserResponse struct {
 	Email    string  `json:"email"`
 	FullName *string `json:"full_name,omitempty"`
 	Phone    *string `json:"phone,omitempty"`
+	Role     string  `json:"role"`
 }
 
 type LoginRequest struct {
@@ -74,4 +75,9 @@ type GooglePayload struct {
 
 type ResendVerifyRegisterTokenRequest struct {
 	Email string `json:"email" validate:"min=6,max=256,required,email"`
+}
+
+type ChangePasswordRequest struct {
+	CurrentPassword string `json:"current_password" validate:"min=6,max=256,required,password"`
+	NewPassword     string `json:"new_password"     validate:"min=6,max=256,required,password"`
 }

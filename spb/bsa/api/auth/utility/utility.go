@@ -23,6 +23,7 @@ func MappingLoginResponse(user *tb.User, tokens map[string]string) model.LoginRe
 			FullName: user.FullName,
 			Email:    user.Email,
 			Phone:    user.Phone,
+			Role:     user.Role.Name,
 		},
 	}
 }
@@ -52,6 +53,10 @@ func EmailIsVerity(db *gorm.DB) *gorm.DB {
 // @return: *gorm.DB
 func EmailIsNotVerity(db *gorm.DB) *gorm.DB {
 	return db.Where("is_email_verified = ?", false)
+}
+
+func HasProviders(db *gorm.DB) *gorm.DB {
+	return db.Where("authentication_providers IS NOT NULL")
 }
 
 // @author: LoanTT

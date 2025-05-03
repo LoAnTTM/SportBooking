@@ -1,6 +1,7 @@
 package model
 
 import (
+	"spb/bsa/pkg/entities"
 	"spb/bsa/pkg/utils"
 )
 
@@ -58,4 +59,9 @@ func NewSearchLocationRequest(province, district, ward string) *SearchByIDReques
 		DistrictID: district,
 		WardID:     ward,
 	}
+}
+
+type AddressWithDistance struct {
+	entities.Address
+	Distance float64
 }
