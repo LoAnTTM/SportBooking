@@ -4,7 +4,6 @@ import BookingsScreen from '@/screens/main/tab/bookings';
 import ClubHomeScreen from '@/screens/main/tab/home';
 import ProfileScreen from '@/screens/main/tab/profile';
 import CalendarIcon from '@/ui/icon/Calendar';
-import CategoryIcon from '@/ui/icon/Category';
 import HomeIcon from '@/ui/icon/Home';
 import UserIcon from '@/ui/icon/User';
 import TabBar from '@/ui/tabbar/TabBar';

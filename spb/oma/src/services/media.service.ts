@@ -1,55 +1,99 @@
 import {
-  S3DeleteObjectOutput, S3DeleteObjectRequest, S3GetObjectOutput, S3GetObjectRequest,
-  S3ListObjectsOutput, S3PutObjectRequest, S3SendData
-} from '@/lib/aws/types';
-import { s3Factory } from '@/services/aws';
+  ADD_MEDIA_TO_CLUB_PATH, ADD_MEDIA_TO_UNIT_PATH, REMOVE_MEDIA_FROM_CLUB_PATH,
+  REMOVE_MEDIA_FROM_UNIT_PATH, UPLOAD_MEDIA_PATH
+} from '@/constants';
+import { ResponseError } from '@/helpers/error';
+import { apiFactory, ApiResponse } from '@/services/http';
+import { MediaModel } from '@/types/model';
+
+import { CreateMediaResponse } from './types';
+
+// Define a type for React Native image file
+export interface RNImageFile {
+  uri: string;
+  type: string;
+  name: string;
+}
 
 export interface IMediaService {
-  upload(file: File, bucket?: string): Promise<S3SendData>;
-  get(url: string, bucket?: string): Promise<S3GetObjectOutput>;
-  delete(url: string, bucket?: string): Promise<S3DeleteObjectOutput>;
-  list(bucket?: string): Promise<S3ListObjectsOutput>;
+  upload(
+    file: RNImageFile | File
+  ): Promise<ApiResponse<MediaModel> | ResponseError>;
+
+  addMediaToClub(
+    clubId: string,
+    media: MediaModel
+  ): Promise<ApiResponse<CreateMediaResponse> | ResponseError>;
+
+  removeMediaFromClub(
+    mediaId: string
+  ): Promise<ApiResponse<null> | ResponseError>;
+
+  addMediaToUnit(
+    unitId: string,
+    media: MediaModel
+  ): Promise<ApiResponse<CreateMediaResponse> | ResponseError>;
+
+  removeMediaFromUnit(
+    mediaId: string
+  ): Promise<ApiResponse<null> | ResponseError>;
 }
 
 class MediaService implements IMediaService {
-  public async upload(file: File, bucket?: string): Promise<S3SendData> {
-    const params: S3PutObjectRequest = {
-      Bucket: bucket,
-      Key: file.name,
-      Body: file,
-      ContentType: file.type,
-    };
+  public async upload(
+    file: RNImageFile | File
+  ): Promise<ApiResponse<MediaModel> | ResponseError> {
+    const formData = new FormData();
 
-    return await s3Factory.upload(params);
+    // Handle React Native file object differently
+    if ('uri' in file) {
+      // For React Native, we need to append the file with specific structure
+      formData.append('file', {
+        uri: file.uri,
+        type: file.type,
+        name: file.name,
+      } as any);
+    } else {
+      // For web File object
+      formData.append('file', file);
+    }
+
+    console.log('Uploading file with FormData:', formData);
+    return await apiFactory(UPLOAD_MEDIA_PATH).post<MediaModel>(formData);
   }
 
-  public async get(url: string, bucket?: string): Promise<S3GetObjectOutput> {
-    const params: S3GetObjectRequest = {
-      Bucket: bucket,
-      Key: url,
-    };
-
-    return await s3Factory.get(params);
+  public async addMediaToClub(
+    clubId: string,
+    media: MediaModel
+  ): Promise<ApiResponse<CreateMediaResponse> | ResponseError> {
+    return await apiFactory(ADD_MEDIA_TO_CLUB_PATH)
+      .addPathParam(':clubId', clubId)
+      .post<CreateMediaResponse>(media);
   }
 
-  public async delete(
-    url: string,
-    bucket?: string
-  ): Promise<S3DeleteObjectOutput> {
-    const params: S3DeleteObjectRequest = {
-      Bucket: bucket,
-      Key: url,
-    };
-
-    return await s3Factory.delete(params);
+  public async removeMediaFromClub(
+    mediaId: string
+  ): Promise<ApiResponse<null> | ResponseError> {
+    return await apiFactory(REMOVE_MEDIA_FROM_CLUB_PATH)
+      .addPathParam(':mediaId', mediaId)
+      .delete<null>();
   }
 
-  public async list(bucket?: string): Promise<S3ListObjectsOutput> {
-    const params = {
-      Bucket: bucket,
-    };
+  public async addMediaToUnit(
+    unitId: string,
+    media: MediaModel
+  ): Promise<ApiResponse<CreateMediaResponse> | ResponseError> {
+    return await apiFactory(ADD_MEDIA_TO_UNIT_PATH)
+      .addPathParam(':unitId', unitId)
+      .post<CreateMediaResponse>(media);
+  }
 
-    return await s3Factory.list(params);
+  public async removeMediaFromUnit(
+    mediaId: string
+  ): Promise<ApiResponse<null> | ResponseError> {
+    return await apiFactory(REMOVE_MEDIA_FROM_UNIT_PATH)
+      .addPathParam(':mediaId', mediaId)
+      .delete<null>();
   }
 }
 

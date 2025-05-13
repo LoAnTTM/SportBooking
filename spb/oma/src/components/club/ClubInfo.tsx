@@ -1,12 +1,13 @@
 import React, { FC } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ShadowedView } from 'react-native-fast-shadow';
 
 import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { hp, wp } from '@/helpers/dimensions';
-import { Club } from '@/types/club';
+import { ClubModel } from '@/types/model';
 
 interface ClubInfoProps {
-  club: Club;
+  club: ClubModel;
   theme: IColorScheme;
   onEditPress: () => void;
 }
@@ -15,7 +16,7 @@ const ClubInfo: FC<ClubInfoProps> = ({ club, theme, onEditPress }) => {
   const styles = createStyles(theme);
   
   return (
-    <View style={styles.container}>
+    <ShadowedView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{club.name}</Text>
@@ -43,12 +44,10 @@ const ClubInfo: FC<ClubInfoProps> = ({ club, theme, onEditPress }) => {
         </View>
       </View>
       
-      <Text style={styles.descriptionLabel}>Description:</Text>
       <Text style={styles.description}>{club.description}</Text>
       
-      <Text style={styles.imagesLabel}>Images:</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.imagesContainer}>
-        {club.images.map((image, index) => (
+        {club.media.map((image, index) => (
           <Image
             key={index}
             source={{ uri: image.filePath }}
@@ -57,7 +56,7 @@ const ClubInfo: FC<ClubInfoProps> = ({ club, theme, onEditPress }) => {
           />
         ))}
       </ScrollView>
-    </View>
+    </ShadowedView>
   );
 };
 
@@ -72,9 +71,8 @@ const createStyles = (theme: IColorScheme) => StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.3,
     shadowRadius: 3,
-    elevation: 3,
   },
   header: {
     flexDirection: 'row',
@@ -94,7 +92,7 @@ const createStyles = (theme: IColorScheme) => StyleSheet.create({
   subtitle: {
     ...fontFamily.POPPINS_REGULAR,
     fontSize: fontSize.sm,
-    color: theme.textDark,
+    color: theme.textLight,
   },
   editButton: {
     backgroundColor: theme.primary,
@@ -123,26 +121,14 @@ const createStyles = (theme: IColorScheme) => StyleSheet.create({
   infoValue: {
     ...fontFamily.POPPINS_REGULAR,
     fontSize: fontSize.sm,
-    color: theme.textDark,
+    color: theme.textLight,
     flex: 1,
   },
-  descriptionLabel: {
-    ...fontFamily.RALEWAY_MEDIUM,
-    fontSize: fontSize.sm,
-    color: theme.textDark,
-    marginBottom: hp(0.5),
-  },
   description: {
-    ...fontFamily.POPPINS_REGULAR,
+    ...fontFamily.POPPINS_ITALIC,
     fontSize: fontSize.sm,
     color: theme.textDark,
     marginBottom: hp(2),
-  },
-  imagesLabel: {
-    ...fontFamily.RALEWAY_MEDIUM,
-    fontSize: fontSize.sm,
-    color: theme.textDark,
-    marginBottom: hp(1),
   },
   imagesContainer: {
     flexDirection: 'row',

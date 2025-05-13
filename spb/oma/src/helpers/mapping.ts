@@ -1,7 +1,7 @@
 import { stringTimeToDateTime } from '@/helpers/function';
-import { UnitCard, UnitPrice, UnitService } from '@/services/types';
+import { ClubCard, UnitCard, UnitPrice, UnitService } from '@/services/types';
 import {
-  AddressModel, GeographyModel, MediaModel, SportTypeModel, UnitModel, UnitPriceModel,
+  AddressModel, ClubModel, GeographyModel, MediaModel, SportTypeModel, UnitModel, UnitPriceModel,
   UnitServiceModel
 } from '@/types/model';
 
@@ -58,6 +58,7 @@ export const mappingUnitModelToUnitCard = (unit: UnitModel): UnitCard => {
     openTime: stringTimeToDateTime(unit.openTime),
     closeTime: stringTimeToDateTime(unit.closeTime),
     description: unit.description,
+	status: unit.status,
     address: mappingAddressModelToString(unit.address),
     image: mappingMediaModelToString(unit.media),
     price: unit.unitPrices?.map(mappingUnitPriceModelToUnitPrice) || [],
@@ -69,3 +70,17 @@ export const mappingUnitModelToUnitCard = (unit: UnitModel): UnitCard => {
     sportTypes: mappingSportTypesToString(unit.sportTypes || []),
   } as UnitCard;
 };
+
+export const mappingClubModelToClubCard = (club: ClubModel): ClubCard => {
+	return {
+		id: club.id,
+		name: club.name,
+		phone: club.phone,
+		ownerId: club.ownerId,
+		address: mappingAddressModelToString(club.address),
+		description: club.description,
+		image: mappingMediaModelToString(club.media),
+		sportTypes: mappingSportTypesToString(club.sportTypes || []),
+		units: club.units.map(mappingUnitModelToUnitCard),
+	} as ClubCard;
+}

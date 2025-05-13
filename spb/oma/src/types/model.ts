@@ -9,10 +9,13 @@ export type AddressModel = {
   locationGeography: GeographyModel;
   ward: string;
   wardCode: string;
+  wardId: string;
   district: string;
   districtCode: string;
+  districtId: string;
   province: string;
   provinceCode: string;
+  provinceId: string;
 };
 
 export type UnitPriceModel = {
@@ -34,7 +37,7 @@ export type UnitServiceModel = {
 };
 
 export type MediaModel = {
-  id: string;
+  mediaId: string;
   filePath: string;
   fileType: string;
   hash: string;
@@ -52,11 +55,12 @@ export type UnitModel = {
   closeTime: string;
   phone: string;
   description: string;
+  status: number;
   address: AddressModel;
-  unitPrices: UnitPriceModel[] | null;
-  unitServices: UnitServiceModel[] | null;
-  media: MediaModel[] | null;
-  sportTypes: SportTypeModel[] | null;
+  unitPrices: UnitPriceModel[];
+  unitServices: UnitServiceModel[];
+  media: MediaModel[];
+  sportTypes: SportTypeModel[];
 };
 
 export type Pagination = {
@@ -111,4 +115,64 @@ export type NotificationModel = {
   notificationTypeId: string;
   sender: string | null;
   receiver: string | null;
+};
+
+export type ClubModel = {
+  id: string;
+  name: string;
+  phone: string;
+  ownerId: string;
+  address: AddressModel;
+  description: string;
+  media: MediaModel[];
+  sportTypes: SportTypeModel[];
+  units: UnitModel[];
+};
+
+export type AddressUpdateModel = {
+  address?: string;
+  wardId?: string;
+  locationGeography?: {
+    latitude?: number;
+    longitude?: number;
+  };
+};
+
+export type ClubUpdateModel = {
+  name?: string;
+  phone?: string;
+  address?: AddressUpdateModel;
+  description?: string;
+  sportTypes?: string[];
+};
+
+export type UnitPriceUpdateModel = {
+  price: number;
+  currency: string;
+  startTime: string;
+  endTime: string;
+};
+
+export type UnitServiceUpdateModel = {
+  name: string;
+  icon: string;
+  price: number;
+  currency: string;
+  description: string;
+  status: number;
+};
+
+export type UnitUpdateModel = {
+  name?: string;
+  openTime?: string;
+  closeTime?: string;
+  phone?: string;
+  description?: string;
+  address?: AddressUpdateModel;
+  unitPrices?: UnitPriceUpdateModel[];
+  unitServices?: UnitServiceUpdateModel[];
+  sportTypes?: string[];
+  media?: MediaModel[];
+  clubId?: string;
+  status?: number;
 };

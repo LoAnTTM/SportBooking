@@ -4,33 +4,26 @@ import { ShadowedView } from 'react-native-fast-shadow';
 
 import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { hp, wp } from '@/helpers/dimensions';
+import { OrderModel } from '@/types/model';
 import CalendarIcon from '@/ui/icon/Calendar';
+import DollarCircleIcon from '@/ui/icon/DollarCircle';
 import TimeCircleIcon from '@/ui/icon/TimeCircle';
-import UserIcon from '@/ui/icon/User';
 
 interface BookingItemProps {
-  booking: {
-    id: string;
-    date: string;
-    startTime: string;
-    endTime: string;
-    status: 'pending' | 'confirmed' | 'cancelled';
-    customerName: string;
-  };
+  booking: OrderModel;
   theme: IColorScheme;
-  onPress: (bookingId: string) => void;
 }
 
-const BookingItem: FC<BookingItemProps> = ({ booking, theme, onPress }) => {
+const BookingItem: FC<BookingItemProps> = ({ booking, theme }) => {
   const styles = createStyles(theme);
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'confirmed':
+      case 'success':
         return theme.success;
       case 'pending':
         return theme.warning;
-      case 'cancelled':
+      case 'failure':
         return theme.error;
       default:
         return theme.textDark;
@@ -39,11 +32,11 @@ const BookingItem: FC<BookingItemProps> = ({ booking, theme, onPress }) => {
 
   const getStatusBackgroundColor = (status: string) => {
     switch (status) {
-      case 'confirmed':
+      case 'success':
         return `${theme.success}20`; // 20% opacity
       case 'pending':
         return `${theme.warning}20`;
-      case 'cancelled':
+      case 'failure':
         return `${theme.error}20`;
       default:
         return theme.backgroundLight;
@@ -55,24 +48,20 @@ const BookingItem: FC<BookingItemProps> = ({ booking, theme, onPress }) => {
       <TouchableOpacity
         style={[
           styles.container,
-          { borderLeftColor: getStatusColor(booking.status) }
+          { borderLeftColor: getStatusColor(booking.status) },
         ]}
-        onPress={() => onPress(booking.id)}
         activeOpacity={0.7}
       >
         <View style={styles.header}>
-          <Text style={styles.date}>{booking.date}</Text>
+          <Text style={styles.date}>{booking.orderItems[0].bookedDay}</Text>
           <View
             style={[
               styles.statusBadge,
-              { backgroundColor: getStatusBackgroundColor(booking.status) }
+              { backgroundColor: getStatusBackgroundColor(booking.status) },
             ]}
           >
             <Text
-              style={[
-                styles.status,
-                { color: getStatusColor(booking.status) },
-              ]}
+              style={[styles.status, { color: getStatusColor(booking.status) }]}
             >
               {booking.status.toUpperCase()}
             </Text>
@@ -82,19 +71,19 @@ const BookingItem: FC<BookingItemProps> = ({ booking, theme, onPress }) => {
         <View style={styles.infoContainer}>
           <View style={styles.infoRow}>
             <CalendarIcon color={theme.primary} size={16} />
-            <Text style={styles.infoText}>{booking.date}</Text>
+            <Text style={styles.infoText}>{booking.orderItems[0].bookedDay}</Text>
           </View>
 
           <View style={styles.infoRow}>
             <TimeCircleIcon color={theme.primary} size={16} />
             <Text style={styles.infoText}>
-              {booking.startTime} - {booking.endTime}
+              {booking.orderItems[0].startTime} - {booking.orderItems[0].endTime}
             </Text>
           </View>
 
           <View style={styles.infoRow}>
-            <UserIcon color={theme.primary} size={16} />
-            <Text style={styles.infoText}>{booking.customerName}</Text>
+            <DollarCircleIcon color={theme.primary} size={16} />
+            <Text style={styles.infoText}>{booking.totalAmount} {booking.currency}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -105,7 +94,7 @@ const BookingItem: FC<BookingItemProps> = ({ booking, theme, onPress }) => {
 const createStyles = (theme: IColorScheme) =>
   StyleSheet.create({
     shadowContainer: {
-      borderRadius: Radius.md,
+      borderRadius: Radius.xs,
       shadowColor: theme.shadow,
       shadowOffset: {
         width: 0,
@@ -113,14 +102,13 @@ const createStyles = (theme: IColorScheme) =>
       },
       shadowOpacity: 0.15,
       shadowRadius: 8,
-      elevation: 5,
       marginBottom: hp(1.5),
     },
     container: {
       backgroundColor: theme.backgroundLight,
-      borderRadius: Radius.md,
+      borderRadius: Radius.xs,
       padding: hp(2),
-      borderLeftWidth: 4,
+      borderLeftWidth: 6,
       overflow: 'hidden',
     },
     header: {

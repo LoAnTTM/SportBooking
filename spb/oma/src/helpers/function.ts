@@ -1,3 +1,5 @@
+import { jwtDecode } from 'jwt-decode';
+
 import { CalendarEvent, CalendarSection } from '@/services/types';
 import { OrderModel } from '@/types/model';
 
@@ -38,6 +40,12 @@ export function stringTimeToDateTime(dateString: string): Date {
 export function stringTimeToNumberTime(dateString: string): number {
   const [hours, minutes] = dateString.split(':').map(Number);
   return hours + minutes / 60;
+}
+
+export function dateTimeToStringTime(date: Date): string {
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
 }
 
 export function stringDateToDate(dateString: string): Date {
@@ -133,3 +141,4 @@ export function convertOrdersToCalendarData(
 
   return result;
 }
+

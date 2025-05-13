@@ -13,6 +13,7 @@ interface AuthState {
   fullName: string;
   rememberMe: boolean;
   accessToken: string;
+  role: string;
 }
 
 interface AuthActions {
@@ -20,7 +21,6 @@ interface AuthActions {
   login: (data: LoginRequest) => Promise<void>;
   logout: () => Promise<void>;
   register: (data: RegisterRequest) => Promise<void>;
-  googleCallback: (data: { code: string }) => Promise<void>;
   verifyRegisterToken: (data: {
     token: number;
     email: string;
@@ -51,6 +51,7 @@ const initialState: AuthState = {
   fullName: '',
   rememberMe: true,
   accessToken: '',
+  role: '',
 };
 
 const useAuthStoreBase = create<AuthState & AuthActions>((set, get) => ({
@@ -74,20 +75,13 @@ const useAuthStoreBase = create<AuthState & AuthActions>((set, get) => ({
   },
 
   login: async (data: LoginRequest) => {
-    // const res = await authService.login(data);
-    // if (res instanceof Error) {
-    //   throw res;
-    // }
+    const res = await authService.login(data);
+    if (res instanceof Error) {
+      throw res;
+    }
 
-	const res = {
-		data: {
-			accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMjljNDgzMTYtMjI3ZC00Y2Q2LWJhMzEtYjE1ZDc5NDQ1YTEyIiwiZW1haWwiOiJuZ3V5ZW5hbmhAZXhhbXBsZS5jb20iLCJyb2xlIjoiY2xpZW50IiwicGVybWlzc2lvbiI6ODM2NTYyNzcsImlzcyI6IjI5YzQ4MzE2LTIyN2QtNGNkNi1iYTMxLWIxNWQ3OTQ0NWExMiIsImV4cCI6MTc0NTk0ODc0OX0.hFyPgbUcOEw1lLEJYm6RBq6qMhqT6YIOC_vtuK3haME',
-			user: {
-				userId: '29c48316-227d-4cd6-ba31-b15d79445a12',
-				email: 'hoangzrik@gmail.com',
-				fullName: 'Hoang Zrik',
-			}
-		}
+	if (res.data.user.role !== 'client') {
+		throw new Error('You are not allowed to login');
 	}
 
     if (get().rememberMe && 'data' in res) {
@@ -100,6 +94,7 @@ const useAuthStoreBase = create<AuthState & AuthActions>((set, get) => ({
       email: res.data.user.email,
       fullName: res.data.user.fullName,
       accessToken: res.data.accessToken,
+      role: res.data.user.role,
     }));
   },
 
@@ -121,26 +116,6 @@ const useAuthStoreBase = create<AuthState & AuthActions>((set, get) => ({
     if (res instanceof Error) {
       throw res;
     }
-  },
-
-  googleCallback: async (data) => {
-    const res = await authService.googleCallback(data);
-
-    if (res instanceof Error) {
-      throw res;
-    }
-
-    if (get().rememberMe && 'data' in res) {
-      await storeData('accessToken', res.data.accessToken);
-      await storeData('userInfo', JSON.stringify(res.data.user));
-    }
-    set(() => ({
-      isLoggedIn: true,
-      userId: res.data.user.userId,
-      email: res.data.user.email,
-      fullName: res.data.user.fullName,
-      accessToken: res.data.accessToken,
-    }));
   },
 
   verifyRegisterToken: async (data) => {
@@ -201,8 +176,8 @@ const useAuthStoreBase = create<AuthState & AuthActions>((set, get) => ({
         );
       } else {
         await removeData('rememberMe');
-		await removeData('accessToken');
-		await removeData('userInfo');
+        await removeData('accessToken');
+        await removeData('userInfo');
       }
     } catch (error) {
       console.error('Failed to store rememberMe:', error);

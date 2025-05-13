@@ -1,14 +1,14 @@
 import {
-  CHANGE_PASSWORD_PATH, FORGOT_PASSWORD_PATH, GOOGLE_SIGNIN_CALLBACK_PATH, LOGIN_PATH, LOGOUT_PATH,
-  REFRESH_TOKEN_PATH, REGISTER_PATH, RESEND_VERIFY_REGISTER_TOKEN_PATH, RESET_PASSWORD_PATH,
-  VERIFY_FORGOT_PASSWORD_TOKEN_PATH, VERIFY_REGISTER_TOKEN_PATH
+  CHANGE_PASSWORD_PATH, FORGOT_PASSWORD_PATH, LOGIN_PATH, LOGOUT_PATH, REFRESH_TOKEN_PATH,
+  RESEND_VERIFY_REGISTER_TOKEN_PATH, RESET_PASSWORD_PATH, VERIFY_FORGOT_PASSWORD_TOKEN_PATH,
+  VERIFY_REGISTER_TOKEN_PATH
 } from '@/constants';
 import { ResponseError } from '@/helpers/error';
 import { logError } from '@/helpers/logger';
 import { removeData, storeData } from '@/helpers/storage';
 import { apiFactory, ApiResponse } from '@/services/http';
 import {
-  GoogleCallbackRequest, LoginRequest, LoginResponse, RefreshTokenResponse, RegisterRequest
+  LoginRequest, LoginResponse, RefreshTokenResponse, RegisterRequest
 } from '@/services/types';
 
 export interface IAuthService {
@@ -16,11 +16,7 @@ export interface IAuthService {
     data: LoginRequest
   ): Promise<ApiResponse<LoginResponse> | ResponseError>;
   logout(): Promise<void>;
-  register(data: RegisterRequest): Promise<ApiResponse<null> | ResponseError>;
   refreshToken(): Promise<ApiResponse<RefreshTokenResponse> | ResponseError>;
-  googleCallback(
-    data: GoogleCallbackRequest
-  ): Promise<ApiResponse<LoginResponse> | ResponseError>;
   verifyEmail(
     token: number,
     email: string
@@ -57,12 +53,6 @@ class AuthService {
     removeData('userInfo');
   }
 
-  public register(
-    data: RegisterRequest
-  ): Promise<ApiResponse<null> | ResponseError> {
-    return apiFactory(REGISTER_PATH, false).post(data);
-  }
-
   public async refreshToken(): Promise<
     ApiResponse<RefreshTokenResponse> | ResponseError
   > {
@@ -76,17 +66,6 @@ class AuthService {
     if ('data' in response) {
       await storeData('accessToken', response.data.accessToken);
     }
-    return response;
-  }
-
-  public async googleCallback(
-    data: GoogleCallbackRequest
-  ): Promise<ApiResponse<LoginResponse> | ResponseError> {
-    const response = await apiFactory(
-      GOOGLE_SIGNIN_CALLBACK_PATH,
-      false
-    ).post<LoginResponse>(data);
-
     return response;
   }
 

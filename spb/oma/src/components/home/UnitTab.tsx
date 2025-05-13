@@ -1,5 +1,5 @@
-import React, { FC, useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import React, { FC, useCallback, useContext, useRef, useState } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { ShadowedView } from 'react-native-fast-shadow';
 import PagerView from 'react-native-pager-view';
 
@@ -14,25 +14,11 @@ const UnitTab: FC<UnitTabProps> = ({ routes, initialTabIndex = 0 }) => {
   const styles = createStyles(theme);
   const viewRef = useRef<PagerView>(null);
   const [activeTab, setActiveTab] = useState(initialTabIndex);
-  const slideAnim = useRef(new Animated.Value(initialTabIndex * (70 + hp(3)))).current;
 
   const handleTabSwitch = useCallback((index: number) => {
     viewRef.current?.setPage(index);
     setActiveTab(index);
-
-    // Animate the active indicator
-    Animated.spring(slideAnim, {
-      toValue: index * (70 + hp(3)),
-      useNativeDriver: true,
-      friction: 8,
-      tension: 50,
-    }).start();
-  }, [slideAnim]);
-
-  // Initialize animation position
-  useEffect(() => {
-    slideAnim.setValue(activeTab * (70 + hp(3)));
-  }, [slideAnim, activeTab]);
+  }, []);
 
   const renderTab = useCallback(
     (route: Route, index: number) => (
@@ -65,22 +51,12 @@ const UnitTab: FC<UnitTabProps> = ({ routes, initialTabIndex = 0 }) => {
 
   return (
     <View style={styles.container} accessibilityRole="tablist">
-      <ShadowedView style={styles.tabBarShadow}>
-        <View style={styles.tabBar}>
+      <ShadowedView style={styles.tabBarShadow} >
+        <ScrollView style={styles.tabBar} horizontal={true} showsHorizontalScrollIndicator={false}>
           <View style={styles.tabSwitch}>
             {routes.map((route, index) => renderTab(route, index))}
-
-            {/* Animated indicator */}
-            <Animated.View
-              style={[
-                styles.activeIndicator,
-                {
-                  transform: [{ translateX: slideAnim }],
-                }
-              ]}
-            />
           </View>
-        </View>
+        </ScrollView>
       </ShadowedView>
 
       <PagerView
@@ -111,7 +87,6 @@ export const createStyles = (theme: IColorScheme) =>
       },
       shadowOpacity: 0.1,
       shadowRadius: 4,
-      elevation: 3,
     },
     tabBar: {
       backgroundColor: theme.backgroundLight,
@@ -127,7 +102,7 @@ export const createStyles = (theme: IColorScheme) =>
     },
     tab: {
       alignItems: 'center',
-      width: 70,
+      width: 100,
       gap: hp(0.5),
       paddingVertical: hp(1),
       zIndex: 1,
@@ -136,16 +111,6 @@ export const createStyles = (theme: IColorScheme) =>
       ...fontFamily.POPPINS_MEDIUM,
       fontSize: fontSize.xs,
       color: theme.textLight,
-    },
-    activeIndicator: {
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      width: 70,
-      height: '100%',
-      backgroundColor: `${theme.primary}15`, // 15% opacity
-      borderRadius: Radius.md,
-      zIndex: 0,
     },
     pagerView: {
       width: '100%',

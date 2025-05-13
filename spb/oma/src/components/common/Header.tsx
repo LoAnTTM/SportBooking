@@ -38,7 +38,6 @@ const createStyles = (theme: IColorScheme) =>
       width: '100%',
       paddingHorizontal: hp(2),
       paddingTop: hp(2),
-      paddingBottom: hp(2),
       shadowColor: theme.shadow,
       shadowOffset: {
         width: 0,
